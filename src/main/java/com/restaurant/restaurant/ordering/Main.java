@@ -11,14 +11,14 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-	    Parent root = FXMLLoader.load(getClass().getResource("/resources/orders/order.fxml"));
+	    Parent root = FXMLLoader.load(getClass().getResource("/com/restaurant/restaurant/ordering/order.fxml"));
 
 	    stage.setTitle("Ordering System");
 
 	    Scene scene = new Scene(root, 700, 500);  // create scene
 
 	    scene.getStylesheets().add(
-	        getClass().getResource("/application/application.css").toExternalForm()
+	        getClass().getResource("/com/restaurant/restaurant/ordering/application.css").toExternalForm()
 	    ); // add CSS
 
 	    stage.setScene(scene); // set scene
