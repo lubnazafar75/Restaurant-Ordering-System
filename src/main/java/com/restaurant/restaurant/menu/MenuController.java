@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class MenuController {
 
@@ -136,5 +138,19 @@ public class MenuController {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    public static Parent getRoot() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    MenuController.class.getResource("/com/restaurant/restaurant/menu/menu.fxml")
+            );
+            return loader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("[MenuController] Could not load menu.fxml");
+            return new javafx.scene.layout.VBox(
+                    new javafx.scene.control.Label("Menu screen failed to load.")
+            );
+        }
     }
 }

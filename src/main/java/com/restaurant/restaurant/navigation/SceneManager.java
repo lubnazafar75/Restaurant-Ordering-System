@@ -12,7 +12,7 @@ import java.util.Map;
 // FIXED: Updated imports to match your project's true folder tree location
 import com.restaurant.restaurant.App;
 import com.restaurant.restaurant.StaffDashboard;
-
+import com.restaurant.restaurant.menu.MenuController;
 /**
  * Central View Routing Orchestrator.
  * Manages screen instantiation, navigation tracking, state shell configuration changes,
@@ -77,8 +77,7 @@ public class SceneManager {
 
         // ── [INTEGRATION ZONE: ADMIN RESTRICTED CHANNELS] ────────────────────────────────────────
         // 📥 INTEGRATION POINT: - Insert Admin Menu Editor view controls
-        register(NavigationUtil.ADMIN_MENU,      NavigationUtil.buildPlaceholderRoot("Managerial System: Menu Configuration", NavigationUtil.ADMIN_MENU));
-
+        register(NavigationUtil.ADMIN_MENU, MenuController.getRoot());
         // 📥 INTEGRATION POINT: - Wire up User Account / Employee records editor view
         register(NavigationUtil.ADMIN_STAFF,     NavigationUtil.buildPlaceholderRoot("Managerial System: Employee Accounts Management", NavigationUtil.ADMIN_STAFF));
 
