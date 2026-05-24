@@ -1,8 +1,6 @@
 package com.restaurant.restaurant.menu;
 
-/** Description : represents a food item in the restaurant menu system
- * 
- */
+// Description : represents a food item in the restaurant menu system
 
 public class FoodItem {
     
