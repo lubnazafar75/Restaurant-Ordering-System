@@ -64,10 +64,24 @@ public class App extends Application {
         );
 
         // Build main scene with responsive safety defaults
-        Scene mainApplicationWindowScene = new Scene(layoutContainerRoot, 1280, 840);
+        // Get the actual screen size of the monitor
+        javafx.geometry.Rectangle2D screenBounds =
+                javafx.stage.Screen.getPrimary().getVisualBounds();
+
+// Set window to 90% of screen size
+        double windowWidth  = screenBounds.getWidth()  * 0.90;
+        double windowHeight = screenBounds.getHeight() * 0.90;
+
+        Scene mainApplicationWindowScene = new Scene(layoutContainerRoot, windowWidth, windowHeight);
         stage.setScene(mainApplicationWindowScene);
         stage.setMinWidth(960);
         stage.setMinHeight(650);
+
+// Center the window on screen
+        stage.setX((screenBounds.getWidth()  - windowWidth)  / 2);
+        stage.setY((screenBounds.getHeight() - windowHeight) / 2);
+
+        stage.setMaximized(true);
         stage.show();
 
         // Boot and link SceneManager systems up live to content area contexts
@@ -91,15 +105,14 @@ public class App extends Application {
     private HBox buildCustomApplicationTitleBar(Stage stage) {
         Label brandingTitleText = new Label(" 🍽  QuickServe Enterprise — Management System");
         brandingTitleText.setFont(Font.font("System", FontWeight.BOLD, 13));
-        brandingTitleText.setTextFill(Color.web("#a0aec0"));
-
+        brandingTitleText.setTextFill(Color.WHITE);
         Region layoutSpacer = new Region();
         HBox.setHgrow(layoutSpacer, Priority.ALWAYS);
 
         // Generates structural management layout window frame controls
-        Button btnMin = createTitleFrameWindowControlActionBtn("─", "#161D30", "#FF4A85");
-        Button btnMax = createTitleFrameWindowControlActionBtn("□", "#161D30", "#00E676");
-        Button btnCls = createTitleFrameWindowControlActionBtn("✕", "#FF3333", "#FF3333"); // Crimson Red Warning Token
+        Button btnMin = createTitleFrameWindowControlActionBtn("─", "#4a5568", "#FF4A85");
+        Button btnMax = createTitleFrameWindowControlActionBtn("□", "#4a5568", "#00E676");
+        Button btnCls = createTitleFrameWindowControlActionBtn("✕", "#e53e3e", "#c0392b");
 
         btnMin.setOnAction(e -> stage.setIconified(true));
         btnMax.setOnAction(e -> {
@@ -267,19 +280,47 @@ public class App extends Application {
         return structuralSeparatorWidgetElement;
     }
 
-    private Button createTitleFrameWindowControlActionBtn(String characterSymbolSign, String primaryHoverColorHexVal, String structuralPressColorToken) {
-        Button executionButtonFrameWidget = new Button(characterSymbolSign);
-        executionButtonFrameWidget.setPrefSize(42, 38);
-        executionButtonFrameWidget.setFont(Font.font("System", 12));
-        executionButtonFrameWidget.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-background-radius: 0;");
+    private Button createTitleFrameWindowControlActionBtn(
+            String characterSymbolSign,
+            String primaryHoverColorHexVal,
+            String structuralPressColorToken) {
 
-        executionButtonFrameWidget.setOnMouseEntered(e -> executionButtonFrameWidget.setStyle(
-                "-fx-background-color: " + primaryHoverColorHexVal + "; -fx-text-fill: white; -fx-background-radius: 0;"
-        ));
-        executionButtonFrameWidget.setOnMouseExited(e -> executionButtonFrameWidget.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: white; -fx-background-radius: 0;"
-        ));
-        return executionButtonFrameWidget;
+        Button btn = new Button(characterSymbolSign);
+        btn.setPrefSize(46, 38);
+        btn.setFont(Font.font("System", 13));
+
+        // Close button (✕) gets permanent red background so it is always visible
+        boolean isCloseBtn = characterSymbolSign.equals("✕");
+
+        if (isCloseBtn) {
+            btn.setStyle(
+                    "-fx-background-color: #c0392b; -fx-text-fill: white; " +
+                            "-fx-background-radius: 0; -fx-font-weight: bold;"
+            );
+            btn.setOnMouseEntered(e -> btn.setStyle(
+                    "-fx-background-color: #e53e3e; -fx-text-fill: white; " +
+                            "-fx-background-radius: 0; -fx-font-weight: bold;"
+            ));
+            btn.setOnMouseExited(e -> btn.setStyle(
+                    "-fx-background-color: #c0392b; -fx-text-fill: white; " +
+                            "-fx-background-radius: 0; -fx-font-weight: bold;"
+            ));
+        } else {
+            btn.setStyle(
+                    "-fx-background-color: transparent; -fx-text-fill: white; " +
+                            "-fx-background-radius: 0;"
+            );
+            btn.setOnMouseEntered(e -> btn.setStyle(
+                    "-fx-background-color: " + primaryHoverColorHexVal + "; " +
+                            "-fx-text-fill: white; -fx-background-radius: 0;"
+            ));
+            btn.setOnMouseExited(e -> btn.setStyle(
+                    "-fx-background-color: transparent; -fx-text-fill: white; " +
+                            "-fx-background-radius: 0;"
+            ));
+        }
+
+        return btn;
     }
 
     public static void main(String[] args) {
