@@ -142,7 +142,7 @@ public class MenuController {
     public static Parent getRoot() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    MenuController.class.getResource("/com/restaurant/restaurant/menu/menu.fxml")
+                    MenuController.class.getResource("/fxml/menu.fxml")
             );
             return loader.load();
         } catch (Exception e) {
