@@ -1,0 +1,74 @@
+/* ROOT BACKGROUND */
+.root {
+    -fx-background-color: #0B0F19;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* CARDS / PANELS */
+.vbox, .hbox, .pane {
+    -fx-background-color: #161D30;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+/* LABELS */
+.label {
+    -fx-text-fill: white;
+}
+
+/* TITLE */
+.title {
+    -fx-text-fill: #FF4A85;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* BUTTON DEFAULT */
+.button {
+    -fx-background-color: #FF4A85;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+}
+
+/* ADD / CONFIRM BUTTON */
+.button-green {
+    -fx-background-color: #00E676;
+    -fx-text-fill: black;
+}
+
+/* DELETE BUTTON */
+.button-danger {
+    -fx-background-color: #FF3333;
+    -fx-text-fill: white;
+}
+
+/* TEXTFIELDS */
+.text-field {
+    -fx-background-color: #0B0F19;
+    -fx-text-fill: white;
+    -fx-border-color: #FF4A85;
+    -fx-border-radius: 5;
+}
+
+/* TABLE */
+.table-view {
+    -fx-background-color: #161D30;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #161D30;
+}
+
+.table-view .column-header, 
+.table-view .filler {
+    -fx-background-color: #161D30;
+}
+
+.table-view .cell {
+    -fx-text-fill: white;
+}
+
+/* CHECKBOX */
+.check-box {
+    -fx-text-fill: white;
+}/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */

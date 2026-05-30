@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.restaurant.restaurant.menu.MenuController"
+            style="-fx-background-color: #0B0F19;">
+
+    <!-- TOP: Search Bar -->
+    <top>
+        <HBox spacing="10" style="-fx-padding: 15; -fx-background-color: #161D30;">
+            <TextField fx:id="searchField"
+                       promptText="Search food item..."
+                       style="-fx-background-color: #0B0F19; -fx-text-fill: #F0F0F0; -fx-prompt-text-fill: #888; -fx-border-color: #FF4A85; -fx-border-radius: 5; -fx-padding: 8;"
+                       HBox.hgrow="ALWAYS"/>
+            <Button text="Search"
+                    onAction="#handleSearch"
+                    style="-fx-background-color: #FF4A85; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-border-radius: 5;"/>
+            <ComboBox fx:id="categoryCombo"
+                      promptText="Filter by Category"
+                      style="-fx-background-color: #0B0F19; -fx-text-fill: #F0F0F0;"/>
+        </HBox>
+    </top>
+
+    <!-- CENTER: Table -->
+    <center>
+        <TableView fx:id="menuTable"
+                   style="-fx-background-color: #161D30; -fx-padding: 10;"
+                   BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colName" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="colCategory" text="Category" prefWidth="150"/>
+                <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
+                <TableColumn fx:id="colAvailable" text="Available" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- RIGHT: Form -->
+    <right>
+        <VBox spacing="12"
+              style="-fx-background-color: #161D30; -fx-padding: 20; -fx-min-width: 250;">
+
+            <Label text="Menu Management"
+                   style="-fx-text-fill: #FF4A85; -fx-font-size: 16; -fx-font-weight: bold;"/>
+
+            <Label text="Item Name" style="-fx-text-fill: #F0F0F0;"/>
+            <TextField fx:id="nameField"
+                       promptText="Enter item name"
+                       style="-fx-background-color: #0B0F19; -fx-text-fill: #F0F0F0; -fx-border-color: #00E676; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+            <Label text="Category" style="-fx-text-fill: #F0F0F0;"/>
+            <ComboBox fx:id="categoryCombo"
+                      promptText="Select category"
+                      maxWidth="Infinity"
+                      style="-fx-background-color: #0B0F19;"/>
+
+            <Label text="Price" style="-fx-text-fill: #F0F0F0;"/>
+            <TextField fx:id="priceField"
+                       promptText="Enter price"
+                       style="-fx-background-color: #0B0F19; -fx-text-fill: #F0F0F0; -fx-border-color: #00E676; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+            <CheckBox fx:id="availableCheck"
+                      text="Available"
+                      style="-fx-text-fill: #F0F0F0;"/>
+
+            <Button text="Add Item"
+                    onAction="#handleAdd"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #00E676; -fx-text-fill: #0B0F19; -fx-font-weight: bold; -fx-padding: 10; -fx-border-radius: 5;"/>
+
+            <Button text="Update Item"
+                    onAction="#handleUpdate"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #FF4A85; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-border-radius: 5;"/>
+
+            <Button text="Delete Item"
+                    onAction="#handleDelete"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #FF3333; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-border-radius: 5;"/>
+        </VBox>
+    </right>
+
+</BorderPane>
