@@ -1,3 +1,5 @@
+// The menu controller
+
 package com.restaurant.restaurant.menu;
 
 import javafx.collections.FXCollections;
