@@ -1,5 +1,5 @@
 
-package ordering;
+package com.restaurant.restaurant.ordering;
 
 import java.util.ArrayList;
 

@@ -1,5 +1,5 @@
 
-package ordering;
+package com.restaurant.restaurant.ordering;
 
 public class OrderItem {
     private String name;

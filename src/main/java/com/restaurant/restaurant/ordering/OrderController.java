@@ -1,5 +1,5 @@
 
-package ordering;
+package com.restaurant.restaurant.ordering;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
