@@ -1,4 +1,4 @@
-package billing;
+package com.restaurant.restaurant.billing;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

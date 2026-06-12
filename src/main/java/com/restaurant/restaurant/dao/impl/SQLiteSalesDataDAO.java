@@ -1,17 +1,19 @@
-package com.restaurant.dao.impl;
+package com.restaurant.restaurant.dao.impl;
 
-import com.restaurant.dao.SalesDataDAO;
-import com.restaurant.model.SalesData;
-import database.SQLiteDatabaseConnection;
+import com.restaurant.restaurant.dao.SalesDataDAO;
+import com.restaurant.restaurant.model.SalesData;
+import com.restaurant.restaurant.database.DBConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.restaurant.restaurant.database.DBConnection;
+
 
 public class SQLiteSalesDataDAO implements SalesDataDAO {
-    private final Connection connection = SQLiteDatabaseConnection.getInstance().getConnection();
+    private final Connection connection = DBConnection.getConnection();
 
     @Override
     public SalesData getTodaysSalesData() {

@@ -1,5 +1,4 @@
-package com.restaurant.model;
-
+package com.restaurant.restaurant.model;
 import java.util.List;
 
 public class OrderDetail {

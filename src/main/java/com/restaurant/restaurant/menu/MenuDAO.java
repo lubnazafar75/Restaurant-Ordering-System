@@ -6,8 +6,8 @@ import java.util.List;
 
 public class MenuDAO {
 
-    private static final String URL = "jdbc:sqlite:database/restaurant.db";
-
+    private static final String URL = "jdbc:sqlite:" +
+            MenuDAO.class.getClassLoader().getResource("database/restaurant.db").getPath();
     private Connection getConnection() throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");

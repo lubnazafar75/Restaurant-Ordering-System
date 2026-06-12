@@ -5,10 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.restaurant.restaurant.App;
 import com.restaurant.restaurant.StaffDashboard;
@@ -40,9 +37,10 @@ public class SceneManager {
         register(NavigationUtil.CUSTOMER_HOME,
                 NavigationUtil.buildPlaceholderRoot("Customer Workspace Root", NavigationUtil.CUSTOMER_HOME));
 
+
         // ✅ Customer Menu — order.fxml integrated
         try {
-            Parent orderRoot = FXMLLoader.load(SceneManager.class.getResource("/fxml/order.fxml"));
+            Parent orderRoot = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/order.fxml")));
             register(NavigationUtil.CUSTOMER_MENU, orderRoot);
         } catch (IOException e) {
             System.err.println("[SceneManager] Failed to load order.fxml: " + e.getMessage());
@@ -52,20 +50,35 @@ public class SceneManager {
 
         // ✅ Admin Menu — menu.fxml integrated
         try {
-            Parent menuRoot = FXMLLoader.load(SceneManager.class.getResource("/fxml/menu.fxml"));
+            Parent menuRoot = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/menu.fxml")));
             register(NavigationUtil.ADMIN_MENU, menuRoot);
         } catch (IOException e) {
             System.err.println("[SceneManager] Failed to load menu.fxml: " + e.getMessage());
             register(NavigationUtil.ADMIN_MENU,
                     NavigationUtil.buildPlaceholderRoot("Admin Menu", NavigationUtil.ADMIN_MENU));
         }
+// ✅ Order Tracking — tracking.fxml
+        try {
+            Parent trackingRoot = FXMLLoader.load(SceneManager.class.getResource("/fxml/tracking.fxml"));
+            register(NavigationUtil.ORDER_TRACKING, trackingRoot);
+        } catch (IOException e) {
+            System.err.println("[SceneManager] Failed to load tracking.fxml: " + e.getMessage());
+            register(NavigationUtil.ORDER_TRACKING,
+                    NavigationUtil.buildPlaceholderRoot("Real-Time Order Tracking", NavigationUtil.ORDER_TRACKING));
+        }
+        // ✅ Billing & Receipt — billing.fxml
+        try {
+            Parent billingRoot = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(
+                    "/com/restaurant/restaurant/billing/billing.fxml")));
+            register(NavigationUtil.CUSTOMER_RECEIPT, billingRoot);
+        } catch (IOException e) {
+            System.err.println("[SceneManager] Failed to load billing.fxml: " + e.getMessage());
+            register(NavigationUtil.CUSTOMER_RECEIPT,
+                    NavigationUtil.buildPlaceholderRoot("Your Digital Bill Receipt", NavigationUtil.CUSTOMER_RECEIPT));
+        }
 
         // ✅ Remaining placeholders
-        register(NavigationUtil.ORDER_TRACKING,
-                NavigationUtil.buildPlaceholderRoot("Real-Time Order Tracking", NavigationUtil.ORDER_TRACKING));
 
-        register(NavigationUtil.CUSTOMER_RECEIPT,
-                NavigationUtil.buildPlaceholderRoot("Your Digital Bill Receipt", NavigationUtil.CUSTOMER_RECEIPT));
 
         register(NavigationUtil.STAFF_LOGIN,
                 NavigationUtil.buildPlaceholderRoot("Staff Authorization Access Gate", NavigationUtil.STAFF_LOGIN));

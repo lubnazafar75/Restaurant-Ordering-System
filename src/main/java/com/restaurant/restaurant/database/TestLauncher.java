@@ -1,8 +1,8 @@
-package database;
+package com.restaurant.restaurant.database;
 
-import com.restaurant.dao.*;
-import com.restaurant.dao.impl.*;
-import com.restaurant.model.*;
+import com.restaurant.restaurant.dao.*;
+import com.restaurant.restaurant.dao.impl.*;
+import com.restaurant.restaurant.model.*;
 import java.util.List;
 import java.util.Optional;
 

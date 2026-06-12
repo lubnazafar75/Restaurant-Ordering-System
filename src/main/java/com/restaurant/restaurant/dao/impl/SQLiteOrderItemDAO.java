@@ -1,8 +1,8 @@
-package com.restaurant.dao.impl;
+package com.restaurant.restaurant.dao.impl;
 
-import com.restaurant.dao.OrderItemDAO;
-import com.restaurant.model.OrderItem;
-import database.SQLiteDatabaseConnection;
+import com.restaurant.restaurant.dao.OrderItemDAO;
+import com.restaurant.restaurant.model.OrderItem;
+import com.restaurant.restaurant.database.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SQLiteOrderItemDAO implements OrderItemDAO {
-    private final Connection connection = SQLiteDatabaseConnection.getInstance().getConnection();
+    private final Connection connection =  DBConnection.getConnection();
 
     @Override
     public OrderItem addItemToOrder(OrderItem item) {

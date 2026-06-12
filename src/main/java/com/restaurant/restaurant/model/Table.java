@@ -1,4 +1,4 @@
-package com.restaurant.model;
+package com.restaurant.restaurant.model;
 
 public class Table {
     private int tableId;

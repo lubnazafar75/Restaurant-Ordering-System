@@ -1,12 +1,13 @@
-package database;
+package com.restaurant.restaurant.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
 public class DBConnection {
     // Matches your official relative path: database/restaurant.db
-    private static final String URL = "jdbc:sqlite:database/restaurant.db";
+    private static final String URL = "jdbc:sqlite::resource:database/restaurant.db";
     private static Connection connection = null;
 
     private DBConnection() {}

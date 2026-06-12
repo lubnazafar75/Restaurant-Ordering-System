@@ -1,5 +1,4 @@
-package com.restaurant.model;
-
+package com.restaurant.restaurant.model;
 public class Order {
     private int orderId;
     private int tableId;

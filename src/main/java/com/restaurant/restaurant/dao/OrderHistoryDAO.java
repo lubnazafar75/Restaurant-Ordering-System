@@ -1,6 +1,5 @@
-package com.restaurant.dao;
-
-import com.restaurant.model.OrderHistory;
+package com.restaurant.restaurant.dao;
+import com.restaurant.restaurant.model.OrderHistory;
 import java.util.List;
 import java.util.Optional;
 

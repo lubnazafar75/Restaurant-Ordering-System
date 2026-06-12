@@ -1,5 +1,4 @@
-package billing;
-
+package com.restaurant.restaurant.billing;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

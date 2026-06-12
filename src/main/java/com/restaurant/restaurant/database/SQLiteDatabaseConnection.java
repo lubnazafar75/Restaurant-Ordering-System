@@ -1,4 +1,4 @@
-package database;
+package com.restaurant.restaurant.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ public class SQLiteDatabaseConnection implements DatabaseConnection {
     // The single instance of our connection coordinator (Singleton Pattern)
     private static SQLiteDatabaseConnection instance;
     private Connection connection;
-    private final String URL = "jdbc:sqlite:database/restaurant.db";
+    private final String URL = "jdbc:sqlite::resource:database/restaurant.db";
 
     // Private constructor prevents other classes from making copies
     private SQLiteDatabaseConnection() {

@@ -1,4 +1,4 @@
-package database;
+package com.restaurant.restaurant.database;
 
 /**
  * DatabaseConnection - Connection pool and initialization

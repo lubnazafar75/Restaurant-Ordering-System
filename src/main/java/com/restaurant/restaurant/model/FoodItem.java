@@ -1,6 +1,4 @@
-package com.restaurant.model;
-
-public class FoodItem {
+package com.restaurant.restaurant.model;public class FoodItem {
     private int itemId;
     private String name;
     private String category;

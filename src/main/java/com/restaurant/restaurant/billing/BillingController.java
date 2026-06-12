@@ -1,4 +1,4 @@
-package billing;
+package com.restaurant.restaurant.billing;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;

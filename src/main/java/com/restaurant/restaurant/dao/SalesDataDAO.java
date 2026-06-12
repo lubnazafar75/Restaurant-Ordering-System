@@ -1,6 +1,5 @@
-package com.restaurant.dao;
-
-import com.restaurant.model.SalesData;
+package com.restaurant.restaurant.dao;
+import com.restaurant.restaurant.model.SalesData;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,17 +1,14 @@
-package com.restaurant.dao.impl;
-
-import com.restaurant.dao.StaffDAO;
-import com.restaurant.model.Staff;
-import database.SQLiteDatabaseConnection;
-
+package com.restaurant.restaurant.dao.impl;
+import com.restaurant.restaurant.dao.StaffDAO;
+import com.restaurant.restaurant.model.Staff;
+import com.restaurant.restaurant.database.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class SQLiteStaffDAO implements StaffDAO {
-    private final Connection connection = SQLiteDatabaseConnection.getInstance().getConnection();
-
+    private final Connection connection = DBConnection.getConnection();
     @Override
     public Optional<Staff> authenticate(String username, String password) {
         String sql = "SELECT * FROM staff WHERE username = ? AND password = ? AND status = 'active'";

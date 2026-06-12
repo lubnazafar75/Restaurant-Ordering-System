@@ -1,8 +1,8 @@
-package com.restaurant.dao.impl;
+package com.restaurant.restaurant.dao.impl;
 
-import com.restaurant.dao.BillingDAO;
-import com.restaurant.model.Billing;
-import database.SQLiteDatabaseConnection;
+import com.restaurant.restaurant.dao.BillingDAO;
+import com.restaurant.restaurant.model.Billing;
+import com.restaurant.restaurant.database.DBConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SQLiteBillingDAO implements BillingDAO {
-    private final Connection connection = SQLiteDatabaseConnection.getInstance().getConnection();
+    private final Connection connection =  DBConnection.getConnection();
 
     @Override
     public Billing createBilling(Billing billing) {

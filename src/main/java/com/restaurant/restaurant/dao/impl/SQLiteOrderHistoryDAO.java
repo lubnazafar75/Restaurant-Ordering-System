@@ -1,8 +1,8 @@
-package com.restaurant.dao.impl;
+package com.restaurant.restaurant.dao.impl;
 
-import com.restaurant.dao.OrderHistoryDAO;
-import com.restaurant.model.OrderHistory;
-import database.SQLiteDatabaseConnection;
+import com.restaurant.restaurant.dao.OrderHistoryDAO;
+import com.restaurant.restaurant.model.OrderHistory;
+import com.restaurant.restaurant.database.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SQLiteOrderHistoryDAO implements OrderHistoryDAO {
-    private final Connection connection = SQLiteDatabaseConnection.getInstance().getConnection();
+    private final Connection connection =  DBConnection.getConnection();
 
     @Override
     public List<OrderHistory> getCompletedOrders(String date) {

@@ -1,5 +1,4 @@
-package com.restaurant.model;
-
+package com.restaurant.restaurant.model;
 public class Billing {
     private int billingId;
     private int orderId;

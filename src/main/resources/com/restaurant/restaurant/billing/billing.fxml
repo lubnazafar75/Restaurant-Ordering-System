@@ -3,8 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <HBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="billing.BillingController"
-      style="-fx-background-color: #0B0F19;"
+      fx:controller="com.restaurant.restaurant.billing.BillingController"      style="-fx-background-color: #0B0F19;"
       prefWidth="1100" prefHeight="680">
     <VBox prefWidth="300"
           style="-fx-background-color: #0D1220;
