@@ -1,4 +1,3 @@
-
 package com.restaurant.restaurant.ordering;
 
 public class OrderItem {
@@ -15,8 +14,11 @@ public class OrderItem {
     public String getName() { return name; }
     public double getPrice() { return price; }
     public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public double getSubtotal() {
-        return price * quantity;
-    }
+    // ADD THESE TWO:
+    public void incrementQuantity() { this.quantity++; }
+    public void decrementQuantity() { if (this.quantity > 1) this.quantity--; }
+
+    public double getSubtotal() { return price * quantity; }
 }
