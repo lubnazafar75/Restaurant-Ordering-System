@@ -21,6 +21,7 @@ public class NavigationUtil {
     public static final String CUSTOMER_HOME    = "CUSTOMER_HOME";
     public static final String CUSTOMER_MENU    = "CUSTOMER_MENU";
     public static final String ORDER_TRACKING   = "ORDER_TRACKING";
+    public static final String CUSTOMER_TRACKING = "CUSTOMER_TRACKING";
     public static final String CUSTOMER_RECEIPT = "CUSTOMER_RECEIPT";
 
     public static final String STAFF_LOGIN      = "STAFF_LOGIN";

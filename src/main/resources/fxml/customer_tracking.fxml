@@ -4,13 +4,11 @@
 <?import javafx.geometry.Insets?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.restaurant.restaurant.tracking.TrackingController"
+           fx:controller="com.restaurant.restaurant.tracking.CustomerTrackingController"
            style="-fx-background-color: #0B0F19;">
 
-    <!-- ═══════════════════════════════════════════════════ -->
-    <!-- SCREEN 1: TRACKING VIEW                            -->
-    <!-- ═══════════════════════════════════════════════════ -->
-    <VBox fx:id="trackingScreen" alignment="TOP_CENTER" spacing="0"
+    <!-- SCREEN 1: TRACKING VIEW -->
+    <VBox fx:id="trackingScreen" alignment="TOP_CENTER"
           style="-fx-background-color: #0B0F19;">
 
         <!-- Header -->
@@ -26,8 +24,7 @@
                               -fx-font-weight: bold;"/>
                 <Label fx:id="orderInfoLabel"
                        text="Tracking your order..."
-                       style="-fx-text-fill: #a0aec0;
-                              -fx-font-size: 13px;"/>
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 13px;"/>
             </VBox>
             <Button text="← Back to Menu"
                     onAction="#handleBackToMenu"
@@ -42,9 +39,9 @@
         </HBox>
 
         <!-- Main Content -->
-        <VBox alignment="TOP_CENTER" spacing="32"
+        <VBox alignment="TOP_CENTER" spacing="24"
               VBox.vgrow="ALWAYS"
-              style="-fx-padding: 40 60;">
+              style="-fx-padding: 32 60;">
 
             <!-- Status Card -->
             <VBox alignment="CENTER" spacing="8"
@@ -57,18 +54,17 @@
                 <Label fx:id="statusEmojiLabel" text="⏳"
                        style="-fx-font-size: 48px;"/>
                 <Label fx:id="currentStatusLabel" text="Order Received"
-                       style="-fx-text-fill: #00E676;
+                       style="-fx-text-fill: #a0aec0;
                               -fx-font-size: 22px;
                               -fx-font-weight: bold;"/>
                 <Label fx:id="statusDescLabel"
                        text="Your order has been received and will be prepared shortly."
-                       style="-fx-text-fill: #a0aec0;
-                              -fx-font-size: 13px;"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 13px;"
                        wrapText="true"/>
             </VBox>
 
             <!-- Progress Steps -->
-            <VBox fx:id="progressContainer" spacing="0"
+            <VBox spacing="0"
                   style="-fx-background-color: #161D30;
                          -fx-background-radius: 16;
                          -fx-border-color: #2A3350;
@@ -82,142 +78,112 @@
                               -fx-font-weight: bold;
                               -fx-padding: 0 0 16 0;"/>
 
-                <!-- Step 1: Pending -->
-                <HBox fx:id="step1Row" spacing="16" alignment="CENTER_LEFT"
+                <!-- Step 1 -->
+                <HBox spacing="16" alignment="CENTER_LEFT"
                       style="-fx-padding: 12 0;">
-                    <StackPane>
-                        <Label fx:id="step1Circle" text="1"
-                               style="-fx-background-color: #00E676;
-                                      -fx-text-fill: #0B0F19;
-                                      -fx-font-weight: bold;
-                                      -fx-font-size: 13px;
-                                      -fx-background-radius: 50;
-                                      -fx-min-width: 36;
-                                      -fx-min-height: 36;
-                                      -fx-alignment: center;"/>
-                    </StackPane>
+                    <Label fx:id="step1Circle" text="1"
+                           style="-fx-background-color: #FF4A85;
+                                  -fx-text-fill: white;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 13px;
+                                  -fx-background-radius: 50;
+                                  -fx-min-width: 36; -fx-min-height: 36;
+                                  -fx-alignment: center;"/>
                     <VBox spacing="2" HBox.hgrow="ALWAYS">
                         <Label text="Order Received"
                                style="-fx-text-fill: white;
                                       -fx-font-size: 14px;
                                       -fx-font-weight: bold;"/>
                         <Label text="Your order has been placed successfully"
-                               style="-fx-text-fill: #a0aec0;
-                                      -fx-font-size: 12px;"/>
+                               style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;"/>
                     </VBox>
                     <Label fx:id="step1Check" text="✓"
-                           style="-fx-text-fill: #00E676;
-                                  -fx-font-size: 18px;
-                                  -fx-font-weight: bold;"/>
+                           style="-fx-text-fill: #2A3350; -fx-font-size: 18px;"/>
                 </HBox>
 
-                <!-- Connector Line 1 -->
-                <HBox>
-                    <Region prefWidth="18"/>
+                <HBox><Region prefWidth="18"/>
                     <Region prefWidth="2" prefHeight="20"
-                            style="-fx-background-color: #2A3350;"/>
-                </HBox>
+                            style="-fx-background-color: #2A3350;"/></HBox>
 
-                <!-- Step 2: Preparing -->
-                <HBox fx:id="step2Row" spacing="16" alignment="CENTER_LEFT"
+                <!-- Step 2 -->
+                <HBox spacing="16" alignment="CENTER_LEFT"
                       style="-fx-padding: 12 0;">
-                    <StackPane>
-                        <Label fx:id="step2Circle" text="2"
-                               style="-fx-background-color: #2A3350;
-                                      -fx-text-fill: #4a5568;
-                                      -fx-font-weight: bold;
-                                      -fx-font-size: 13px;
-                                      -fx-background-radius: 50;
-                                      -fx-min-width: 36;
-                                      -fx-min-height: 36;
-                                      -fx-alignment: center;"/>
-                    </StackPane>
+                    <Label fx:id="step2Circle" text="2"
+                           style="-fx-background-color: #2A3350;
+                                  -fx-text-fill: #4a5568;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 13px;
+                                  -fx-background-radius: 50;
+                                  -fx-min-width: 36; -fx-min-height: 36;
+                                  -fx-alignment: center;"/>
                     <VBox spacing="2" HBox.hgrow="ALWAYS">
-                        <Label fx:id="step2Title" text="Being Prepared"
+                        <Label text="Being Prepared"
                                style="-fx-text-fill: #4a5568;
                                       -fx-font-size: 14px;
                                       -fx-font-weight: bold;"/>
                         <Label text="Our chefs are preparing your meal"
-                               style="-fx-text-fill: #4a5568;
-                                      -fx-font-size: 12px;"/>
+                               style="-fx-text-fill: #4a5568; -fx-font-size: 12px;"/>
                     </VBox>
                     <Label fx:id="step2Check" text="✓"
-                           style="-fx-text-fill: #2A3350;
-                                  -fx-font-size: 18px;"/>
+                           style="-fx-text-fill: #2A3350; -fx-font-size: 18px;"/>
                 </HBox>
 
-                <!-- Connector Line 2 -->
-                <HBox>
-                    <Region prefWidth="18"/>
+                <HBox><Region prefWidth="18"/>
                     <Region prefWidth="2" prefHeight="20"
-                            style="-fx-background-color: #2A3350;"/>
-                </HBox>
+                            style="-fx-background-color: #2A3350;"/></HBox>
 
-                <!-- Step 3: Ready -->
-                <HBox fx:id="step3Row" spacing="16" alignment="CENTER_LEFT"
+                <!-- Step 3 -->
+                <HBox spacing="16" alignment="CENTER_LEFT"
                       style="-fx-padding: 12 0;">
-                    <StackPane>
-                        <Label fx:id="step3Circle" text="3"
-                               style="-fx-background-color: #2A3350;
-                                      -fx-text-fill: #4a5568;
-                                      -fx-font-weight: bold;
-                                      -fx-font-size: 13px;
-                                      -fx-background-radius: 50;
-                                      -fx-min-width: 36;
-                                      -fx-min-height: 36;
-                                      -fx-alignment: center;"/>
-                    </StackPane>
+                    <Label fx:id="step3Circle" text="3"
+                           style="-fx-background-color: #2A3350;
+                                  -fx-text-fill: #4a5568;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 13px;
+                                  -fx-background-radius: 50;
+                                  -fx-min-width: 36; -fx-min-height: 36;
+                                  -fx-alignment: center;"/>
                     <VBox spacing="2" HBox.hgrow="ALWAYS">
-                        <Label fx:id="step3Title" text="Ready for Delivery"
+                        <Label text="Ready for Delivery"
                                style="-fx-text-fill: #4a5568;
                                       -fx-font-size: 14px;
                                       -fx-font-weight: bold;"/>
                         <Label text="Your order is ready and on its way"
-                               style="-fx-text-fill: #4a5568;
-                                      -fx-font-size: 12px;"/>
+                               style="-fx-text-fill: #4a5568; -fx-font-size: 12px;"/>
                     </VBox>
                     <Label fx:id="step3Check" text="✓"
-                           style="-fx-text-fill: #2A3350;
-                                  -fx-font-size: 18px;"/>
+                           style="-fx-text-fill: #2A3350; -fx-font-size: 18px;"/>
                 </HBox>
 
-                <!-- Connector Line 3 -->
-                <HBox>
-                    <Region prefWidth="18"/>
+                <HBox><Region prefWidth="18"/>
                     <Region prefWidth="2" prefHeight="20"
-                            style="-fx-background-color: #2A3350;"/>
-                </HBox>
+                            style="-fx-background-color: #2A3350;"/></HBox>
 
-                <!-- Step 4: Delivered -->
-                <HBox fx:id="step4Row" spacing="16" alignment="CENTER_LEFT"
+                <!-- Step 4 -->
+                <HBox spacing="16" alignment="CENTER_LEFT"
                       style="-fx-padding: 12 0;">
-                    <StackPane>
-                        <Label fx:id="step4Circle" text="4"
-                               style="-fx-background-color: #2A3350;
-                                      -fx-text-fill: #4a5568;
-                                      -fx-font-weight: bold;
-                                      -fx-font-size: 13px;
-                                      -fx-background-radius: 50;
-                                      -fx-min-width: 36;
-                                      -fx-min-height: 36;
-                                      -fx-alignment: center;"/>
-                    </StackPane>
+                    <Label fx:id="step4Circle" text="4"
+                           style="-fx-background-color: #2A3350;
+                                  -fx-text-fill: #4a5568;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 13px;
+                                  -fx-background-radius: 50;
+                                  -fx-min-width: 36; -fx-min-height: 36;
+                                  -fx-alignment: center;"/>
                     <VBox spacing="2" HBox.hgrow="ALWAYS">
-                        <Label fx:id="step4Title" text="Delivered"
+                        <Label text="Delivered"
                                style="-fx-text-fill: #4a5568;
                                       -fx-font-size: 14px;
                                       -fx-font-weight: bold;"/>
                         <Label text="Enjoy your meal!"
-                               style="-fx-text-fill: #4a5568;
-                                      -fx-font-size: 12px;"/>
+                               style="-fx-text-fill: #4a5568; -fx-font-size: 12px;"/>
                     </VBox>
                     <Label fx:id="step4Check" text="✓"
-                           style="-fx-text-fill: #2A3350;
-                                  -fx-font-size: 18px;"/>
+                           style="-fx-text-fill: #2A3350; -fx-font-size: 18px;"/>
                 </HBox>
             </VBox>
 
-            <!-- Food Received Button — shown when READY -->
+            <!-- Food Received Button -->
             <Button fx:id="foodReceivedBtn"
                     text="✅ Food Received"
                     onAction="#handleFoodReceived"
@@ -230,27 +196,20 @@
                            -fx-background-radius: 12;
                            -fx-padding: 16;
                            -fx-cursor: hand;"/>
-
         </VBox>
     </VBox>
 
-    <!-- ═══════════════════════════════════════════════════ -->
-    <!-- SCREEN 2: FOOD RECEIVED CONFIRMATION               -->
-    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- SCREEN 2: FOOD RECEIVED -->
     <VBox fx:id="receivedScreen" visible="false" managed="false"
           alignment="CENTER" spacing="20"
           style="-fx-background-color: #0B0F19;">
-
-        <Label text="🎉"
-               style="-fx-font-size: 72px;"/>
+        <Label text="🎉" style="-fx-font-size: 72px;"/>
         <Label text="Enjoy Your Meal!"
                style="-fx-text-fill: #00E676;
                       -fx-font-size: 32px;
                       -fx-font-weight: bold;"/>
-        <Label text="Thank you for dining with us at QuickServe!"
-               style="-fx-text-fill: #a0aec0;
-                      -fx-font-size: 15px;"/>
-
+        <Label text="Thank you for dining with us!"
+               style="-fx-text-fill: #a0aec0; -fx-font-size: 15px;"/>
         <VBox spacing="12" maxWidth="360" alignment="CENTER"
               style="-fx-padding: 20 0 0 0;">
             <Button text="🧾 Request Receipt"
@@ -276,5 +235,65 @@
                            -fx-cursor: hand;"/>
         </VBox>
     </VBox>
+    <!-- Customer Bottom Navigation Bar -->
+    <VBox alignment="BOTTOM_CENTER"
+          style="-fx-background-color: transparent;"
+          pickOnBounds="false">
+        <HBox alignment="CENTER" spacing="0"
+              style="-fx-background-color: #0D1220;
+                 -fx-border-color: #1E2740;
+                 -fx-border-width: 1 0 0 0;
+                 -fx-padding: 0;">
 
+            <!-- Menu -->
+            <VBox alignment="CENTER" spacing="4" prefWidth="200" prefHeight="64"
+                  style="-fx-cursor: hand; -fx-padding: 10;"
+                  onMouseClicked="#handleNavMenu">
+                <Label text="🍔" style="-fx-font-size: 20px;"/>
+                <Label text="Menu"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- Track Order -->
+            <VBox alignment="CENTER" spacing="4" prefWidth="200" prefHeight="64"
+                  style="-fx-cursor: hand;
+                     -fx-padding: 10;
+                     -fx-border-color: #FF4A85;
+                     -fx-border-width: 0 0 3 0;">
+                <Label text="📍" style="-fx-font-size: 20px;"/>
+                <Label text="Track Order"
+                       style="-fx-text-fill: #FF4A85;
+                          -fx-font-size: 11px;
+                          -fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- Bill -->
+            <VBox alignment="CENTER" spacing="4" prefWidth="200" prefHeight="64"
+                  style="-fx-cursor: hand; -fx-padding: 10;"
+                  onMouseClicked="#handleNavBill">
+                <Label text="🧾" style="-fx-font-size: 20px;"/>
+                <Label text="My Bill"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- Rate Us -->
+            <VBox alignment="CENTER" spacing="4" prefWidth="200" prefHeight="64"
+                  style="-fx-cursor: hand; -fx-padding: 10;"
+                  onMouseClicked="#handleNavRate">
+                <Label text="⭐" style="-fx-font-size: 20px;"/>
+                <Label text="Rate Us"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 11px;"/>
+            </VBox>
+
+            <!-- Help -->
+            <VBox alignment="CENTER" spacing="4" prefWidth="200" prefHeight="64"
+                  style="-fx-cursor: hand; -fx-padding: 10;"
+                  onMouseClicked="#handleNavHelp">
+                <Label text="💬" style="-fx-font-size: 20px;"/>
+                <Label text="Help"
+                       style="-fx-text-fill: #a0aec0; -fx-font-size: 11px;"/>
+            </VBox>
+
+        </HBox>
+    </VBox>
 </StackPane>

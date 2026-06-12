@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import com.restaurant.restaurant.navigation.SceneManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -756,7 +757,10 @@ public class BillingController {
             panelToShow.setManaged(true);
         }
     }
-
+    @FXML
+    public void handleOrderMore() {
+        SceneManager.navigateToMenu();
+    }
     private void navigateToHome() {
         // Replace with: SceneManager.navigateTo("home");
         System.out.println("Navigating to home screen...");

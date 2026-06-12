@@ -285,7 +285,14 @@ public class OrderController {
         if (lower.contains("roll")) return "🥟";
         return "🍽";
     }
-
+    // Add this new public method:
+    public void showMenuDirectly() {
+        if (tableNumber > 0) {
+            showScreen(menuScreen);
+        } else {
+            showScreen(tableEntryScreen);
+        }
+    }
     // ─── CART ────────────────────────────────────────────────
     private void addToCart(String name, double price) {
         // Check if item already in cart — increase quantity
@@ -417,7 +424,7 @@ public class OrderController {
 
     @FXML
     public void handleTrackOrder() {
-        SceneManager.navigateTo(NavigationUtil.ORDER_TRACKING);
+        SceneManager.navigateTo(NavigationUtil.CUSTOMER_TRACKING);
     }
 
     @FXML
