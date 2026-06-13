@@ -87,30 +87,30 @@ public class SceneManager {
                             "Customer Order Tracking", NavigationUtil.CUSTOMER_TRACKING));
         }
 
-        // ✅ Customer Receipt — customer_receipt.fxml (simple thank you + request screen)
+        // ✅ Customer Receipt — customer_billing.fxml (simple thank you + request screen)
         try {
             Parent customerReceiptRoot = FXMLLoader.load(Objects.requireNonNull(
-                    SceneManager.class.getResource("/fxml/customer_receipt.fxml")));
-            register(NavigationUtil.CUSTOMER_RECEIPT, customerReceiptRoot);
+                    SceneManager.class.getResource("/fxml/customer_billing.fxml")));
+            register(NavigationUtil.customer_billing, customerReceiptRoot);
         } catch (IOException e) {
-            System.err.println("[SceneManager] Failed to load customer_receipt.fxml: "
+            System.err.println("[SceneManager] Failed to load customer_billing.fxml: "
                     + e.getMessage());
-            register(NavigationUtil.CUSTOMER_RECEIPT,
+            register(NavigationUtil.customer_billing,
                     NavigationUtil.buildPlaceholderRoot(
-                            "Your Digital Bill Receipt", NavigationUtil.CUSTOMER_RECEIPT));
+                            "Your Digital Bill Receipt", NavigationUtil.customer_billing));
         }
 
-        // ✅ Staff Billing — billing.fxml (uses CUSTOMER_RECEIPT_STAFF key)
+        // ✅ Staff Billing — billing.fxml (uses customer_billing_STAFF key)
         try {
             Parent billingRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource(
-                            "/com/restaurant/restaurant/billing/billing.fxml")));
-            register(NavigationUtil.CUSTOMER_RECEIPT_STAFF, billingRoot);
+                            "/fxml/billing.fxml")));
+            register(NavigationUtil.customer_billing_STAFF, billingRoot);
         } catch (IOException e) {
             System.err.println("[SceneManager] Failed to load billing.fxml: " + e.getMessage());
-            register(NavigationUtil.CUSTOMER_RECEIPT_STAFF,
+            register(NavigationUtil.customer_billing_STAFF,
                     NavigationUtil.buildPlaceholderRoot(
-                            "Billing Management", NavigationUtil.CUSTOMER_RECEIPT_STAFF));
+                            "Billing Management", NavigationUtil.customer_billing_STAFF));
         }
 
         // ✅ Staff Login
@@ -175,7 +175,7 @@ public class SceneManager {
                 || sceneKey.equals(NavigationUtil.CUSTOMER_HOME)
                 || sceneKey.equals(NavigationUtil.CUSTOMER_MENU)
                 || sceneKey.equals(NavigationUtil.CUSTOMER_TRACKING)
-                || sceneKey.equals(NavigationUtil.CUSTOMER_RECEIPT)
+                || sceneKey.equals(NavigationUtil.customer_billing)
                 || sceneKey.equals(NavigationUtil.ORDER_TRACKING)
                 || sceneKey.equals(NavigationUtil.STAFF_LOGIN)) {
             App.setSidebarVisibility(false);
@@ -184,12 +184,12 @@ public class SceneManager {
         }
 
         // Reload customer receipt fresh each visit so order data is current
-        if (sceneKey.equals(NavigationUtil.CUSTOMER_RECEIPT)) {
+        if (sceneKey.equals(NavigationUtil.customer_billing)) {
             try {
                 FXMLLoader loader = new FXMLLoader(
-                        SceneManager.class.getResource("/fxml/customer_receipt.fxml"));
+                        SceneManager.class.getResource("/fxml/customer_billing.fxml"));
                 Parent freshRoot = loader.load();
-                screenRegistry.put(NavigationUtil.CUSTOMER_RECEIPT, freshRoot);
+                screenRegistry.put(NavigationUtil.customer_billing, freshRoot);
                 if (currentSceneKey != null &&
                         !currentSceneKey.equals(sceneKey)) {
                     history.push(currentSceneKey);
@@ -198,7 +198,7 @@ public class SceneManager {
                 innerContentArea.getChildren().setAll(freshRoot);
                 return;
             } catch (IOException e) {
-                System.err.println("Could not reload customer_receipt: "
+                System.err.println("Could not reload customer_billing: "
                         + e.getMessage());
             }
         }

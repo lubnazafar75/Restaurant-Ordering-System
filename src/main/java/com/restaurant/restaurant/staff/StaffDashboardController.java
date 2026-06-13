@@ -10,9 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
 
@@ -62,7 +59,7 @@ public class StaffDashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource(
-                            "/com/restaurant/restaurant/billing/billing.fxml"));
+                            "/fxml/billing.fxml"));
             Parent billingRoot = loader.load();
             contentArea.getChildren().setAll(billingRoot);
             System.out.println("[Dashboard] Billing loaded successfully");

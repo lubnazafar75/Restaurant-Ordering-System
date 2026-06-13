@@ -50,7 +50,7 @@ public class StaffDashboard {
 
                 // ── [INTEGRATION NODE: BILLING MODULE DASHBOARD CARD] ────────────────────────────────────
                 // Added a dedicated card to allow managers to jump straight to the billing/receipts module.
-                buildInteractiveDashboardCardComponent("🧾", "Billing & Auditing", "Review consumer receipts, invoices, and sales data.", "#00E676", NavigationUtil.CUSTOMER_RECEIPT)
+                buildInteractiveDashboardCardComponent("🧾", "Billing & Auditing", "Review consumer receipts, invoices, and sales data.", "#00E676", NavigationUtil.customer_billing)
         );
 
         VBox rootMainLayoutBlock = new VBox(headerAreaContainerPanel, modularControlCardsGridDeck);

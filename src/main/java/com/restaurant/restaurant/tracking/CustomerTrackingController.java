@@ -112,7 +112,7 @@ public class CustomerTrackingController {
 
     @FXML
     public void handleRequestReceipt() {
-        SceneManager.navigateTo(NavigationUtil.CUSTOMER_RECEIPT);
+        SceneManager.navigateTo(NavigationUtil.customer_billing);
     }
 
     @FXML
@@ -134,7 +134,7 @@ public class CustomerTrackingController {
 
     @FXML
     public void handleNavBill() {
-        SceneManager.navigateTo(NavigationUtil.CUSTOMER_RECEIPT);
+        SceneManager.navigateTo(NavigationUtil.customer_billing);
     }
 
     @FXML

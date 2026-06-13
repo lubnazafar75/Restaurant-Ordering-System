@@ -87,6 +87,8 @@ public class App extends Application {
 
         // Boot and link SceneManager systems up live to content area contexts
         SceneManager.initialize(stage, contentViewportPane);
+        // Initialize database schema and seed data on first run
+        com.restaurant.restaurant.database.DatabaseInitializer.initializeDatabase();
         SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
     }
 
@@ -179,7 +181,7 @@ public class App extends Application {
                 // ── [INTEGRATION NODE: BILLING & RECEIPTS LINK] ──────────────────────────────────────────
                 // Injected the tracking key route so you can jump to Eunice's billing layouts directly from the sidebar.
                 createSidebarNavigationButton("🧾", "Billing & Receipts",
-                        NavigationUtil.CUSTOMER_RECEIPT_STAFF)        );
+                        NavigationUtil.customer_billing_STAFF)        );
 
         Region layoutVerticalSpacer = new Region();
         VBox.setVgrow(layoutVerticalSpacer, Priority.ALWAYS);
