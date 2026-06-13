@@ -178,8 +178,8 @@ public class App extends Application {
 
                 // ── [INTEGRATION NODE: BILLING & RECEIPTS LINK] ──────────────────────────────────────────
                 // Injected the tracking key route so you can jump to Eunice's billing layouts directly from the sidebar.
-                createSidebarNavigationButton("🧾", "Billing & Receipts", NavigationUtil.CUSTOMER_RECEIPT)
-        );
+                createSidebarNavigationButton("🧾", "Billing & Receipts",
+                        NavigationUtil.CUSTOMER_RECEIPT_STAFF)        );
 
         Region layoutVerticalSpacer = new Region();
         VBox.setVgrow(layoutVerticalSpacer, Priority.ALWAYS);

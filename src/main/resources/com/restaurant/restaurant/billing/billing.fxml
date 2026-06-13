@@ -3,8 +3,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <HBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.restaurant.restaurant.billing.BillingController"      style="-fx-background-color: #0B0F19;"
-      prefWidth="1100" prefHeight="680">
+      fx:controller="com.restaurant.restaurant.billing.BillingController"     style="-fx-background-color: #0B0F19;"
+      prefWidth="1100" prefHeight="680"><!-- ADD this as first child inside the left VBox (prefWidth="300") -->
+    <HBox style="-fx-padding: 10 12 0 12;">
+        <Button text="← Back"
+                onAction="#handleBack"
+                style="-fx-background-color: transparent;
+                   -fx-text-fill: #a0aec0;
+                   -fx-font-size: 12px;
+                   -fx-border-color: #2A3350;
+                   -fx-border-radius: 6;
+                   -fx-background-radius: 6;
+                   -fx-padding: 6 12;
+                   -fx-cursor: hand;"/>
+    </HBox>
     <VBox prefWidth="300"
           style="-fx-background-color: #0D1220;
                  -fx-border-color: #1E2740;

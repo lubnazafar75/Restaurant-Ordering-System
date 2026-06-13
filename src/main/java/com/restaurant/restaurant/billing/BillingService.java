@@ -20,10 +20,19 @@ public class BillingService {
     // When Esther's DBConnection.java is ready, you can swap this out.
     // For now this lets you work and test independently.
     // ---------------------------------------------------------------
-    private static final String DB_URL = "jdbc:sqlite:restaurant.db";
-
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
+        try {
+            var resource = BillingService.class.getClassLoader()
+                    .getResource("database/restaurant.db");
+            if (resource != null) {
+                String url = "jdbc:sqlite:" +
+                        java.nio.file.Paths.get(resource.toURI()).toString();
+                return DriverManager.getConnection(url);
+            }
+        } catch (Exception e) {
+            System.err.println("BillingService DB path error: " + e.getMessage());
+        }
+        return DriverManager.getConnection("jdbc:sqlite:src/main/resources/database/restaurant.db");
     }
 
 

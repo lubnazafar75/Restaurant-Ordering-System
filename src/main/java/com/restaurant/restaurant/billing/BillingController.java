@@ -86,15 +86,29 @@ public class BillingController {
     // ---------------------------------------------------------------
     @FXML
     public void initialize() {
+        // Staff billing view
         if (orderListView != null) {
             setupOrderList();
         }
+        // Customer receipt view
         if (enjoyMealPanel != null) {
             showEnjoyMealScreen();
             playEnjoyMealAnimations();
+        }// Hide panels that don't exist in current view safely
+        if (receiptDetailPanel != null) {
+            receiptDetailPanel.setVisible(false);
+            receiptDetailPanel.setManaged(false);
+        }
+        if (cashPanel != null) {
+            cashPanel.setVisible(false);
+            cashPanel.setManaged(false);
         }
     }
-
+    @FXML
+    public void handleBack() {
+        com.restaurant.restaurant.navigation.SceneManager.navigateTo(
+                com.restaurant.restaurant.navigation.NavigationUtil.STAFF_DASHBOARD);
+    }
 
     // ---------------------------------------------------------------
     // WAITER SCREEN — Order List Setup

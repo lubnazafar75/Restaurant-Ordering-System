@@ -10,9 +10,6 @@ import java.util.*;
 import com.restaurant.restaurant.App;
 import com.restaurant.restaurant.StaffDashboard;
 
-/**
- * Central View Routing Orchestrator.
- */
 public class SceneManager {
 
     private static Stage primaryStage;
@@ -90,7 +87,7 @@ public class SceneManager {
                             "Customer Order Tracking", NavigationUtil.CUSTOMER_TRACKING));
         }
 
-        // ✅ Customer Billing — customer_billing.fxml
+        // ✅ Customer Receipt — customer_receipt.fxml (simple thank you + request screen)
         try {
             Parent customerReceiptRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/customer_receipt.fxml")));
@@ -103,17 +100,17 @@ public class SceneManager {
                             "Your Digital Bill Receipt", NavigationUtil.CUSTOMER_RECEIPT));
         }
 
-        // ✅ Staff Billing — billing.fxml
+        // ✅ Staff Billing — billing.fxml (uses CUSTOMER_RECEIPT_STAFF key)
         try {
             Parent billingRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource(
                             "/com/restaurant/restaurant/billing/billing.fxml")));
-            register(NavigationUtil.CUSTOMER_RECEIPT, billingRoot);
+            register(NavigationUtil.CUSTOMER_RECEIPT_STAFF, billingRoot);
         } catch (IOException e) {
             System.err.println("[SceneManager] Failed to load billing.fxml: " + e.getMessage());
-            register(NavigationUtil.CUSTOMER_RECEIPT,
+            register(NavigationUtil.CUSTOMER_RECEIPT_STAFF,
                     NavigationUtil.buildPlaceholderRoot(
-                            "Billing Management",NavigationUtil.CUSTOMER_RECEIPT));
+                            "Billing Management", NavigationUtil.CUSTOMER_RECEIPT_STAFF));
         }
 
         // ✅ Staff Login
@@ -122,14 +119,13 @@ public class SceneManager {
                     SceneManager.class.getResource("/fxml/login.fxml")));
             register(NavigationUtil.STAFF_LOGIN, loginRoot);
         } catch (IOException e) {
-            System.err.println("[SceneManager] Failed to load login.fxml: "
-                    + e.getMessage());
+            System.err.println("[SceneManager] Failed to load login.fxml: " + e.getMessage());
             register(NavigationUtil.STAFF_LOGIN,
                     NavigationUtil.buildPlaceholderRoot(
                             "Staff Login", NavigationUtil.STAFF_LOGIN));
         }
-        // ✅ Staff Dashboard
 
+        // ✅ Staff Dashboard
         try {
             Parent staffDashRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/staff_dashboard.fxml")));
@@ -139,10 +135,12 @@ public class SceneManager {
                     + e.getMessage());
             register(NavigationUtil.STAFF_DASHBOARD, StaffDashboard.getRoot());
         }
+
         // ✅ Order Checking
         register(NavigationUtil.ORDER_CHECKING,
                 NavigationUtil.buildPlaceholderRoot(
-                        "Hostess Order Intake Checking Panel", NavigationUtil.ORDER_CHECKING));
+                        "Hostess Order Intake Checking Panel",
+                        NavigationUtil.ORDER_CHECKING));
 
         // ✅ Kitchen
         register(NavigationUtil.KITCHEN,
@@ -158,7 +156,8 @@ public class SceneManager {
         // ✅ Admin Sales
         register(NavigationUtil.ADMIN_SALES,
                 NavigationUtil.buildPlaceholderRoot(
-                        "Managerial System: Revenue Analytics", NavigationUtil.ADMIN_SALES));
+                        "Managerial System: Revenue Analytics",
+                        NavigationUtil.ADMIN_SALES));
     }
 
     public static void register(String key, Parent root) {
@@ -167,7 +166,7 @@ public class SceneManager {
 
     public static void navigateTo(String sceneKey) {
         if (!screenRegistry.containsKey(sceneKey)) {
-            System.err.println("[SceneManager] Execution Error: Route not found -> " + sceneKey);
+            System.err.println("[SceneManager] Route not found -> " + sceneKey);
             return;
         }
 
@@ -182,6 +181,26 @@ public class SceneManager {
             App.setSidebarVisibility(false);
         } else {
             App.setSidebarVisibility(true);
+        }
+
+        // Reload customer receipt fresh each visit so order data is current
+        if (sceneKey.equals(NavigationUtil.CUSTOMER_RECEIPT)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        SceneManager.class.getResource("/fxml/customer_receipt.fxml"));
+                Parent freshRoot = loader.load();
+                screenRegistry.put(NavigationUtil.CUSTOMER_RECEIPT, freshRoot);
+                if (currentSceneKey != null &&
+                        !currentSceneKey.equals(sceneKey)) {
+                    history.push(currentSceneKey);
+                }
+                currentSceneKey = sceneKey;
+                innerContentArea.getChildren().setAll(freshRoot);
+                return;
+            } catch (IOException e) {
+                System.err.println("Could not reload customer_receipt: "
+                        + e.getMessage());
+            }
         }
 
         if (currentSceneKey != null && !currentSceneKey.equals(sceneKey)) {

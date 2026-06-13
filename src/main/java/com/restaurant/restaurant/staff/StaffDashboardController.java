@@ -60,13 +60,18 @@ public class StaffDashboardController {
     @FXML public void showBilling() {
         setActive(btnBilling);
         try {
-            Parent billingRoot = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                     getClass().getResource(
                             "/com/restaurant/restaurant/billing/billing.fxml"));
+            Parent billingRoot = loader.load();
             contentArea.getChildren().setAll(billingRoot);
-        } catch (IOException e) {
+            System.out.println("[Dashboard] Billing loaded successfully");
+        } catch (Exception e) {
+            System.err.println("[Dashboard] Billing load error: " + e.getMessage());
+            e.printStackTrace();
             contentArea.getChildren().setAll(
-                    buildPlaceholder("🧾 Billing", "Billing module loading..."));
+                    buildPlaceholder("🧾 Billing",
+                            "Error: " + e.getMessage()));
         }
     }
 

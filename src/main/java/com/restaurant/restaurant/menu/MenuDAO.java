@@ -6,15 +6,24 @@ import java.util.List;
 
 public class MenuDAO {
 
-    private static final String URL = "jdbc:sqlite:" +
-            MenuDAO.class.getClassLoader().getResource("database/restaurant.db").getPath();
-    private Connection getConnection() throws SQLException {
+
+    private static String getDbUrl() {
         try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            var resource = MenuDAO.class.getClassLoader()
+                    .getResource("database/restaurant.db");
+            if (resource != null) {
+                return "jdbc:sqlite:" +
+                        java.nio.file.Paths.get(resource.toURI()).toString();
+            }
+        } catch (Exception e) {
+            System.err.println("MenuDAO DB path error: " + e.getMessage());
         }
-        return DriverManager.getConnection(URL);
+        return "jdbc:sqlite:src/main/resources/database/restaurant.db";
+    }
+    private Connection getConnection() throws SQLException {
+        try { Class.forName("org.sqlite.JDBC"); }
+        catch (ClassNotFoundException e) { e.printStackTrace(); }
+        return DriverManager.getConnection(getDbUrl());
     }
 
     public List<FoodItem> getAllItems() {

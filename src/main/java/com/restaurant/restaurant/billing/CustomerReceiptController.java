@@ -29,14 +29,24 @@ public class CustomerReceiptController {
         currentTotal = total;
     }
 
+
+
+    // TO:
     @FXML
     public void initialize() {
-        orderNumberLabel.setText("Order #: " + currentOrderId);
-        tableNumberLabel.setText("Table  : " +
-                String.format("%02d", currentTable));
-        totalAmountLabel.setText("Total  : GHS " +
-                String.format("%.2f", currentTotal));
+        refreshDisplay();
         showScreen(thankYouScreen);
+    }
+
+    private void refreshDisplay() {
+        if (orderNumberLabel != null)
+            orderNumberLabel.setText("Order #: " + currentOrderId);
+        if (tableNumberLabel != null)
+            tableNumberLabel.setText("Table  : " +
+                    String.format("%02d", currentTable));
+        if (totalAmountLabel != null)
+            totalAmountLabel.setText("Total  : GHS " +
+                    String.format("%.2f", currentTotal));
     }
 
     @FXML

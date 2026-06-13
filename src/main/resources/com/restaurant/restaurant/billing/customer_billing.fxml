@@ -5,8 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.restaurant.restaurant.billing.BillingController"
-           prefWidth="750" prefHeight="700"
+           fx:controller="com.restaurant.restaurant.billing.BillingController"           prefWidth="750" prefHeight="700"
            style="-fx-background-color: #0B0F19;">
 
     <!-- ═══════════════════════════════════════════

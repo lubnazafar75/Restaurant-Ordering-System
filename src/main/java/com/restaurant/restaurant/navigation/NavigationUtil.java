@@ -23,7 +23,7 @@ public class NavigationUtil {
     public static final String ORDER_TRACKING   = "ORDER_TRACKING";
     public static final String CUSTOMER_TRACKING = "CUSTOMER_TRACKING";
     public static final String CUSTOMER_RECEIPT = "CUSTOMER_RECEIPT";
-
+    public static final String CUSTOMER_RECEIPT_STAFF = "CUSTOMER_RECEIPT_STAFF";
     public static final String STAFF_LOGIN      = "STAFF_LOGIN";
     public static final String STAFF_DASHBOARD  = "STAFF_DASHBOARD";
     public static final String KITCHEN          = "KITCHEN";
