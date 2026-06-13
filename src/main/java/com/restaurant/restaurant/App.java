@@ -45,6 +45,7 @@ public class App extends Application {
         // Hides sidebar component on boot initialization sequences
         globalLeftSidebarContainer.setVisible(false);
         globalLeftSidebarContainer.setManaged(false);
+        globalLeftSidebarContainer.setPrefWidth(0);
 
         // Core view central workspace viewport block styled in primary Deep Night Blue (#0B0F19)
         StackPane contentViewportPane = new StackPane();
@@ -52,8 +53,8 @@ public class App extends Application {
         HBox.setHgrow(contentViewportPane, Priority.ALWAYS);
 
         // Joins structural side drawers and center viewport panes together horizontally
-        HBox workBodyLayoutFrame = new HBox(globalLeftSidebarContainer, contentViewportPane);
-        VBox.setVgrow(workBodyLayoutFrame, Priority.ALWAYS);
+// Removed globalLeftSidebarContainer - dashboard has its own sidebar
+        HBox workBodyLayoutFrame = new HBox(contentViewportPane);        VBox.setVgrow(workBodyLayoutFrame, Priority.ALWAYS);
 
         // Root container vertically matching custom title rows and inner layout body grids
         VBox layoutContainerRoot = new VBox(titleBar, workBodyLayoutFrame);
@@ -93,9 +94,10 @@ public class App extends Application {
      * Public visibility tracking control method managed dynamically by your SceneManager routing framework.
      */
     public static void setSidebarVisibility(boolean visibleState) {
+        // ALWAYS keep sidebar hidden - dashboard has its own sidebar
         if (globalLeftSidebarContainer != null) {
-            globalLeftSidebarContainer.setVisible(visibleState);
-            globalLeftSidebarContainer.setManaged(visibleState);
+            globalLeftSidebarContainer.setVisible(false);
+            globalLeftSidebarContainer.setManaged(false);
         }
     }
 
