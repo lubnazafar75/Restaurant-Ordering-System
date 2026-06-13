@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.restaurant.restaurant.billing.CustomerReceiptController"
+           style="-fx-background-color: #0B0F19;">
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 1 — THANK YOU / ORDER SUMMARY
+         ═══════════════════════════════════════════ -->
+    <VBox fx:id="thankYouScreen" alignment="TOP_CENTER"
+          style="-fx-background-color: #0B0F19;">
+
+        <!-- Header -->
+        <HBox style="-fx-padding: 16 20;
+                     -fx-border-color: #161D30;
+                     -fx-border-width: 0 0 1 0;">
+            <Button text="← Back"
+                    onAction="#handleBack"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #a0aec0;
+                           -fx-font-size: 13px;
+                           -fx-border-color: #2A3350;
+                           -fx-border-radius: 8;
+                           -fx-background-radius: 8;
+                           -fx-padding: 8 16;
+                           -fx-cursor: hand;"/>
+        </HBox>
+
+        <!-- Content -->
+        <VBox alignment="CENTER" spacing="24" VBox.vgrow="ALWAYS"
+              style="-fx-padding: 40 60;">
+
+            <!-- Green check circle -->
+            <StackPane maxWidth="100" maxHeight="100"
+                       minWidth="100" minHeight="100">
+                <VBox prefWidth="100" prefHeight="100"
+                      style="-fx-background-color: #00261A;
+                             -fx-background-radius: 50;
+                             -fx-border-color: #00E676;
+                             -fx-border-radius: 50;
+                             -fx-border-width: 3;"/>
+                <Label text="✓"
+                       style="-fx-text-fill: #00E676;
+                              -fx-font-size: 48px;
+                              -fx-font-weight: bold;"/>
+            </StackPane>
+
+            <!-- Title -->
+            <VBox alignment="CENTER" spacing="6">
+                <Label text="Thank You For Dining"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 26px;
+                              -fx-font-weight: bold;"/>
+                <Label text="At QuickServe"
+                       style="-fx-text-fill: #00E676;
+                              -fx-font-size: 26px;
+                              -fx-font-weight: bold;"/>
+                <Label text="Your order has been successfully delivered and completed."
+                       style="-fx-text-fill: #a0aec0;
+                              -fx-font-size: 14px;"
+                       wrapText="true"/>
+            </VBox>
+
+            <!-- Order Details Card -->
+            <VBox spacing="12" maxWidth="380"
+                  style="-fx-background-color: #161D30;
+                         -fx-background-radius: 16;
+                         -fx-border-color: #2A3350;
+                         -fx-border-radius: 16;
+                         -fx-border-width: 1;
+                         -fx-padding: 24 28;">
+
+                <Label text="ORDER DETAILS"
+                       style="-fx-text-fill: #4a5568;
+                              -fx-font-size: 11px;
+                              -fx-font-weight: bold;"/>
+
+                <Separator style="-fx-background-color: #2A3350;"/>
+
+                <Label fx:id="orderNumberLabel"
+                       text="Order #: ORD-1045"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 15px;
+                              -fx-font-family: monospace;"/>
+                <Label fx:id="tableNumberLabel"
+                       text="Table  : 05"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 15px;
+                              -fx-font-family: monospace;"/>
+                <Separator style="-fx-background-color: #2A3350;"/>
+                <Label fx:id="totalAmountLabel"
+                       text="Total  : GHS 0.00"
+                       style="-fx-text-fill: #00E676;
+                              -fx-font-size: 18px;
+                              -fx-font-weight: bold;
+                              -fx-font-family: monospace;"/>
+            </VBox>
+
+            <!-- Request Receipt Button -->
+            <Button text="🧾 Request Receipt"
+                    onAction="#handleRequestReceipt"
+                    maxWidth="380"
+                    style="-fx-background-color: #FF4A85;
+                           -fx-text-fill: white;
+                           -fx-font-size: 15px;
+                           -fx-font-weight: bold;
+                           -fx-background-radius: 12;
+                           -fx-padding: 16;
+                           -fx-cursor: hand;"/>
+
+            <!-- Back to Menu -->
+            <Button text="🍽 Order More"
+                    onAction="#handleBack"
+                    maxWidth="380"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #a0aec0;
+                           -fx-font-size: 14px;
+                           -fx-border-color: #2A3350;
+                           -fx-border-radius: 12;
+                           -fx-background-radius: 12;
+                           -fx-padding: 12;
+                           -fx-cursor: hand;"/>
+        </VBox>
+    </VBox>
+
+    <!-- ═══════════════════════════════════════════
+         SCREEN 2 — RECEIPT REQUESTED CONFIRMATION
+         ═══════════════════════════════════════════ -->
+    <VBox fx:id="receiptRequestedScreen"
+          visible="false" managed="false"
+          alignment="CENTER" spacing="24"
+          style="-fx-background-color: #0B0F19; -fx-padding: 40 60;">
+
+        <!-- Green check -->
+        <StackPane maxWidth="100" maxHeight="100"
+                   minWidth="100" minHeight="100">
+            <VBox prefWidth="100" prefHeight="100"
+                  style="-fx-background-color: #00261A;
+                         -fx-background-radius: 50;
+                         -fx-border-color: #00E676;
+                         -fx-border-radius: 50;
+                         -fx-border-width: 3;"/>
+            <Label text="✓"
+                   style="-fx-text-fill: #00E676;
+                          -fx-font-size: 48px;
+                          -fx-font-weight: bold;"/>
+        </StackPane>
+
+        <Label text="Receipt Requested"
+               style="-fx-text-fill: #00E676;
+                      -fx-font-size: 28px;
+                      -fx-font-weight: bold;"/>
+
+        <VBox alignment="CENTER" spacing="8" maxWidth="380"
+              style="-fx-background-color: #161D30;
+                     -fx-background-radius: 16;
+                     -fx-border-color: #2A3350;
+                     -fx-border-radius: 16;
+                     -fx-border-width: 1;
+                     -fx-padding: 24 28;">
+            <Label text="A staff member has been notified."
+                   style="-fx-text-fill: white;
+                          -fx-font-size: 15px;
+                          -fx-font-weight: bold;"
+                   wrapText="true"/>
+            <Label text="Please wait while your receipt is being prepared."
+                   style="-fx-text-fill: #a0aec0;
+                          -fx-font-size: 13px;"
+                   wrapText="true"/>
+        </VBox>
+
+        <Button text="⭐ Rate Your Experience"
+                onAction="#handleRateExperience"
+                maxWidth="380"
+                style="-fx-background-color: #F59E0B;
+                       -fx-text-fill: #0B0F19;
+                       -fx-font-size: 15px;
+                       -fx-font-weight: bold;
+                       -fx-background-radius: 12;
+                       -fx-padding: 16;
+                       -fx-cursor: hand;"/>
+
+        <Button text="🍽 Order More"
+                onAction="#handleBack"
+                maxWidth="380"
+                style="-fx-background-color: transparent;
+                       -fx-text-fill: #a0aec0;
+                       -fx-font-size: 14px;
+                       -fx-border-color: #2A3350;
+                       -fx-border-radius: 12;
+                       -fx-background-radius: 12;
+                       -fx-padding: 12;
+                       -fx-cursor: hand;"/>
+    </VBox>
+
+</StackPane>

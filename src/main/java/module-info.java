@@ -14,6 +14,8 @@ module com.restaurant.demo {
     opens com.restaurant.restaurant.dao.impl to javafx.fxml;
     opens com.restaurant.restaurant.model to javafx.fxml;
     opens com.restaurant.restaurant.database to javafx.fxml;
+    opens com.restaurant.restaurant.login to javafx.fxml;
+    opens com.restaurant.restaurant.staff to javafx.fxml;
 
     exports com.restaurant.restaurant;
     exports com.restaurant.restaurant.menu;
@@ -21,4 +23,6 @@ module com.restaurant.demo {
     exports com.restaurant.restaurant.ordering;
     exports com.restaurant.restaurant.tracking;
     exports com.restaurant.restaurant.billing;
+    exports com.restaurant.restaurant.login;
+
 }

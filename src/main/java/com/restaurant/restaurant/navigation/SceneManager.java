@@ -92,12 +92,11 @@ public class SceneManager {
 
         // ✅ Customer Billing — customer_billing.fxml
         try {
-            Parent customerBillingRoot = FXMLLoader.load(Objects.requireNonNull(
-                    SceneManager.class.getResource(
-                            "/com/restaurant/restaurant/billing/customer_billing.fxml")));
-            register(NavigationUtil.CUSTOMER_RECEIPT, customerBillingRoot);
+            Parent customerReceiptRoot = FXMLLoader.load(Objects.requireNonNull(
+                    SceneManager.class.getResource("/fxml/customer_receipt.fxml")));
+            register(NavigationUtil.CUSTOMER_RECEIPT, customerReceiptRoot);
         } catch (IOException e) {
-            System.err.println("[SceneManager] Failed to load customer_billing.fxml: "
+            System.err.println("[SceneManager] Failed to load customer_receipt.fxml: "
                     + e.getMessage());
             register(NavigationUtil.CUSTOMER_RECEIPT,
                     NavigationUtil.buildPlaceholderRoot(
@@ -118,13 +117,28 @@ public class SceneManager {
         }
 
         // ✅ Staff Login
-        register(NavigationUtil.STAFF_LOGIN,
-                NavigationUtil.buildPlaceholderRoot(
-                        "Staff Authorization Access Gate", NavigationUtil.STAFF_LOGIN));
-
+        try {
+            Parent loginRoot = FXMLLoader.load(Objects.requireNonNull(
+                    SceneManager.class.getResource("/fxml/login.fxml")));
+            register(NavigationUtil.STAFF_LOGIN, loginRoot);
+        } catch (IOException e) {
+            System.err.println("[SceneManager] Failed to load login.fxml: "
+                    + e.getMessage());
+            register(NavigationUtil.STAFF_LOGIN,
+                    NavigationUtil.buildPlaceholderRoot(
+                            "Staff Login", NavigationUtil.STAFF_LOGIN));
+        }
         // ✅ Staff Dashboard
-        register(NavigationUtil.STAFF_DASHBOARD, StaffDashboard.getRoot());
 
+        try {
+            Parent staffDashRoot = FXMLLoader.load(Objects.requireNonNull(
+                    SceneManager.class.getResource("/fxml/staff_dashboard.fxml")));
+            register(NavigationUtil.STAFF_DASHBOARD, staffDashRoot);
+        } catch (IOException e) {
+            System.err.println("[SceneManager] Failed to load staff_dashboard.fxml: "
+                    + e.getMessage());
+            register(NavigationUtil.STAFF_DASHBOARD, StaffDashboard.getRoot());
+        }
         // ✅ Order Checking
         register(NavigationUtil.ORDER_CHECKING,
                 NavigationUtil.buildPlaceholderRoot(

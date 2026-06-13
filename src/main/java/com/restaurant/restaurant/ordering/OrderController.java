@@ -418,7 +418,9 @@ public class OrderController {
                 "Order placed for Table " + tableNumber +
                         ". Your food is being prepared!");
         orderSummaryLabel.setText(summary.toString());
-
+//  before showScreen(confirmScreen):
+        com.restaurant.restaurant.billing.CustomerReceiptController
+                .setOrderData(tableNumber, "ORD-" + (1000 + tableNumber), total);
         showScreen(confirmScreen);
     }
 
