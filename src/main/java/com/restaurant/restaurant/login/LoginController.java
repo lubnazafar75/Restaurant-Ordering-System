@@ -59,6 +59,7 @@ public class LoginController {
         }
     }
 
+
     private boolean authenticate(String staffId, String password) {
         // Try database first
         try {

@@ -27,169 +27,173 @@
                     styleClass="btn-ghost"/>
         </HBox>
 
-        <!-- Scrollable Main Content -->
-        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
-                    styleClass="scroll-pane">
-            <VBox alignment="TOP_CENTER" spacing="20"
-                  style="-fx-padding: 28 60 110 60;">
+        <!-- Main Content (no scroll needed) -->
+        <VBox alignment="CENTER" spacing="28"
+              VBox.vgrow="ALWAYS"
+              style="-fx-padding: 30 60 90 60;">
 
-                <!-- Status Card -->
-                <VBox alignment="CENTER" spacing="10"
-                      maxWidth="620"
-                      style="-fx-background-color: white;
-                             -fx-background-radius: 20;
-                             -fx-border-color: #D1FAE5;
-                             -fx-border-radius: 20;
-                             -fx-border-width: 2;
-                             -fx-padding: 32 32;
-                             -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.15), 20, 0, 0, 6);">
+            <!-- Status Card -->
+            <VBox alignment="CENTER" spacing="10"
+                  maxWidth="700"
+                  style="-fx-background-color: white;
+                         -fx-background-radius: 20;
+                         -fx-border-color: #D1FAE5;
+                         -fx-border-radius: 20;
+                         -fx-border-width: 2;
+                         -fx-padding: 28 32;
+                         -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.15), 20, 0, 0, 6);">
 
-                    <!-- Icon in soft circle -->
-                    <StackPane>
-                        <VBox prefWidth="92" prefHeight="92"
-                              style="-fx-background-color: #F0FDF4;
-                                     -fx-background-radius: 50;"/>
-                        <Label fx:id="statusEmojiLabel" text="⏳"
-                               style="-fx-font-size: 44px;"/>
-                    </StackPane>
+                <!-- Icon in soft circle -->
+                <StackPane>
+                    <VBox prefWidth="84" prefHeight="84"
+                          style="-fx-background-color: #F0FDF4;
+                                 -fx-background-radius: 50;"/>
+                    <Label fx:id="statusEmojiLabel" text="⏳"
+                           style="-fx-font-size: 40px;"/>
+                </StackPane>
 
-                    <Label fx:id="currentStatusLabel" text="Order Received"
-                           style="-fx-text-fill: #1F2937;
-                                  -fx-font-size: 24px;
-                                  -fx-font-weight: bold;">
-                        <VBox.margin><Insets top="8"/></VBox.margin>
-                    </Label>
+                <Label fx:id="currentStatusLabel" text="Order Received"
+                       style="-fx-text-fill: #1F2937;
+                              -fx-font-size: 24px;
+                              -fx-font-weight: bold;">
+                    <VBox.margin><Insets top="6"/></VBox.margin>
+                </Label>
 
-                    <Label fx:id="statusDescLabel"
-                           text="Your order has been received and will be prepared shortly."
-                           styleClass="label-muted"
-                           wrapText="true"
-                           textAlignment="CENTER"
-                           maxWidth="420"/>
-
-                    <!-- Estimated time hint -->
-                    <HBox alignment="CENTER" spacing="6"
-                          style="-fx-background-color: #FFFBEB;
-                                 -fx-background-radius: 20;
-                                 -fx-padding: 6 16;">
-                        <Label text="⏱"
-                               style="-fx-font-size: 13px;"/>
-                        <Label fx:id="estimatedTimeLabel"
-                               text="Estimated wait: ~15 minutes"
-                               style="-fx-text-fill: #D97706;
-                                      -fx-font-size: 12px;
-                                      -fx-font-weight: bold;"/>
-                    </HBox>
-                </VBox>
-
-                <!-- Progress Steps -->
-                <VBox spacing="0" maxWidth="620"
-                      styleClass="card">
-
-                    <Label text="ORDER PROGRESS"
-                           styleClass="label-caption">
-                        <VBox.margin><Insets bottom="18"/></VBox.margin>
-                    </Label>
-
-                    <!-- Step 1 -->
-                    <HBox spacing="16" alignment="CENTER_LEFT"
-                          style="-fx-padding: 12 0;">
-                        <Label fx:id="step1Circle" text="1"
-                               styleClass="step-circle-active"/>
-                        <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label text="Order Received"
-                                   style="-fx-text-fill: #1F2937;
-                                          -fx-font-size: 14px;
-                                          -fx-font-weight: bold;"/>
-                            <Label text="Your order has been placed successfully"
-                                   styleClass="label-muted" style="-fx-font-size: 12px;"/>
-                        </VBox>
-                        <Label fx:id="step1Check" text="✓"
-                               style="-fx-text-fill: #E5E7EB; -fx-font-size: 18px;"/>
-                    </HBox>
-
-                    <HBox><Region prefWidth="19"/>
-                        <Region prefWidth="2" prefHeight="24"
-                                style="-fx-background-color: #E5E7EB;"/></HBox>
-
-                    <!-- Step 2 -->
-                    <HBox spacing="16" alignment="CENTER_LEFT"
-                          style="-fx-padding: 12 0;">
-                        <Label fx:id="step2Circle" text="2"
-                               styleClass="step-circle-inactive"/>
-                        <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label fx:id="step2Title" text="Being Prepared"
-                                   style="-fx-text-fill: #9CA3AF;
-                                          -fx-font-size: 14px;
-                                          -fx-font-weight: bold;"/>
-                            <Label text="Our chefs are preparing your meal"
-                                   style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;"/>
-                        </VBox>
-                        <Label fx:id="step2Check" text="✓"
-                               style="-fx-text-fill: #E5E7EB; -fx-font-size: 18px;"/>
-                    </HBox>
-
-                    <HBox><Region prefWidth="19"/>
-                        <Region prefWidth="2" prefHeight="24"
-                                style="-fx-background-color: #E5E7EB;"/></HBox>
-
-                    <!-- Step 3 -->
-                    <HBox spacing="16" alignment="CENTER_LEFT"
-                          style="-fx-padding: 12 0;">
-                        <Label fx:id="step3Circle" text="3"
-                               styleClass="step-circle-inactive"/>
-                        <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label fx:id="step3Title" text="Ready for Delivery"
-                                   style="-fx-text-fill: #9CA3AF;
-                                          -fx-font-size: 14px;
-                                          -fx-font-weight: bold;"/>
-                            <Label text="Your order is ready and on its way"
-                                   style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;"/>
-                        </VBox>
-                        <Label fx:id="step3Check" text="✓"
-                               style="-fx-text-fill: #E5E7EB; -fx-font-size: 18px;"/>
-                    </HBox>
-
-                    <HBox><Region prefWidth="19"/>
-                        <Region prefWidth="2" prefHeight="24"
-                                style="-fx-background-color: #E5E7EB;"/></HBox>
-
-                    <!-- Step 4 -->
-                    <HBox spacing="16" alignment="CENTER_LEFT"
-                          style="-fx-padding: 12 0;">
-                        <Label fx:id="step4Circle" text="4"
-                               styleClass="step-circle-inactive"/>
-                        <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label fx:id="step4Title" text="Delivered"
-                                   style="-fx-text-fill: #9CA3AF;
-                                          -fx-font-size: 14px;
-                                          -fx-font-weight: bold;"/>
-                            <Label text="Enjoy your meal!"
-                                   style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;"/>
-                        </VBox>
-                        <Label fx:id="step4Check" text="✓"
-                               style="-fx-text-fill: #E5E7EB; -fx-font-size: 18px;"/>
-                    </HBox>
-                </VBox>
-
-                <!-- Reassurance note -->
-                <Label text="💡 This page updates automatically as our staff process your order."
+                <Label fx:id="statusDescLabel"
+                       text="Your order has been received and will be prepared shortly."
                        styleClass="label-muted"
-                       style="-fx-font-size: 12px;"
                        wrapText="true"
                        textAlignment="CENTER"
-                       maxWidth="500"/>
+                       maxWidth="420"/>
 
-                <!-- Food Received Button -->
-                <Button fx:id="foodReceivedBtn"
-                        text="✅ Food Received"
-                        onAction="#handleFoodReceived"
-                        visible="false" managed="false"
-                        maxWidth="620"
-                        styleClass="btn-primary"
-                        style="-fx-font-size: 16px;"/>
+                <!-- Estimated time hint -->
+                <HBox alignment="CENTER" spacing="6"
+                      style="-fx-background-color: #FFFBEB;
+                             -fx-background-radius: 20;
+                             -fx-padding: 6 16;">
+                    <Label text="⏱"
+                           style="-fx-font-size: 13px;"/>
+                    <Label fx:id="estimatedTimeLabel"
+                           text="Estimated wait: ~15 minutes"
+                           style="-fx-text-fill: #D97706;
+                                  -fx-font-size: 12px;
+                                  -fx-font-weight: bold;"/>
+                </HBox>
             </VBox>
-        </ScrollPane>
+
+            <!-- Horizontal Progress Tracker -->
+            <VBox maxWidth="700" spacing="0"
+                  styleClass="card">
+
+                <Label text="ORDER PROGRESS"
+                       styleClass="label-caption">
+                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                </Label>
+
+                <!-- Progress bar with step circles overlaid -->
+                <StackPane>
+                    <!-- Background track -->
+                    <Region prefHeight="4"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #E5E7EB;
+                                   -fx-background-radius: 2;">
+                        <StackPane.margin><Insets left="22" right="22"/></StackPane.margin>
+                    </Region>
+
+                    <!-- Filled progress -->
+                    <Region fx:id="progressFill"
+                            prefHeight="4"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #10B981;
+                                   -fx-background-radius: 2;">
+                        <StackPane.margin><Insets left="22" right="22"/></StackPane.margin>
+                        <StackPane.alignment>CENTER_LEFT</StackPane.alignment>
+                    </Region>
+
+                    <!-- Step circles -->
+                    <HBox alignment="CENTER" spacing="0"
+                          maxWidth="Infinity">
+                        <Label fx:id="step1Circle" text="✓"
+                               styleClass="step-circle-active"
+                               HBox.hgrow="NEVER"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="step2Circle" text="2"
+                               styleClass="step-circle-inactive"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="step3Circle" text="3"
+                               styleClass="step-circle-inactive"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="step4Circle" text="4"
+                               styleClass="step-circle-inactive"/>
+                    </HBox>
+                </StackPane>
+
+                <!-- Step labels below the bar -->
+                <HBox alignment="TOP_CENTER" spacing="0">
+                    <VBox.margin><Insets top="10"/></VBox.margin>
+
+                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
+                          HBox.hgrow="ALWAYS">
+                        <Label fx:id="step1Title" text="Order Received"
+                               style="-fx-text-fill: #1F2937; -fx-font-size: 12px;
+                                      -fx-font-weight: bold;"
+                               textAlignment="CENTER" wrapText="true"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
+                          HBox.hgrow="ALWAYS">
+                        <Label fx:id="step2Title" text="Being Prepared"
+                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
+                                      -fx-font-weight: bold;"
+                               textAlignment="CENTER" wrapText="true"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
+                          HBox.hgrow="ALWAYS">
+                        <Label fx:id="step3Title" text="Ready for Delivery"
+                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
+                                      -fx-font-weight: bold;"
+                               textAlignment="CENTER" wrapText="true"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
+                          HBox.hgrow="ALWAYS">
+                        <Label fx:id="step4Title" text="Delivered"
+                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
+                                      -fx-font-weight: bold;"
+                               textAlignment="CENTER" wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Current step description -->
+                <Label fx:id="stepDescriptionLabel"
+                       text="Your order has been placed successfully"
+                       styleClass="label-muted"
+                       style="-fx-font-size: 12px;"
+                       textAlignment="CENTER"
+                       wrapText="true"
+                       maxWidth="Infinity">
+                    <VBox.margin><Insets top="16"/></VBox.margin>
+                </Label>
+            </VBox>
+
+            <!-- Reassurance note -->
+            <Label text="💡 This page updates automatically as our staff process your order."
+                   styleClass="label-muted"
+                   style="-fx-font-size: 12px;"
+                   wrapText="true"
+                   textAlignment="CENTER"
+                   maxWidth="500"/>
+
+            <!-- Food Received Button -->
+            <Button fx:id="foodReceivedBtn"
+                    text="✅ Food Received"
+                    onAction="#handleFoodReceived"
+                    visible="false" managed="false"
+                    maxWidth="700"
+                    styleClass="btn-primary"
+                    style="-fx-font-size: 16px;"/>
+        </VBox>
     </VBox>
 
     <!-- SCREEN 2: FOOD RECEIVED -->
@@ -233,7 +237,6 @@
               maxWidth="Infinity"
               styleClass="bottom-nav">
 
-            <!-- Menu -->
             <VBox alignment="CENTER" spacing="4"
                   HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
                   styleClass="bottom-nav-item"
@@ -243,7 +246,6 @@
                        styleClass="label-muted" style="-fx-font-size: 11px;"/>
             </VBox>
 
-            <!-- Track Order (Active) -->
             <VBox alignment="CENTER" spacing="4"
                   HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
                   styleClass="bottom-nav-item, bottom-nav-item-active">
@@ -254,7 +256,6 @@
                               -fx-font-weight: bold;"/>
             </VBox>
 
-            <!-- Bill -->
             <VBox alignment="CENTER" spacing="4"
                   HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
                   styleClass="bottom-nav-item"
@@ -264,7 +265,6 @@
                        styleClass="label-muted" style="-fx-font-size: 11px;"/>
             </VBox>
 
-            <!-- Rate Us -->
             <VBox alignment="CENTER" spacing="4"
                   HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
                   styleClass="bottom-nav-item"
@@ -274,7 +274,6 @@
                        styleClass="label-muted" style="-fx-font-size: 11px;"/>
             </VBox>
 
-            <!-- Help -->
             <VBox alignment="CENTER" spacing="4"
                   HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
                   styleClass="bottom-nav-item"

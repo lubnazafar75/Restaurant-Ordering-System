@@ -568,7 +568,7 @@ public class BillingController {
 
         if (plateIcon != null) {
             ScaleTransition pulse = new ScaleTransition(
-                Duration.seconds(1.8), plateIcon
+                    Duration.seconds(1.8), plateIcon
             );
             pulse.setFromX(1.0); pulse.setToX(1.12);
             pulse.setFromY(1.0); pulse.setToY(1.12);
@@ -581,7 +581,7 @@ public class BillingController {
         if (enjoyMealTitle != null) {
             enjoyMealTitle.setOpacity(0);
             FadeTransition titleFade = new FadeTransition(
-                Duration.seconds(1.5), enjoyMealTitle
+                    Duration.seconds(1.5), enjoyMealTitle
             );
             titleFade.setFromValue(0);
             titleFade.setToValue(1);
@@ -593,14 +593,14 @@ public class BillingController {
             enjoyMealSubtitle.setTranslateY(20);
 
             FadeTransition subFade = new FadeTransition(
-                Duration.seconds(1.2), enjoyMealSubtitle
+                    Duration.seconds(1.2), enjoyMealSubtitle
             );
             subFade.setFromValue(0);
             subFade.setToValue(1);
             subFade.setDelay(Duration.seconds(0.5));
 
             TranslateTransition subSlide = new TranslateTransition(
-                Duration.seconds(1.2), enjoyMealSubtitle
+                    Duration.seconds(1.2), enjoyMealSubtitle
             );
             subSlide.setFromY(20);
             subSlide.setToY(0);
@@ -612,7 +612,7 @@ public class BillingController {
 
         if (showReceiptButton != null) {
             FadeTransition shimmer = new FadeTransition(
-                Duration.seconds(1.2), showReceiptButton
+                    Duration.seconds(1.2), showReceiptButton
             );
             shimmer.setFromValue(0.75);
             shimmer.setToValue(1.0);
@@ -621,33 +621,48 @@ public class BillingController {
             shimmer.setDelay(Duration.seconds(1.5));
             shimmer.play();
 
+            // Light theme hover — green outline, white/soft-green fill
             showReceiptButton.setOnMouseEntered(e ->
-                showReceiptButton.setStyle(
-                    "-fx-background-color: #E7447A;" +
-                    "-fx-text-fill: white;" +
-                    "-fx-font-size: 16px;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-border-color: #FF4A85;" +
-                    "-fx-border-radius: 30;" +
-                    "-fx-background-radius: 30;" +
-                    "-fx-border-width: 3;" +
-                    "-fx-padding: 14 30 14 30;" +
-                    "-fx-cursor: hand;"
-                )
+                    showReceiptButton.setStyle(
+                            "-fx-background-color: #F0FDF4;" +
+                                    "-fx-text-fill: #059669;" +
+                                    "-fx-font-size: 16px;" +
+                                    "-fx-font-weight: bold;" +
+                                    "-fx-border-color: #10B981;" +
+                                    "-fx-border-radius: 30;" +
+                                    "-fx-background-radius: 30;" +
+                                    "-fx-border-width: 2;" +
+                                    "-fx-padding: 14 30 14 30;" +
+                                    "-fx-cursor: hand;"
+                    )
             );
             showReceiptButton.setOnMouseExited(e ->
-                showReceiptButton.setStyle(
-                    "-fx-background-color: transparent;" +
-                    "-fx-text-fill: #FF4A85;" +
-                    "-fx-font-size: 16px;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-border-color: #FF4A85;" +
-                    "-fx-border-radius: 30;" +
-                    "-fx-background-radius: 30;" +
-                    "-fx-border-width: 3;" +
-                    "-fx-padding: 14 30 14 30;" +
-                    "-fx-cursor: hand;"
-                )
+                    showReceiptButton.setStyle(
+                            "-fx-background-color: white;" +
+                                    "-fx-text-fill: #10B981;" +
+                                    "-fx-font-size: 16px;" +
+                                    "-fx-font-weight: bold;" +
+                                    "-fx-border-color: #10B981;" +
+                                    "-fx-border-radius: 30;" +
+                                    "-fx-background-radius: 30;" +
+                                    "-fx-border-width: 2;" +
+                                    "-fx-padding: 14 30 14 30;" +
+                                    "-fx-cursor: hand;"
+                    )
+            );
+
+            // Ensure correct initial style (not waiting for first mouse-exit event)
+            showReceiptButton.setStyle(
+                    "-fx-background-color: white;" +
+                            "-fx-text-fill: #10B981;" +
+                            "-fx-font-size: 16px;" +
+                            "-fx-font-weight: bold;" +
+                            "-fx-border-color: #10B981;" +
+                            "-fx-border-radius: 30;" +
+                            "-fx-background-radius: 30;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-padding: 14 30 14 30;" +
+                            "-fx-cursor: hand;"
             );
         }
     }
@@ -683,16 +698,16 @@ public class BillingController {
     public void handleBackHoverIn() {
         if (backButton == null) return;
         backButton.setStyle(
-            "-fx-background-color: #FF6B9D;" +
-            "-fx-text-fill: white;" +
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-border-color: #FF6B9D;" +
-            "-fx-border-radius: 20;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-width: 2;" +
-            "-fx-cursor: hand;" +
-            "-fx-padding: 8 18 8 18;"
+                "-fx-background-color: #F0FDF4;" +
+                        "-fx-text-fill: #059669;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-border-color: #10B981;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-padding: 8 18 8 18;"
         );
     }
 
@@ -700,19 +715,18 @@ public class BillingController {
     public void handleBackHoverOut() {
         if (backButton == null) return;
         backButton.setStyle(
-            "-fx-background-color: transparent;" +
-            "-fx-text-fill: #FF4A85;" +
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-border-color: #FF4A85;" +
-            "-fx-border-radius: 20;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-width: 2;" +
-            "-fx-cursor: hand;" +
-            "-fx-padding: 8 18 8 18;"
+                "-fx-background-color: white;" +
+                        "-fx-text-fill: #10B981;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-border-color: #10B981;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-width: 2;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-padding: 8 18 8 18;"
         );
     }
-
     // Called by Lubna's SceneManager after waiter confirms payment
     public void showPaymentConfirmed() {
         setCustomerPanel(paymentConfirmedPanel);

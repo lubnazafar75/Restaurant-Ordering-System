@@ -6,19 +6,15 @@
 <HBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.restaurant.restaurant.staff.StaffDashboardController"
       maxWidth="Infinity" maxHeight="Infinity"
-      style="-fx-background-color: #0B0F19;">
+      styleClass="screen-root">
 
     <!-- SIDEBAR -->
-    <VBox prefWidth="220" minWidth="200"
-          style="-fx-background-color: #161D30;
-                 -fx-border-color: #1E2740;
-                 -fx-border-width: 0 1 0 0;">
+    <VBox prefWidth="230" minWidth="210"
+          styleClass="sidebar">
 
         <!-- Logo -->
         <VBox alignment="CENTER" spacing="4"
-              style="-fx-padding: 24 16 20 16;
-                     -fx-border-color: #1E2740;
-                     -fx-border-width: 0 0 1 0;">
+              styleClass="sidebar-logo-area">
             <Label text="🍽" style="-fx-font-size: 32px;"/>
             <Label text="Savoria"
                    style="-fx-text-fill: #10B981; -fx-font-size: 18px;
@@ -29,11 +25,7 @@
         </VBox>
 
         <!-- Staff Profile Card -->
-        <VBox spacing="4"
-              style="-fx-background-color: #0D1220;
-                     -fx-padding: 14 16;
-                     -fx-border-color: #1E2740;
-                     -fx-border-width: 0 0 1 0;">
+        <VBox spacing="4" styleClass="sidebar-profile">
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <StackPane minWidth="38" minHeight="38"
                            maxWidth="38" maxHeight="38">
@@ -51,86 +43,60 @@
                 </VBox>
             </HBox>
             <Label fx:id="staffIdLabel" text="ID: —"
-                   style="-fx-text-fill: #4a5568; -fx-font-size: 10px;"/>
+                   style="-fx-text-fill: #6B7280; -fx-font-size: 10px;"/>
         </VBox>
 
         <!-- Nav Items -->
         <VBox spacing="2" style="-fx-padding: 12 8;">
-            <Label text="MAIN MENU"
-                   style="-fx-text-fill: #4a5568; -fx-font-size: 10px;
-                          -fx-font-weight: bold; -fx-padding: 4 8 8 8;"/>
+            <Label text="MAIN MENU" styleClass="sidebar-section-label"/>
 
             <Button fx:id="btnDashboard" text="📊  Dashboard"
                     onAction="#showDashboard" maxWidth="Infinity"
-                    style="-fx-background-color: #10B981; -fx-text-fill: white;
-                           -fx-font-size: 13px; -fx-alignment: CENTER_LEFT;
-                           -fx-background-radius: 8; -fx-padding: 10 14;
-                           -fx-cursor: hand;"/>
+                    styleClass="btn-nav-active"/>
 
             <Button fx:id="btnOrders" text="📋  Order Management"
                     onAction="#showOrders" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
 
             <Button fx:id="btnKitchen" text="👨‍🍳  Kitchen Monitor"
                     onAction="#showKitchen" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
 
             <Button fx:id="btnBilling" text="🧾  Billing"
                     onAction="#showBilling" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
 
             <Button fx:id="btnMenu" text="🍔  Menu Management"
                     onAction="#showMenuManagement" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
 
-            <Label text="REPORTS"
-                   style="-fx-text-fill: #4a5568; -fx-font-size: 10px;
-                          -fx-font-weight: bold; -fx-padding: 12 8 8 8;"/>
+            <Label text="REPORTS" styleClass="sidebar-section-label">
+                <VBox.margin><Insets top="8"/></VBox.margin>
+            </Label>
 
             <Button fx:id="btnSales" text="📈  Sales Analytics"
                     onAction="#showSales" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
 
             <Button fx:id="btnStaff" text="👥  Staff Management"
                     onAction="#showStaffManagement" maxWidth="Infinity"
-                    style="-fx-background-color: transparent;
-                           -fx-text-fill: #a0aec0; -fx-font-size: 13px;
-                           -fx-alignment: CENTER_LEFT; -fx-background-radius: 8;
-                           -fx-padding: 10 14; -fx-cursor: hand;"/>
+                    styleClass="btn-nav"/>
         </VBox>
 
         <Region VBox.vgrow="ALWAYS"/>
 
         <!-- Logout -->
         <VBox style="-fx-padding: 12 8;
-                     -fx-border-color: #1E2740;
+                     -fx-border-color: #374151;
                      -fx-border-width: 1 0 0 0;">
             <Button text="← Logout" onAction="#handleLogout"
                     maxWidth="Infinity"
-                    style="-fx-background-color: #7F1D1D;
-                           -fx-text-fill: white; -fx-font-size: 13px;
-                           -fx-font-weight: bold; -fx-background-radius: 8;
-                           -fx-padding: 10; -fx-cursor: hand;"/>
+                    styleClass="btn-logout"/>
         </VBox>
     </VBox>
 
     <!-- MAIN CONTENT AREA -->
     <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS"
-               style="-fx-background-color: #0B0F19;"/>
+               styleClass="screen-root"/>
 
 </HBox>

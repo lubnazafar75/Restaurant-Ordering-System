@@ -29,13 +29,52 @@ public class StaffDashboardController {
 
     private Button activeBtn;
 
+    // Style constants for nav buttons (light theme sidebar is dark charcoal)
+    private static final String NAV_INACTIVE =
+            "-fx-background-color: transparent; -fx-text-fill: #D1D5DB; " +
+                    "-fx-font-size: 13px; -fx-alignment: CENTER_LEFT; " +
+                    "-fx-background-radius: 10; -fx-padding: 11 14; -fx-cursor: hand;";
+
+    private static final String NAV_ACTIVE =
+            "-fx-background-color: #10B981; -fx-text-fill: white; " +
+                    "-fx-font-size: 13px; -fx-font-weight: bold; " +
+                    "-fx-alignment: CENTER_LEFT; -fx-background-radius: 10; " +
+                    "-fx-padding: 11 14; -fx-cursor: hand;";
+
     @FXML
     public void initialize() {
         staffNameLabel.setText(LoginController.sessionStaffName);
         staffRoleLabel.setText(LoginController.sessionRole);
         staffIdLabel.setText("ID: " + LoginController.sessionStaffId);
         activeBtn = btnDashboard;
+        applyRoleBasedAccess();
         showDashboard();
+    }
+
+    private void applyRoleBasedAccess() {
+        boolean isAdmin = LoginController.sessionRole.equalsIgnoreCase("Admin");
+
+        if (!isAdmin) {
+            btnMenu.setVisible(false);
+            btnMenu.setManaged(false);
+            btnSales.setVisible(false);
+            btnSales.setManaged(false);
+            btnStaff.setVisible(false);
+            btnStaff.setManaged(false);
+        }
+    }
+
+    private boolean isAdmin() {
+        return LoginController.sessionRole.equalsIgnoreCase("Admin");
+    }
+
+    private void showAccessDenied() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Access Denied");
+        alert.setHeaderText("Restricted Area");
+        alert.setContentText("This section is only available to administrators.");
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        alert.showAndWait();
     }
 
     // ── NAV HANDLERS ─────────────────────────────────────────
@@ -59,7 +98,7 @@ public class StaffDashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource(
-                            "/fxml/billing.fxml"));
+                            "/com/restaurant/restaurant/billing/billing.fxml"));
             Parent billingRoot = loader.load();
             contentArea.getChildren().setAll(billingRoot);
             System.out.println("[Dashboard] Billing loaded successfully");
@@ -73,6 +112,7 @@ public class StaffDashboardController {
     }
 
     @FXML public void showMenuManagement() {
+        if (!isAdmin()) { showAccessDenied(); return; }
         setActive(btnMenu);
         try {
             Parent menuRoot = FXMLLoader.load(
@@ -86,11 +126,13 @@ public class StaffDashboardController {
     }
 
     @FXML public void showSales() {
+        if (!isAdmin()) { showAccessDenied(); return; }
         setActive(btnSales);
         contentArea.getChildren().setAll(buildSalesView());
     }
 
     @FXML public void showStaffManagement() {
+        if (!isAdmin()) { showAccessDenied(); return; }
         setActive(btnStaff);
         contentArea.getChildren().setAll(buildStaffManagementView());
     }
@@ -100,8 +142,7 @@ public class StaffDashboardController {
         confirm.setTitle("Logout");
         confirm.setHeaderText("Are you sure you want to logout?");
         confirm.setContentText("You will be returned to the home screen.");
-        confirm.getDialogPane().setStyle(
-                "-fx-background-color: #161D30;");
+        confirm.getDialogPane().getStyleClass().add("dialog-pane");
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 LoginController.sessionStaffId = "";
@@ -115,17 +156,9 @@ public class StaffDashboardController {
     // ── ACTIVE BUTTON STYLING ─────────────────────────────────
     private void setActive(Button btn) {
         if (activeBtn != null) {
-            activeBtn.setStyle(
-                    "-fx-background-color: transparent; " +
-                            "-fx-text-fill: #a0aec0; -fx-font-size: 13px; " +
-                            "-fx-alignment: CENTER_LEFT; -fx-background-radius: 8; " +
-                            "-fx-padding: 10 14; -fx-cursor: hand;");
+            activeBtn.setStyle(NAV_INACTIVE);
         }
-        btn.setStyle(
-                "-fx-background-color: #10B981; -fx-text-fill: white; " +
-                        "-fx-font-size: 13px; -fx-alignment: CENTER_LEFT; " +
-                        "-fx-background-radius: 8; -fx-padding: 10 14; " +
-                        "-fx-cursor: hand;");
+        btn.setStyle(NAV_ACTIVE);
         activeBtn = btn;
     }
 
@@ -133,12 +166,12 @@ public class StaffDashboardController {
     private Parent buildDashboardView() {
         VBox view = new VBox(24);
         view.setPadding(new Insets(28, 32, 28, 32));
-        view.setStyle("-fx-background-color: #0B0F19;");
+        view.setStyle("-fx-background-color: #F8FAFC;");
 
         // Header
         VBox header = new VBox(4);
         Label title = new Label("Dashboard Overview");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; " +
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
                 "-fx-font-weight: bold;");
         Label subtitle = new Label("Welcome back, " +
                 LoginController.sessionStaffName + " · " +
@@ -158,7 +191,7 @@ public class StaffDashboardController {
         // Recent orders table
         VBox ordersSection = new VBox(12);
         Label ordersTitle = new Label("Recent Orders");
-        ordersTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; " +
+        ordersTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; " +
                 "-fx-font-weight: bold;");
 
         TableView<String[]> table = buildOrdersTable();
@@ -169,29 +202,24 @@ public class StaffDashboardController {
         // Quick actions
         HBox quickActions = new HBox(12);
         Label qaTitle = new Label("Quick Actions");
-        qaTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; " +
+        qaTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; " +
                 "-fx-font-weight: bold;");
 
-        Button viewOrdersBtn = buildActionBtn(
-                "📋 View Orders", "#10B981");
+        Button viewOrdersBtn = buildActionBtn("📋 View Orders", "#10B981");
         viewOrdersBtn.setOnAction(e -> showOrders());
 
-        Button kitchenBtn = buildActionBtn(
-                "👨‍🍳 Kitchen Monitor", "#3B82F6");
+        Button kitchenBtn = buildActionBtn("👨‍🍳 Kitchen Monitor", "#3B82F6");
         kitchenBtn.setOnAction(e -> showKitchen());
 
-        Button billingBtn = buildActionBtn(
-                "🧾 Process Payment", "#F59E0B");
+        Button billingBtn = buildActionBtn("🧾 Process Payment", "#F59E0B");
         billingBtn.setOnAction(e -> showBilling());
 
-        quickActions.getChildren().addAll(
-                viewOrdersBtn, kitchenBtn, billingBtn);
+        quickActions.getChildren().addAll(viewOrdersBtn, kitchenBtn, billingBtn);
 
         VBox qaSection = new VBox(12);
         qaSection.getChildren().addAll(qaTitle, quickActions);
 
-        view.getChildren().addAll(
-                header, stats, ordersSection, qaSection);
+        view.getChildren().addAll(header, stats, ordersSection, qaSection);
         return view;
     }
 
@@ -199,13 +227,9 @@ public class StaffDashboardController {
                                String value, String color) {
         HBox card = new HBox(12);
         card.setAlignment(Pos.CENTER_LEFT);
-        card.setPadding(new Insets(16, 20, 16, 20));
         card.setPrefWidth(200);
         HBox.setHgrow(card, Priority.ALWAYS);
-        card.setStyle("-fx-background-color: #161D30; " +
-                "-fx-background-radius: 12; " +
-                "-fx-border-color: #1E2740; " +
-                "-fx-border-radius: 12; -fx-border-width: 1;");
+        card.getStyleClass().add("stat-card");
 
         StackPane iconBox = new StackPane();
         iconBox.setMinSize(44, 44);
@@ -218,10 +242,9 @@ public class StaffDashboardController {
 
         VBox txt = new VBox(2);
         Label val = new Label(value);
-        val.setStyle("-fx-text-fill: white; -fx-font-size: 26px; " +
-                "-fx-font-weight: bold;");
+        val.getStyleClass().add("stat-value");
         Label lbl = new Label(label);
-        lbl.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
+        lbl.getStyleClass().add("stat-label");
         txt.getChildren().addAll(val, lbl);
 
         card.getChildren().addAll(iconBox, txt);
@@ -230,10 +253,8 @@ public class StaffDashboardController {
 
     private TableView<String[]> buildOrdersTable() {
         TableView<String[]> table = new TableView<>();
-        table.setStyle("-fx-background-color: #161D30; " +
-                "-fx-control-inner-background: #161D30; " +
-                "-fx-table-cell-border-color: #1E2740;");
-        table.setPrefHeight(200);
+        table.getStyleClass().add("table-view");
+        table.setPrefHeight(220);
 
         TableColumn<String[], String> tableCol = new TableColumn<>("Table");
         tableCol.setCellValueFactory(d ->
@@ -243,7 +264,7 @@ public class StaffDashboardController {
         TableColumn<String[], String> itemsCol = new TableColumn<>("Items");
         itemsCol.setCellValueFactory(d ->
                 new javafx.beans.property.SimpleStringProperty(d.getValue()[1]));
-        itemsCol.setPrefWidth(250);
+        itemsCol.setPrefWidth(280);
 
         TableColumn<String[], String> timeCol = new TableColumn<>("Time");
         timeCol.setCellValueFactory(d ->
@@ -257,7 +278,6 @@ public class StaffDashboardController {
 
         table.getColumns().addAll(tableCol, itemsCol, timeCol, statusCol);
 
-        // Sample data
         table.getItems().addAll(
                 new String[]{"Table 3", "Jollof Rice, Chicken", "10:32", "Preparing"},
                 new String[]{"Table 7", "Fried Rice, Juice", "10:45", "Ready"},
@@ -269,12 +289,12 @@ public class StaffDashboardController {
 
     private Button buildActionBtn(String text, String color) {
         Button btn = new Button(text);
-        btn.setPrefHeight(44);
+        btn.setPrefHeight(46);
         HBox.setHgrow(btn, Priority.ALWAYS);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setStyle("-fx-background-color: " + color + "; " +
                 "-fx-text-fill: white; -fx-font-size: 13px; " +
-                "-fx-font-weight: bold; -fx-background-radius: 10; " +
+                "-fx-font-weight: bold; -fx-background-radius: 12; " +
                 "-fx-cursor: hand;");
         return btn;
     }
@@ -283,23 +303,18 @@ public class StaffDashboardController {
     private Parent buildOrdersView() {
         VBox view = new VBox(20);
         view.setPadding(new Insets(28, 32, 28, 32));
-        view.setStyle("-fx-background-color: #0B0F19;");
+        view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("📋 Order Management");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; " +
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
                 "-fx-font-weight: bold;");
 
         // Filter tabs
         HBox tabs = new HBox(8);
         String[] tabNames = {"All Orders", "Incoming", "Active", "Completed"};
-        String[] tabColors = {"#10B981", "#2A3350", "#2A3350", "#2A3350"};
         for (int i = 0; i < tabNames.length; i++) {
             Button tab = new Button(tabNames[i]);
-            final String color = tabColors[i];
-            tab.setStyle("-fx-background-color: " + color + "; " +
-                    "-fx-text-fill: " + (i == 0 ? "white" : "#a0aec0") + "; " +
-                    "-fx-font-size: 12px; -fx-background-radius: 20; " +
-                    "-fx-padding: 7 16; -fx-cursor: hand;");
+            tab.getStyleClass().add(i == 0 ? "btn-pill-active" : "btn-pill");
             tabs.getChildren().add(tab);
         }
 
@@ -309,15 +324,15 @@ public class StaffDashboardController {
 
         String[][] orders = {
                 {"Table 3", "Jollof Rice × 2, Chicken × 1", "10:32 AM",
-                        "PREPARING", "#F59E0B"},
+                        "PREPARING", "warning"},
                 {"Table 7", "Fried Rice × 1, Juice × 2", "10:45 AM",
-                        "READY", "#10B981"},
+                        "READY", "success"},
                 {"Table 1", "Fufu & Soup × 3", "11:02 AM",
-                        "PENDING", "#6B7280"},
+                        "PENDING", "muted"},
                 {"Table 5", "Burger × 2, Chips × 2, Malt × 2", "11:15 AM",
-                        "DELIVERED", "#3B82F6"},
+                        "DELIVERED", "info"},
                 {"Table 9", "Kelewele × 1, Spring Rolls × 2", "11:28 AM",
-                        "PREPARING", "#F59E0B"}
+                        "PREPARING", "warning"}
         };
 
         for (String[] order : orders) {
@@ -326,8 +341,7 @@ public class StaffDashboardController {
 
         ScrollPane scroll = new ScrollPane(ordersList);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color: transparent; " +
-                "-fx-background: transparent;");
+        scroll.getStyleClass().add("scroll-pane");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
         view.getChildren().addAll(title, tabs, scroll);
@@ -337,20 +351,16 @@ public class StaffDashboardController {
     private HBox buildOrderCard(String[] order) {
         HBox card = new HBox(16);
         card.setAlignment(Pos.CENTER_LEFT);
-        card.setPadding(new Insets(14, 20, 14, 20));
-        card.setStyle("-fx-background-color: #161D30; " +
-                "-fx-background-radius: 12; " +
-                "-fx-border-color: #1E2740; " +
-                "-fx-border-radius: 12; -fx-border-width: 1;");
+        card.getStyleClass().add("order-card");
 
         // Table number badge
         StackPane badge = new StackPane();
         badge.setMinSize(52, 52);
         badge.setMaxSize(52, 52);
-        badge.setStyle("-fx-background-color: #10B98122; " +
+        badge.setStyle("-fx-background-color: #D1FAE5; " +
                 "-fx-background-radius: 10;");
         Label tableLabel = new Label(order[0].replace("Table ", "T"));
-        tableLabel.setStyle("-fx-text-fill: #10B981; " +
+        tableLabel.setStyle("-fx-text-fill: #059669; " +
                 "-fx-font-size: 13px; -fx-font-weight: bold;");
         badge.getChildren().add(tableLabel);
 
@@ -358,7 +368,7 @@ public class StaffDashboardController {
         VBox details = new VBox(4);
         HBox.setHgrow(details, Priority.ALWAYS);
         Label tableName = new Label(order[0]);
-        tableName.setStyle("-fx-text-fill: white; -fx-font-size: 15px; " +
+        tableName.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 15px; " +
                 "-fx-font-weight: bold;");
         Label items = new Label(order[1]);
         items.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
@@ -366,15 +376,11 @@ public class StaffDashboardController {
 
         // Time
         Label time = new Label(order[2]);
-        time.setStyle("-fx-text-fill: #4a5568; -fx-font-size: 12px;");
+        time.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 12px;");
 
         // Status badge
         Label status = new Label(order[3]);
-        status.setPadding(new Insets(4, 12, 4, 12));
-        status.setStyle("-fx-background-color: " + order[4] + "22; " +
-                "-fx-text-fill: " + order[4] + "; " +
-                "-fx-font-size: 11px; -fx-font-weight: bold; " +
-                "-fx-background-radius: 20;");
+        status.getStyleClass().add("badge-" + order[4]);
 
         card.getChildren().addAll(badge, details, time, status);
         return card;
@@ -384,10 +390,10 @@ public class StaffDashboardController {
     private Parent buildKitchenView() {
         VBox view = new VBox(20);
         view.setPadding(new Insets(28, 32, 28, 32));
-        view.setStyle("-fx-background-color: #0B0F19;");
+        view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("👨‍🍳 Kitchen Monitor");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; " +
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
                 "-fx-font-weight: bold;");
         Label subtitle = new Label(
                 "Update order status — changes reflect on customer screen instantly");
@@ -419,8 +425,7 @@ public class StaffDashboardController {
         ScrollPane scroll = new ScrollPane(columns);
         scroll.setFitToWidth(true);
         scroll.setFitToHeight(true);
-        scroll.setStyle("-fx-background-color: transparent; " +
-                "-fx-background: transparent;");
+        scroll.getStyleClass().add("scroll-pane");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
         view.getChildren().addAll(title, subtitle, scroll);
@@ -431,16 +436,17 @@ public class StaffDashboardController {
                                     String[] orders) {
         VBox col = new VBox(10);
         col.setPadding(new Insets(14));
-        col.setStyle("-fx-background-color: #161D30; " +
-                "-fx-background-radius: 12; " +
-                "-fx-border-color: " + color + "44; " +
-                "-fx-border-radius: 12; -fx-border-width: 1;");
+        col.setStyle("-fx-background-color: white; " +
+                "-fx-background-radius: 14; " +
+                "-fx-border-color: " + color + "33; " +
+                "-fx-border-radius: 14; -fx-border-width: 1; " +
+                "-fx-effect: dropshadow(gaussian, rgba(31,41,55,0.05), 8, 0, 0, 2);");
 
         // Column header
         HBox header = new HBox(8);
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(0, 0, 8, 0));
-        header.setStyle("-fx-border-color: " + color + "44; " +
+        header.setPadding(new Insets(0, 0, 10, 0));
+        header.setStyle("-fx-border-color: " + color + "33; " +
                 "-fx-border-width: 0 0 1 0;");
         Label statusLabel = new Label(status);
         statusLabel.setStyle("-fx-text-fill: " + color + "; " +
@@ -454,10 +460,12 @@ public class StaffDashboardController {
             String[] parts = order.split("\\|");
             VBox card = new VBox(4);
             card.setPadding(new Insets(10, 12, 10, 12));
-            card.setStyle("-fx-background-color: #0B0F19; " +
-                    "-fx-background-radius: 8;");
+            card.setStyle("-fx-background-color: #F8FAFC; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-border-color: #E5E7EB; -fx-border-width: 1; " +
+                    "-fx-border-radius: 10;");
             Label tableL = new Label(parts[0]);
-            tableL.setStyle("-fx-text-fill: white; -fx-font-size: 13px; " +
+            tableL.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; " +
                     "-fx-font-weight: bold;");
             Label itemsL = new Label(parts.length > 1 ? parts[1] : "");
             itemsL.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
@@ -468,8 +476,8 @@ public class StaffDashboardController {
             Button nextBtn = new Button("→ Next Status");
             nextBtn.setStyle("-fx-background-color: " + color + "; " +
                     "-fx-text-fill: white; -fx-font-size: 10px; " +
-                    "-fx-background-radius: 6; -fx-padding: 4 10; " +
-                    "-fx-cursor: hand;");
+                    "-fx-font-weight: bold; -fx-background-radius: 8; " +
+                    "-fx-padding: 5 12; -fx-cursor: hand;");
             btns.getChildren().add(nextBtn);
 
             card.getChildren().addAll(tableL, itemsL, btns);
@@ -482,10 +490,10 @@ public class StaffDashboardController {
     private Parent buildSalesView() {
         VBox view = new VBox(20);
         view.setPadding(new Insets(28, 32, 28, 32));
-        view.setStyle("-fx-background-color: #0B0F19;");
+        view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("📈 Sales Analytics");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; " +
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
                 "-fx-font-weight: bold;");
 
         // Period tabs
@@ -493,11 +501,7 @@ public class StaffDashboardController {
         String[] periods = {"Today", "This Week", "This Month"};
         for (int i = 0; i < periods.length; i++) {
             Button tab = new Button(periods[i]);
-            tab.setStyle("-fx-background-color: " +
-                    (i == 0 ? "#10B981" : "#2A3350") + "; " +
-                    "-fx-text-fill: " + (i == 0 ? "white" : "#a0aec0") + "; " +
-                    "-fx-font-size: 12px; -fx-background-radius: 20; " +
-                    "-fx-padding: 7 16; -fx-cursor: hand;");
+            tab.getStyleClass().add(i == 0 ? "btn-pill-active" : "btn-pill");
             tabs.getChildren().add(tab);
         }
 
@@ -513,7 +517,7 @@ public class StaffDashboardController {
         // Top items
         VBox topItems = new VBox(12);
         Label topTitle = new Label("🏆 Top Selling Items");
-        topTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; " +
+        topTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; " +
                 "-fx-font-weight: bold;");
 
         String[][] items = {
@@ -538,11 +542,13 @@ public class StaffDashboardController {
         HBox row = new HBox(12);
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(12, 16, 12, 16));
-        row.setStyle("-fx-background-color: #161D30; " +
-                "-fx-background-radius: 10;");
+        row.setStyle("-fx-background-color: white; " +
+                "-fx-background-radius: 12; " +
+                "-fx-border-color: #E5E7EB; -fx-border-width: 1; " +
+                "-fx-effect: dropshadow(gaussian, rgba(31,41,55,0.04), 6, 0, 0, 2);");
 
         Label name = new Label(item[0]);
-        name.setStyle("-fx-text-fill: white; -fx-font-size: 14px; " +
+        name.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 14px; " +
                 "-fx-font-weight: bold;");
         HBox.setHgrow(name, Priority.ALWAYS);
         name.setMaxWidth(Double.MAX_VALUE);
@@ -550,7 +556,7 @@ public class StaffDashboardController {
         // Progress bar
         StackPane barBg = new StackPane();
         barBg.setPrefSize(120, 6);
-        barBg.setStyle("-fx-background-color: #2A3350; " +
+        barBg.setStyle("-fx-background-color: #E5E7EB; " +
                 "-fx-background-radius: 3;");
         double pct = Double.parseDouble(item[3]) / 100.0;
         Region barFill = new Region();
@@ -577,27 +583,24 @@ public class StaffDashboardController {
     private Parent buildStaffManagementView() {
         VBox view = new VBox(20);
         view.setPadding(new Insets(28, 32, 28, 32));
-        view.setStyle("-fx-background-color: #0B0F19;");
+        view.setStyle("-fx-background-color: #F8FAFC;");
 
         HBox headerRow = new HBox(12);
         headerRow.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("👥 Staff Management");
-        title.setStyle("-fx-text-fill: white; -fx-font-size: 24px; " +
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
                 "-fx-font-weight: bold;");
         HBox.setHgrow(title, Priority.ALWAYS);
         title.setMaxWidth(Double.MAX_VALUE);
 
         Button addBtn = new Button("+ Add Staff");
-        addBtn.setStyle("-fx-background-color: #10B981; " +
-                "-fx-text-fill: white; -fx-font-size: 13px; " +
-                "-fx-font-weight: bold; -fx-background-radius: 10; " +
-                "-fx-padding: 10 20; -fx-cursor: hand;");
+        addBtn.getStyleClass().add("btn-primary");
+        addBtn.setStyle(addBtn.getStyle() + "-fx-font-size: 13px; -fx-padding: 10 20;");
         headerRow.getChildren().addAll(title, addBtn);
 
         // Staff table
         TableView<String[]> table = new TableView<>();
-        table.setStyle("-fx-background-color: #161D30; " +
-                "-fx-control-inner-background: #161D30;");
+        table.getStyleClass().add("table-view");
         VBox.setVgrow(table, Priority.ALWAYS);
 
         String[] cols = {"Staff ID", "Name", "Role", "Status"};
@@ -628,9 +631,9 @@ public class StaffDashboardController {
     private Parent buildPlaceholder(String icon, String message) {
         VBox box = new VBox(12);
         box.setAlignment(Pos.CENTER);
-        box.setStyle("-fx-background-color: #0B0F19;");
+        box.setStyle("-fx-background-color: #F8FAFC;");
         Label lbl = new Label(icon);
-        lbl.setStyle("-fx-text-fill: #a0aec0; -fx-font-size: 18px;");
+        lbl.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 18px;");
         Label msg = new Label(message);
         msg.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
         box.getChildren().addAll(lbl, msg);

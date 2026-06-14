@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class CustomerTrackingController {
@@ -16,11 +17,12 @@ public class CustomerTrackingController {
     @FXML private Label statusEmojiLabel;
     @FXML private Label currentStatusLabel;
     @FXML private Label statusDescLabel;
-    @FXML private Label step1Circle, step2Circle, step3Circle, step4Circle;
-    @FXML private Label step1Check, step2Check, step3Check, step4Check;
-    @FXML private Button foodReceivedBtn;
     @FXML private Label estimatedTimeLabel;
-    @FXML private Label step2Title, step3Title, step4Title;
+    @FXML private Label step1Circle, step2Circle, step3Circle, step4Circle;
+    @FXML private Label step1Title, step2Title, step3Title, step4Title;
+    @FXML private Label stepDescriptionLabel;
+    @FXML private Region progressFill;
+    @FXML private Button foodReceivedBtn;
 
     // Default starting step — kitchen staff will manually advance this
     // via the Kitchen Monitor screen (status update buttons).
@@ -54,6 +56,7 @@ public class CustomerTrackingController {
                 statusDescLabel.setText(
                         "Your order has been received and will be prepared shortly.");
                 estimatedTimeLabel.setText("Estimated wait: ~15 minutes");
+                stepDescriptionLabel.setText("Your order has been placed successfully");
                 foodReceivedBtn.setVisible(false);
                 foodReceivedBtn.setManaged(false);
                 break;
@@ -64,6 +67,7 @@ public class CustomerTrackingController {
                         "-fx-text-fill: #F59E0B; -fx-font-size: 24px; -fx-font-weight: bold;");
                 statusDescLabel.setText("Our chefs are working on your order right now!");
                 estimatedTimeLabel.setText("Estimated wait: ~10 minutes");
+                stepDescriptionLabel.setText("Our chefs are preparing your meal");
                 foodReceivedBtn.setVisible(false);
                 foodReceivedBtn.setManaged(false);
                 break;
@@ -75,6 +79,7 @@ public class CustomerTrackingController {
                 statusDescLabel.setText(
                         "Your order is ready! A waiter will bring it to your table.");
                 estimatedTimeLabel.setText("Almost there — just a few more minutes!");
+                stepDescriptionLabel.setText("Your order is ready and on its way");
                 foodReceivedBtn.setVisible(true);
                 foodReceivedBtn.setManaged(true);
                 break;
@@ -86,49 +91,52 @@ public class CustomerTrackingController {
                 statusDescLabel.setText(
                         "Your food has been delivered. Enjoy your meal!");
                 estimatedTimeLabel.setText("Enjoy your meal! 🎉");
+                stepDescriptionLabel.setText("Enjoy your meal!");
                 foodReceivedBtn.setVisible(true);
                 foodReceivedBtn.setManaged(true);
                 break;
         }
-        updateStep(step1Circle, step1Check, null, 1);
-        updateStep(step2Circle, step2Check, step2Title, 2);
-        updateStep(step3Circle, step3Check, step3Title, 3);
-        updateStep(step4Circle, step4Check, step4Title, 4);
+
+        updateStep(step1Circle, step1Title, 1, "✓");
+        updateStep(step2Circle, step2Title, 2, "2");
+        updateStep(step3Circle, step3Title, 3, "3");
+        updateStep(step4Circle, step4Title, 4, "4");
+
+        // Update progress bar fill width as a percentage (1->25%, 2->50%, 3->75%, 4->100%)
+        double percent = currentStep / 4.0;
+        progressFill.prefWidthProperty().unbind();
+        progressFill.maxWidthProperty().unbind();
+        // Use a percentage-based binding relative to the parent StackPane width
+        progressFill.maxWidthProperty().bind(
+                ((Region) progressFill.getParent()).widthProperty().multiply(percent));
     }
+
     /**
-     * Updates a single step's circle and checkmark style based on
-     * its position relative to the current step.
-     * Uses style classes from application.css for consistency:
+     * Updates a single step's circle and title style.
+     * Uses style classes from application.css:
      *   step-circle-done     -> steps already completed
      *   step-circle-active   -> the current in-progress step
      *   step-circle-inactive -> steps not yet reached
      */
-    private void updateStep(Label circle, Label check, Label title, int stepNumber) {
+    private void updateStep(Label circle, Label title, int stepNumber, String activeText) {
         circle.getStyleClass().removeAll(
                 "step-circle-done", "step-circle-active", "step-circle-inactive");
 
         if (stepNumber < currentStep) {
             circle.getStyleClass().add("step-circle-done");
-            check.setStyle(
-                    "-fx-text-fill: #10B981; -fx-font-size: 18px; -fx-font-weight: bold;");
-            if (title != null) {
-                title.setStyle(
-                        "-fx-text-fill: #1F2937; -fx-font-size: 14px; -fx-font-weight: bold;");
-            }
+            circle.setText("✓");
+            title.setStyle(
+                    "-fx-text-fill: #1F2937; -fx-font-size: 12px; -fx-font-weight: bold;");
         } else if (stepNumber == currentStep) {
             circle.getStyleClass().add("step-circle-active");
-            check.setStyle("-fx-text-fill: #E5E7EB; -fx-font-size: 18px;");
-            if (title != null) {
-                title.setStyle(
-                        "-fx-text-fill: #1F2937; -fx-font-size: 14px; -fx-font-weight: bold;");
-            }
+            circle.setText(activeText.equals("✓") ? "✓" : String.valueOf(stepNumber));
+            title.setStyle(
+                    "-fx-text-fill: #1F2937; -fx-font-size: 12px; -fx-font-weight: bold;");
         } else {
             circle.getStyleClass().add("step-circle-inactive");
-            check.setStyle("-fx-text-fill: #E5E7EB; -fx-font-size: 18px;");
-            if (title != null) {
-                title.setStyle(
-                        "-fx-text-fill: #9CA3AF; -fx-font-size: 14px; -fx-font-weight: bold;");
-            }
+            circle.setText(String.valueOf(stepNumber));
+            title.setStyle(
+                    "-fx-text-fill: #9CA3AF; -fx-font-size: 12px; -fx-font-weight: bold;");
         }
     }
 
