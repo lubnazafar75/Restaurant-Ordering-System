@@ -7,10 +7,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.collections.FXCollections;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -142,32 +138,22 @@ public class OrderController {
 
     private void addCategoryButton(String name, boolean active) {
         Button btn = new Button(name);
-        btn.setStyle(active
-                ? "-fx-background-color: #FF4A85; -fx-text-fill: white; " +
-                "-fx-font-size: 12px; -fx-font-weight: bold; " +
-                "-fx-background-radius: 20; -fx-padding: 7 16; -fx-cursor: hand;"
-                : "-fx-background-color: transparent; -fx-text-fill: #a0aec0; " +
-                "-fx-font-size: 12px; -fx-background-radius: 20; " +
-                "-fx-border-color: #2A3350; -fx-border-radius: 20; " +
-                "-fx-padding: 7 16; -fx-cursor: hand;");
+        btn.getStyleClass().add(active ? "btn-pill-active" : "btn-pill");
 
         btn.setOnAction(e -> {
             currentCategory = name;
             // Reset all buttons
             categoryBar.getChildren().forEach(node -> {
                 if (node instanceof Button) {
-                    ((Button) node).setStyle(
-                            "-fx-background-color: transparent; -fx-text-fill: #a0aec0; " +
-                                    "-fx-font-size: 12px; -fx-background-radius: 20; " +
-                                    "-fx-border-color: #2A3350; -fx-border-radius: 20; " +
-                                    "-fx-padding: 7 16; -fx-cursor: hand;");
+                    ((Button) node).getStyleClass().removeAll("btn-pill-active");
+                    if (!((Button) node).getStyleClass().contains("btn-pill")) {
+                        ((Button) node).getStyleClass().add("btn-pill");
+                    }
                 }
             });
             // Highlight active
-            btn.setStyle(
-                    "-fx-background-color: #FF4A85; -fx-text-fill: white; " +
-                            "-fx-font-size: 12px; -fx-font-weight: bold; " +
-                            "-fx-background-radius: 20; -fx-padding: 7 16; -fx-cursor: hand;");
+            btn.getStyleClass().remove("btn-pill");
+            btn.getStyleClass().add("btn-pill-active");
             loadFoodItems(name);
         });
 
@@ -210,58 +196,34 @@ public class OrderController {
         card.setPrefWidth(160);
         card.setAlignment(Pos.CENTER);
         card.setPadding(new Insets(14));
-        card.setStyle(
-                "-fx-background-color: #161D30; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-border-color: #2A3350; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-cursor: hand;");
+        card.getStyleClass().add("food-card");
 
-        // Food emoji based on category
+        // Food emoji
         Label emoji = new Label(getFoodEmoji(name));
-        emoji.setFont(Font.font("System", 32));
+        emoji.setStyle("-fx-font-size: 32px;");
 
         Label nameLabel = new Label(name);
-        nameLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-        nameLabel.setTextFill(Color.WHITE);
+        nameLabel.setStyle(
+                "-fx-text-fill: #1F2937; -fx-font-size: 13px; " +
+                        "-fx-font-weight: bold;");
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
+        nameLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         Label priceLabel = new Label("GHS " + priceStr);
-        priceLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-        priceLabel.setTextFill(Color.web("#00E676"));
+        priceLabel.setStyle(
+                "-fx-text-fill: #10B981; -fx-font-size: 13px; " +
+                        "-fx-font-weight: bold;");
 
         Button addBtn = new Button("+ Add");
         addBtn.setPrefWidth(120);
-        addBtn.setStyle(
-                "-fx-background-color: #FF4A85; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-font-size: 12px; " +
-                        "-fx-background-radius: 8; " +
-                        "-fx-padding: 6; " +
-                        "-fx-cursor: hand;");
+        addBtn.getStyleClass().add("btn-primary");
+        addBtn.setStyle(addBtn.getStyle() +
+                "-fx-font-size: 12px; -fx-padding: 8 6;");
 
         addBtn.setOnAction(e -> addToCart(name, price));
 
         card.getChildren().addAll(emoji, nameLabel, priceLabel, addBtn);
-
-        // Hover effect
-        card.setOnMouseEntered(e -> card.setStyle(
-                "-fx-background-color: #1E2740; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-border-color: #FF4A85; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-cursor: hand;"));
-        card.setOnMouseExited(e -> card.setStyle(
-                "-fx-background-color: #161D30; " +
-                        "-fx-background-radius: 12; " +
-                        "-fx-border-color: #2A3350; " +
-                        "-fx-border-radius: 12; " +
-                        "-fx-border-width: 1; " +
-                        "-fx-cursor: hand;"));
 
         return card;
     }
@@ -313,7 +275,7 @@ public class OrderController {
 
         if (order.getItems().isEmpty()) {
             Label empty = new Label("Your cart is empty");
-            empty.setStyle("-fx-text-fill: #4a5568; -fx-font-size: 13px;");
+            empty.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 13px;");
             cartItemsBox.getChildren().add(empty);
             cartCountLabel.setText("0 items");
         } else {
@@ -337,19 +299,24 @@ public class OrderController {
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(8, 12, 8, 12));
         row.setStyle(
-                "-fx-background-color: #161D30; " +
-                        "-fx-background-radius: 8;");
+                "-fx-background-color: #F8FAFC; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-border-color: #E5E7EB; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-border-width: 1;");
 
         Label nameLabel = new Label(item.getName());
-        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px;");
+        nameLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px;");
         HBox.setHgrow(nameLabel, Priority.ALWAYS);
         nameLabel.setMaxWidth(Double.MAX_VALUE);
 
         Button minusBtn = new Button("−");
         minusBtn.setPrefSize(28, 28);
         minusBtn.setStyle(
-                "-fx-background-color: #2A3350; -fx-text-fill: white; " +
-                        "-fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;");
+                "-fx-background-color: #F1F5F9; -fx-text-fill: #1F2937; " +
+                        "-fx-font-size: 14px; -fx-font-weight: bold; " +
+                        "-fx-background-radius: 6; -fx-cursor: hand; " +
+                        "-fx-border-color: #E5E7EB; -fx-border-radius: 6; -fx-border-width: 1;");
         minusBtn.setOnAction(e -> {
             if (item.getQuantity() > 1) {
                 item.decrementQuantity();
@@ -362,13 +329,14 @@ public class OrderController {
         Label qtyLabel = new Label(String.valueOf(item.getQuantity()));
         qtyLabel.setPrefWidth(28);
         qtyLabel.setAlignment(Pos.CENTER);
-        qtyLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px;");
+        qtyLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button plusBtn = new Button("+");
         plusBtn.setPrefSize(28, 28);
         plusBtn.setStyle(
-                "-fx-background-color: #FF4A85; -fx-text-fill: white; " +
-                        "-fx-font-size: 14px; -fx-background-radius: 6; -fx-cursor: hand;");
+                "-fx-background-color: #10B981; -fx-text-fill: white; " +
+                        "-fx-font-size: 14px; -fx-font-weight: bold; " +
+                        "-fx-background-radius: 6; -fx-cursor: hand;");
         plusBtn.setOnAction(e -> {
             item.incrementQuantity();
             refreshCart();
@@ -377,7 +345,7 @@ public class OrderController {
         Label priceLabel = new Label(
                 String.format("GHS %.2f", item.getSubtotal()));
         priceLabel.setStyle(
-                "-fx-text-fill: #00E676; -fx-font-size: 13px; " +
+                "-fx-text-fill: #10B981; -fx-font-size: 13px; " +
                         "-fx-font-weight: bold;");
         priceLabel.setPrefWidth(80);
         priceLabel.setAlignment(Pos.CENTER_RIGHT);
@@ -454,8 +422,7 @@ public class OrderController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.getDialogPane().setStyle(
-                "-fx-background-color: #161D30;");
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
         alert.showAndWait();
     }
 }

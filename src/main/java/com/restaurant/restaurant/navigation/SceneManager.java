@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
+import com.restaurant.restaurant.util.AnimationUtil;
 
 import com.restaurant.restaurant.App;
 import com.restaurant.restaurant.StaffDashboard;
@@ -208,7 +209,12 @@ public class SceneManager {
         }
 
         currentSceneKey = sceneKey;
-        innerContentArea.getChildren().setAll(screenRegistry.get(sceneKey));
+
+        Parent root = screenRegistry.get(sceneKey);
+
+        innerContentArea.getChildren().setAll(root);
+
+        animateScene(root);
     }
 
     public static void navigateToMenu() {
@@ -234,5 +240,9 @@ public class SceneManager {
         if (key.equals(currentSceneKey)) {
             innerContentArea.getChildren().setAll(structuralNode);
         }
+    }
+    private static void animateScene(Parent root) {
+        AnimationUtil.fadeIn(root);
+        AnimationUtil.slideIn(root);
     }
 }

@@ -1,4 +1,3 @@
-// FIXED: Shifted package route to match your actual workspace namespace
 package com.restaurant.restaurant;
 
 import com.restaurant.restaurant.navigation.NavigationUtil;
@@ -11,74 +10,73 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * Primary Shell View Blueprint Window Framework.
- * Sets theme styling properties, builds custom title frames, constructs side navigation decks,
- * and controls outer container layouts.
+ * Primary Application Shell.
+ * Builds the custom title bar and the central content viewport
+ * that SceneManager swaps screens into.
  */
 public class App extends Application {
 
-    // Track mouse locations for dragging custom undecorated application frames safely
+    // Track mouse locations for dragging the undecorated window
     private double xOffset = 0;
     private double yOffset = 0;
 
-    // Shared pointer access references to alter drawer shell components across dynamic class paths
-    private static VBox globalLeftSidebarContainer;
-
     @Override
     public void start(Stage stage) {
-        // Disables default platform window styling layouts
         stage.initStyle(StageStyle.UNDECORATED);
 
-        // Frame and structural container setup calls
         HBox titleBar = buildCustomApplicationTitleBar(stage);
-        globalLeftSidebarContainer = buildPersistentSystemSidebar();
 
-        // Hides sidebar component on boot initialization sequences
-        globalLeftSidebarContainer.setVisible(false);
-        globalLeftSidebarContainer.setManaged(false);
-        globalLeftSidebarContainer.setPrefWidth(0);
-
-        // Core view central workspace viewport block styled in primary Deep Night Blue (#0B0F19)
+        // Central workspace viewport — screens are swapped in here by SceneManager
         StackPane contentViewportPane = new StackPane();
-        contentViewportPane.setStyle("-fx-background-color: #0B0F19;");
+        contentViewportPane.setStyle("-fx-background-color: #F8FAFC;");
+        contentViewportPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         HBox.setHgrow(contentViewportPane, Priority.ALWAYS);
+        VBox.setVgrow(contentViewportPane, Priority.ALWAYS);
 
-        // Joins structural side drawers and center viewport panes together horizontally
-// Removed globalLeftSidebarContainer - dashboard has its own sidebar
-        HBox workBodyLayoutFrame = new HBox(contentViewportPane);        VBox.setVgrow(workBodyLayoutFrame, Priority.ALWAYS);
+        HBox workBodyLayoutFrame = new HBox(contentViewportPane);
+        VBox.setVgrow(workBodyLayoutFrame, Priority.ALWAYS);
 
-        // Root container vertically matching custom title rows and inner layout body grids
         VBox layoutContainerRoot = new VBox(titleBar, workBodyLayoutFrame);
         layoutContainerRoot.setStyle(
-                "-fx-background-color: #0B0F19; " +
-                        "-fx-border-color: #161D30; " + // Border wrapped in Dark Navy Slate
+                "-fx-background-color: #F8FAFC; " +
+                        "-fx-border-color: #E5E7EB; " +
                         "-fx-border-width: 1;"
         );
 
-        // Build main scene with responsive safety defaults
         // Get the actual screen size of the monitor
         javafx.geometry.Rectangle2D screenBounds =
                 javafx.stage.Screen.getPrimary().getVisualBounds();
 
-// Set window to 90% of screen size
+        // Set window to 90% of screen size
         double windowWidth  = screenBounds.getWidth()  * 0.90;
         double windowHeight = screenBounds.getHeight() * 0.90;
 
-        Scene mainApplicationWindowScene = new Scene(layoutContainerRoot, windowWidth, windowHeight);
+        Scene mainApplicationWindowScene =
+                new Scene(layoutContainerRoot, windowWidth, windowHeight);
+
+        // Apply Savoria global design system
+        mainApplicationWindowScene.getStylesheets().add(
+                App.class
+                        .getResource("/css/application.css")
+                        .toExternalForm()
+        );
+
         stage.setScene(mainApplicationWindowScene);
         stage.setMinWidth(960);
         stage.setMinHeight(650);
 
-// Center the window on screen
+        // Center the window on screen
         stage.setX((screenBounds.getWidth()  - windowWidth)  / 2);
         stage.setY((screenBounds.getHeight() - windowHeight) / 2);
 
@@ -93,30 +91,28 @@ public class App extends Application {
     }
 
     /**
-     * Public visibility tracking control method managed dynamically by your SceneManager routing framework.
+     * Public visibility hook kept for SceneManager compatibility.
+     * The app no longer has a global sidebar — the staff dashboard
+     * manages its own sidebar internally.
      */
     public static void setSidebarVisibility(boolean visibleState) {
-        // ALWAYS keep sidebar hidden - dashboard has its own sidebar
-        if (globalLeftSidebarContainer != null) {
-            globalLeftSidebarContainer.setVisible(false);
-            globalLeftSidebarContainer.setManaged(false);
-        }
+        // No-op: no global sidebar exists anymore.
     }
 
     /**
-     * Builds custom operational title panels.
+     * Builds the custom window title bar (minimize / maximize / close).
      */
     private HBox buildCustomApplicationTitleBar(Stage stage) {
-        Label brandingTitleText = new Label(" 🍽  QuickServe Enterprise — Management System");
+        Label brandingTitleText = new Label(" 🍽  Savoria — Restaurant Management System");
         brandingTitleText.setFont(Font.font("System", FontWeight.BOLD, 13));
         brandingTitleText.setTextFill(Color.WHITE);
+
         Region layoutSpacer = new Region();
         HBox.setHgrow(layoutSpacer, Priority.ALWAYS);
 
-        // Generates structural management layout window frame controls
-        Button btnMin = createTitleFrameWindowControlActionBtn("─", "#4a5568", "#FF4A85");
-        Button btnMax = createTitleFrameWindowControlActionBtn("□", "#4a5568", "#00E676");
-        Button btnCls = createTitleFrameWindowControlActionBtn("✕", "#e53e3e", "#c0392b");
+        Button btnMin = createTitleFrameWindowControlActionBtn("─", "#374151");
+        Button btnMax = createTitleFrameWindowControlActionBtn("□", "#374151");
+        Button btnCls = createTitleFrameWindowControlActionBtn("✕", "#374151");
 
         btnMin.setOnAction(e -> stage.setIconified(true));
         btnMax.setOnAction(e -> {
@@ -129,12 +125,13 @@ public class App extends Application {
             }
         });
         btnCls.setOnAction(e -> Platform.exit());
+        btnCls.getStyleClass().add("title-bar-close");
 
         HBox customTitleBarLayout = new HBox(brandingTitleText, layoutSpacer, btnMin, btnMax, btnCls);
         customTitleBarLayout.setAlignment(Pos.CENTER_LEFT);
         customTitleBarLayout.setPadding(new Insets(0, 0, 0, 14));
         customTitleBarLayout.setPrefHeight(38);
-        customTitleBarLayout.setStyle("-fx-background-color: #0B0F19; -fx-border-color: #161D30; -fx-border-width: 0 0 1 0;");
+        customTitleBarLayout.getStyleClass().add("title-bar");
 
         // Drag listeners
         customTitleBarLayout.setOnMousePressed(e -> {
@@ -152,183 +149,224 @@ public class App extends Application {
     }
 
     /**
-     * Builds corporate sidebar layout drawer decks styled in Dark Navy Slate (#161D30).
-     */
-    private VBox buildPersistentSystemSidebar() {
-        // Branding Box area
-        VBox logoIdentityArea = new VBox(4,
-                new Label("🍽") {{ setFont(Font.font("System", 32)); }},
-                new Label("QuickServe") {{ setFont(Font.font("System", FontWeight.BOLD, 16)); setTextFill(Color.WHITE); }},
-                new Label("SYSTEM INTEGRATOR CONSOLE") {{ setFont(Font.font("System", 9)); setTextFill(Color.web("#FF4A85")); }} // Cyber Pink Accent
-        );
-        logoIdentityArea.setAlignment(Pos.CENTER);
-        logoIdentityArea.setPadding(new Insets(22, 10, 22, 10));
-
-        // Employee Operational Shortcut layouts
-        VBox operationalActionLayoutContainer = new VBox(4,
-                createSidebarNavigationButton("📋", "Order Intake Deck", NavigationUtil.ORDER_CHECKING),
-                createSidebarNavigationButton("👨‍🍳", "Kitchen Monitor",   NavigationUtil.KITCHEN),
-                createSidebarNavigationButton("📊", "Staff Hub Main",    NavigationUtil.STAFF_DASHBOARD)
-        );
-
-        // High Priority Management Restricted administrative layout container
-        VBox administrativeActionLayoutContainer = new VBox(4,
-                new Label("MANAGEMENT PRIVILEGES") {{ setFont(Font.font("System", FontWeight.BOLD, 10)); setPadding(new Insets(12,0,4,14)); setTextFill(Color.web("#FF4A85")); }},
-                createSidebarNavigationButton("🍔", "Menu Customizer",   NavigationUtil.ADMIN_MENU),
-                createSidebarNavigationButton("👥", "Manage Personnel",  NavigationUtil.ADMIN_STAFF),
-                createSidebarNavigationButton("📈", "Revenue Reports",   NavigationUtil.ADMIN_SALES),
-
-                // ── [INTEGRATION NODE: BILLING & RECEIPTS LINK] ──────────────────────────────────────────
-                // Injected the tracking key route so you can jump to Eunice's billing layouts directly from the sidebar.
-                createSidebarNavigationButton("🧾", "Billing & Receipts",
-                        NavigationUtil.customer_billing_STAFF)        );
-
-        Region layoutVerticalSpacer = new Region();
-        VBox.setVgrow(layoutVerticalSpacer, Priority.ALWAYS);
-
-        // System shutdown logout escape control button mapped in Crimson Red Warning tokens
-        Button systemExitLogoutActionBtn = new Button("← Exit Session");
-        systemExitLogoutActionBtn.setPrefSize(166, 36);
-        systemExitLogoutActionBtn.setStyle(
-                "-fx-background-color: #FF3333; -fx-text-fill: white; " +
-                        "-fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"
-        );
-        systemExitLogoutActionBtn.setOnAction(e -> NavigationUtil.logout());
-
-        VBox structuralLayoutSidebar = new VBox(
-                logoIdentityArea, createHorizontalDividerComponent(),
-                operationalActionLayoutContainer, administrativeActionLayoutContainer,
-                layoutVerticalSpacer, new VBox(systemExitLogoutActionBtn) {{ setPadding(new Insets(10)); setAlignment(Pos.CENTER); }}
-        );
-        structuralLayoutSidebar.setPrefWidth(190);
-        structuralLayoutSidebar.setStyle("-fx-background-color: #161D30; -fx-border-color: #161D30; -fx-border-width: 0 1 0 0;");
-
-        return structuralLayoutSidebar;
-    }
-
-    /**
-     * Profile Selection Center Portal Welcome Hub.
-     * Displays clean profile paths immediately on startup.
+     * Landing page — Savoria brand light theme.
+     * Split layout: branding/visual panel on the left, welcome content on the right.
      */
     public static Parent buildMainPortalView() {
-        Label welcomeTextHeader = new Label("Welcome to QuickServe System");
-        welcomeTextHeader.setFont(Font.font("System", FontWeight.BOLD, 28));
-        welcomeTextHeader.setTextFill(Color.WHITE);
 
-        Label subPromptTextText = new Label("Please click your identity profile path to access interface systems:");
-        subPromptTextText.setFont(Font.font("System", 14));
-        subPromptTextText.setTextFill(Color.web("#a0aec0"));
+        // ── ROOT ─────────────────────────────────────────────
+        HBox root = new HBox();
+        root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        root.setStyle("-fx-background-color: #F8FAFC;");
 
-        // Route Profile 1: Customer path maps directly into Electric Neon Green (#00E676)
-        Button profileRouteCustomerActionBtn = new Button("Customer Ordering Terminal");
-        profileRouteCustomerActionBtn.setPrefSize(380, 54);
-        profileRouteCustomerActionBtn.setStyle(
-                "-fx-background-color: #00E676; -fx-text-fill: #0B0F19; " +
-                        "-fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;"
-        );
-        profileRouteCustomerActionBtn.setOnAction(e -> NavigationUtil.goTo(NavigationUtil.CUSTOMER_MENU));
+        // ── LEFT PANEL: Branding visual ─────────────────────
+        StackPane leftPanel = new StackPane();
+        leftPanel.setMinWidth(380);
+        leftPanel.setPrefWidth(480);
+        leftPanel.setMaxHeight(Double.MAX_VALUE);
+        HBox.setHgrow(leftPanel, Priority.ALWAYS);
+        leftPanel.setStyle(
+                "-fx-background-color: linear-gradient(to bottom right, #10B981, #059669);");
 
-        // Route Profile 2: Employee path maps directly into custom Cyber Pink borders (#FF4A85)
-        Button profileRouteStaffActionBtn = new Button("🔐 Staff Log In");
-        profileRouteStaffActionBtn.setPrefSize(380, 54);
-        profileRouteStaffActionBtn.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #FF4A85; " +
-                        "-fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 8; " +
-                        "-fx-border-color: #FF4A85; -fx-border-width: 2; -fx-cursor: hand;"
-        );
-        profileRouteStaffActionBtn.setOnAction(e -> NavigationUtil.goTo(NavigationUtil.STAFF_LOGIN));
+        VBox brandContent = new VBox(14);
+        brandContent.setAlignment(Pos.CENTER);
+        brandContent.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        VBox interactiveMenuBlockLayout = new VBox(18, profileRouteCustomerActionBtn, profileRouteStaffActionBtn);
-        interactiveMenuBlockLayout.setAlignment(Pos.CENTER);
-        interactiveMenuBlockLayout.setPadding(new Insets(20));
+        Label logoIcon = new Label("🍽");
+        logoIcon.setStyle("-fx-font-size: 72px;");
 
-        VBox frameContainerBlockLayout = new VBox(30, welcomeTextHeader, subPromptTextText, interactiveMenuBlockLayout);
-        frameContainerBlockLayout.setAlignment(Pos.CENTER);
-        frameContainerBlockLayout.setStyle("-fx-background-color: #0B0F19;");
+        Label brandName = new Label("Savoria");
+        brandName.setStyle(
+                "-fx-text-fill: white; -fx-font-size: 48px; " +
+                        "-fx-font-weight: bold;");
 
-        return frameContainerBlockLayout;
+        Label brandSub = new Label("— RESTAURANT —");
+        brandSub.setStyle(
+                "-fx-text-fill: #FDE68A; -fx-font-size: 13px; " +
+                        "-fx-font-weight: bold;");
+
+        Label brandTagline = new Label("Savor Every Moment");
+        brandTagline.setStyle(
+                "-fx-text-fill: white; -fx-font-size: 16px;");
+
+        VBox.setMargin(brandTagline, new Insets(8, 0, 0, 0));
+
+        Label brandDesc = new Label(
+                "Order your favorite meals directly from\nyour table and enjoy a seamless experience.");
+        brandDesc.setStyle(
+                "-fx-text-fill: #D1FAE5; -fx-font-size: 13px;");
+        brandDesc.setTextAlignment(TextAlignment.CENTER);
+        brandDesc.setWrapText(true);
+        VBox.setMargin(brandDesc, new Insets(12, 0, 0, 0));
+
+        brandContent.getChildren().addAll(
+                logoIcon, brandName, brandSub, brandTagline, brandDesc);
+        leftPanel.getChildren().add(brandContent);
+
+        // ── RIGHT PANEL: Welcome + Actions ───────────────────
+        VBox rightPanel = new VBox();
+        rightPanel.setAlignment(Pos.CENTER);
+        rightPanel.setMinWidth(380);
+        rightPanel.setPrefWidth(540);
+        rightPanel.setMaxHeight(Double.MAX_VALUE);
+        rightPanel.setStyle("-fx-background-color: #F8FAFC;");
+        HBox.setHgrow(rightPanel, Priority.ALWAYS);
+
+        VBox content = new VBox(18);
+        content.setAlignment(Pos.CENTER);
+        content.setMaxWidth(420);
+        content.setPadding(new Insets(40));
+
+        Label welcomeSmall = new Label("Welcome to");
+        welcomeSmall.setStyle(
+                "-fx-text-fill: #6B7280; -fx-font-size: 18px;");
+
+        Label savoriaTitle = new Label("Savoria");
+        savoriaTitle.setStyle(
+                "-fx-text-fill: #1F2937; -fx-font-size: 52px; " +
+                        "-fx-font-weight: bold;");
+
+        // Orange divider with fork icon
+        HBox divider = new HBox(8);
+        divider.setAlignment(Pos.CENTER);
+        Region l1 = new Region();
+        l1.setPrefSize(60, 2);
+        l1.setStyle("-fx-background-color: #F59E0B;");
+        Label forkIcon = new Label("🍴");
+        forkIcon.setStyle("-fx-font-size: 14px;");
+        Region l2 = new Region();
+        l2.setPrefSize(60, 2);
+        l2.setStyle("-fx-background-color: #F59E0B;");
+        divider.getChildren().addAll(l1, forkIcon, l2);
+        VBox.setMargin(divider, new Insets(4, 0, 0, 0));
+
+        Label tagline = new Label("Savor Every Moment");
+        tagline.setStyle(
+                "-fx-text-fill: #F59E0B; -fx-font-size: 16px; " +
+                        "-fx-font-weight: bold;");
+
+        Label description = new Label(
+                "Order your favorite meals directly from your table\n" +
+                        "and enjoy a seamless dining experience.");
+        description.setStyle(
+                "-fx-text-fill: #6B7280; -fx-font-size: 14px;");
+        description.setTextAlignment(TextAlignment.CENTER);
+        description.setWrapText(true);
+        VBox.setMargin(description, new Insets(0, 0, 8, 0));
+
+        // ── Start Ordering — Primary button ──────────────────
+        Button startBtn = new Button("🍽   Start Ordering   ›");
+        startBtn.setMaxWidth(Double.MAX_VALUE);
+        startBtn.setPrefHeight(56);
+        startBtn.getStyleClass().add("btn-primary");
+        startBtn.setStyle(startBtn.getStyle() + "-fx-font-size: 16px;");
+        startBtn.setOnAction(
+                e -> NavigationUtil.goTo(NavigationUtil.CUSTOMER_MENU));
+
+        // ── Staff Access divider ──────────────────────────────
+        HBox staffDiv = new HBox(8);
+        staffDiv.setAlignment(Pos.CENTER);
+        Region sd1 = new Region();
+        sd1.setPrefSize(70, 1);
+        sd1.setStyle("-fx-background-color: #E5E7EB;");
+        Label staffLabel = new Label("Staff Access");
+        staffLabel.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 13px;");
+        Region sd2 = new Region();
+        sd2.setPrefSize(70, 1);
+        sd2.setStyle("-fx-background-color: #E5E7EB;");
+        staffDiv.getChildren().addAll(sd1, staffLabel, sd2);
+        VBox.setMargin(staffDiv, new Insets(8, 0, 0, 0));
+
+        // ── Staff Login — Secondary button ────────────────────
+        Button staffBtn = new Button("👤   Staff Login   ›");
+        staffBtn.setMaxWidth(Double.MAX_VALUE);
+        staffBtn.setPrefHeight(52);
+        staffBtn.getStyleClass().add("btn-secondary");
+        staffBtn.setStyle(staffBtn.getStyle() + "-fx-font-size: 15px;");
+        staffBtn.setOnAction(
+                e -> NavigationUtil.goTo(NavigationUtil.STAFF_LOGIN));
+
+        content.getChildren().addAll(
+                welcomeSmall, savoriaTitle, divider, tagline,
+                description, startBtn, staffDiv, staffBtn);
+        rightPanel.getChildren().add(content);
+
+        // ── Footer features bar ───────────────────────────────
+        HBox footer = new HBox();
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(16, 24, 16, 24));
+        footer.setMaxWidth(Double.MAX_VALUE);
+        footer.setStyle(
+                "-fx-background-color: white; " +
+                        "-fx-border-color: #E5E7EB; " +
+                        "-fx-border-width: 1 0 0 0;");
+
+        String[][] features = {
+                {"⚡", "Fast Service", "Quick and efficient"},
+                {"📦", "Real-Time Tracking", "Track your order live"},
+                {"🛡", "Easy Payment", "Secure and simple"},
+                {"🌿", "Freshly Prepared", "Made with love"}
+        };
+
+        for (int i = 0; i < features.length; i++) {
+            HBox item = new HBox(10);
+            item.setAlignment(Pos.CENTER_LEFT);
+            HBox.setHgrow(item, Priority.ALWAYS);
+            item.setPadding(new Insets(0, 14, 0, 14));
+
+            StackPane circle = new StackPane();
+            circle.setMinSize(36, 36);
+            circle.setMaxSize(36, 36);
+            circle.setStyle(
+                    "-fx-background-color: #D1FAE5; " +
+                            "-fx-background-radius: 50;");
+            Label ico = new Label(features[i][0]);
+            ico.setStyle("-fx-font-size: 14px;");
+            circle.getChildren().add(ico);
+
+            VBox txt = new VBox(1);
+            Label t1 = new Label(features[i][1]);
+            t1.setStyle(
+                    "-fx-text-fill: #1F2937; -fx-font-size: 12px; " +
+                            "-fx-font-weight: bold;");
+            Label t2 = new Label(features[i][2]);
+            t2.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 10px;");
+            txt.getChildren().addAll(t1, t2);
+            item.getChildren().addAll(circle, txt);
+            footer.getChildren().add(item);
+
+            if (i < features.length - 1) {
+                Region vd = new Region();
+                vd.setPrefSize(1, 36);
+                vd.setStyle("-fx-background-color: #E5E7EB;");
+                footer.getChildren().add(vd);
+            }
+        }
+
+        VBox rightWithFooter = new VBox(rightPanel, footer);
+        VBox.setVgrow(rightPanel, Priority.ALWAYS);
+        HBox.setHgrow(rightWithFooter, Priority.ALWAYS);
+        rightWithFooter.setMinWidth(380);
+
+        root.getChildren().addAll(leftPanel, rightWithFooter);
+        return root;
     }
 
     /**
-     * Dynamic Navigation Link Button Factory with specialized Cyber Pink left anchor-bar hover metrics.
+     * Title bar window control button (minimize/maximize/close).
      */
-    private Button createSidebarNavigationButton(String visualIconSymbol, String componentLabelTitle, String sceneRoutingTargetKey) {
-        Button sidebarNavigationControlInstanceButton = new Button(visualIconSymbol + "  " + componentLabelTitle);
-        sidebarNavigationControlInstanceButton.setPrefSize(174, 38);
-        sidebarNavigationControlInstanceButton.setAlignment(Pos.CENTER_LEFT);
-        sidebarNavigationControlInstanceButton.setFont(Font.font("System", 13));
-        sidebarNavigationControlInstanceButton.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #a0aec0; " +
-                        "-fx-cursor: hand; -fx-background-radius: 6; -fx-padding: 0 0 0 14;"
-        );
-
-        // Hover layout styling maps: transforms text Green and drops a Pink anchor line block
-        sidebarNavigationControlInstanceButton.setOnMouseEntered(e -> sidebarNavigationControlInstanceButton.setStyle(
-                "-fx-background-color: #0B0F19; -fx-text-fill: #00E676; " +
-                        "-fx-cursor: hand; -fx-background-radius: 6; -fx-padding: 0 0 0 14; -fx-border-color: #FF4A85; -fx-border-width: 0 0 0 3;"
-        ));
-
-        sidebarNavigationControlInstanceButton.setOnMouseExited(e -> sidebarNavigationControlInstanceButton.setStyle(
-                "-fx-background-color: transparent; -fx-text-fill: #a0aec0; " +
-                        "-fx-cursor: hand; -fx-background-radius: 6; -fx-padding: 0 0 0 14;"
-        ));
-
-        sidebarNavigationControlInstanceButton.setOnAction(e -> SceneManager.navigateTo(sceneRoutingTargetKey));
-        return sidebarNavigationControlInstanceButton;
-    }
-
-    private Separator createHorizontalDividerComponent() {
-        Separator structuralSeparatorWidgetElement = new Separator();
-        structuralSeparatorWidgetElement.setStyle("-fx-background-color: #161D30;");
-        VBox.setMargin(structuralSeparatorWidgetElement, new Insets(6, 12, 6, 12));
-        return structuralSeparatorWidgetElement;
-    }
-
     private Button createTitleFrameWindowControlActionBtn(
-            String characterSymbolSign,
-            String primaryHoverColorHexVal,
-            String structuralPressColorToken) {
+            String characterSymbolSign, String hoverColor) {
 
         Button btn = new Button(characterSymbolSign);
         btn.setPrefSize(46, 38);
         btn.setFont(Font.font("System", 13));
-
-        // Close button (✕) gets permanent red background so it is always visible
-        boolean isCloseBtn = characterSymbolSign.equals("✕");
-
-        if (isCloseBtn) {
-            btn.setStyle(
-                    "-fx-background-color: #c0392b; -fx-text-fill: white; " +
-                            "-fx-background-radius: 0; -fx-font-weight: bold;"
-            );
-            btn.setOnMouseEntered(e -> btn.setStyle(
-                    "-fx-background-color: #e53e3e; -fx-text-fill: white; " +
-                            "-fx-background-radius: 0; -fx-font-weight: bold;"
-            ));
-            btn.setOnMouseExited(e -> btn.setStyle(
-                    "-fx-background-color: #c0392b; -fx-text-fill: white; " +
-                            "-fx-background-radius: 0; -fx-font-weight: bold;"
-            ));
-        } else {
-            btn.setStyle(
-                    "-fx-background-color: transparent; -fx-text-fill: white; " +
-                            "-fx-background-radius: 0;"
-            );
-            btn.setOnMouseEntered(e -> btn.setStyle(
-                    "-fx-background-color: " + primaryHoverColorHexVal + "; " +
-                            "-fx-text-fill: white; -fx-background-radius: 0;"
-            ));
-            btn.setOnMouseExited(e -> btn.setStyle(
-                    "-fx-background-color: transparent; -fx-text-fill: white; " +
-                            "-fx-background-radius: 0;"
-            ));
-        }
+        btn.getStyleClass().add("title-bar-btn");
 
         return btn;
     }
 
     public static void main(String[] args) {
-        // Run core JavaFX system processes loop instances
         launch(args);
     }
 }

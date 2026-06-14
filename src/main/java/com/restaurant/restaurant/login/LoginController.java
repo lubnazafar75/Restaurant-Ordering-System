@@ -3,6 +3,9 @@ package com.restaurant.restaurant.login;
 import com.restaurant.restaurant.navigation.NavigationUtil;
 import com.restaurant.restaurant.navigation.SceneManager;
 import javafx.fxml.FXML;
+import com.restaurant.restaurant.util.AnimationUtil;
+import javafx.scene.layout.VBox;
+
 import javafx.scene.control.*;
 
 public class LoginController {
@@ -10,6 +13,8 @@ public class LoginController {
     @FXML private TextField staffIdField;
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
+    @FXML private VBox loginCard;
+    @FXML private Button loginButton;
 
     // Static session data accessible from dashboard
     public static String sessionStaffId   = "";
@@ -18,6 +23,15 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+
+        if (loginCard != null) {
+            AnimationUtil.fadeIn(loginCard);
+        }
+
+        if (loginButton != null) {
+            AnimationUtil.addButtonHover(loginButton);
+        }
+
         staffIdField.setOnAction(e -> passwordField.requestFocus());
         passwordField.setOnAction(e -> handleLogin());
     }

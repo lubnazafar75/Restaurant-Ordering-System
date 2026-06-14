@@ -46,7 +46,9 @@
     </VBox>
 
     <!-- RIGHT PANEL: Login Form -->
-    <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
+    <VBox fx:id="loginCard"
+          alignment="CENTER"
+          HBox.hgrow="ALWAYS"
           style="-fx-background-color: #0B0F19;">
         <padding><Insets top="60" right="80" bottom="60" left="80"/></padding>
 
@@ -138,11 +140,14 @@
         </Label>
 
         <!-- Login Button -->
-        <Button text="→   LOGIN" onAction="#handleLogin"
-                maxWidth="Infinity" prefHeight="52"
+        <Button fx:id="loginButton"
+                text="→   LOGIN"
+                onAction="#handleLogin"
+                maxWidth="Infinity"
+                prefHeight="52"
                 style="-fx-background-color: #10B981; -fx-text-fill: white;
-                       -fx-font-size: 16px; -fx-font-weight: bold;
-                       -fx-background-radius: 12; -fx-cursor: hand;">
+               -fx-font-size: 16px; -fx-font-weight: bold;
+               -fx-background-radius: 12; -fx-cursor: hand;">
             <VBox.margin><Insets top="20" bottom="24"/></VBox.margin>
         </Button>
 
