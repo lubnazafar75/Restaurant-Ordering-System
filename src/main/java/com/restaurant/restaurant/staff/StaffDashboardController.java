@@ -1,6 +1,9 @@
 package com.restaurant.restaurant.staff;
 
+import com.restaurant.restaurant.dao.StaffDAO;
+import com.restaurant.restaurant.dao.impl.SQLiteStaffDAO;
 import com.restaurant.restaurant.login.LoginController;
+import com.restaurant.restaurant.model.Staff;
 import com.restaurant.restaurant.navigation.NavigationUtil;
 import com.restaurant.restaurant.navigation.SceneManager;
 import javafx.fxml.FXML;
@@ -729,14 +732,15 @@ public class StaffDashboardController {
         Button addBtn = new Button("+ Add Staff");
         addBtn.getStyleClass().add("btn-primary");
         addBtn.setStyle(addBtn.getStyle() + "-fx-font-size: 13px; -fx-padding: 10 20;");
+        addBtn.setOnAction(e -> showAddStaffDialog());
         headerRow.getChildren().addAll(title, addBtn);
 
-        // Staff table
+        // Staff table — backed by the real `staff` table via SQLiteStaffDAO
         TableView<String[]> table = new TableView<>();
         table.getStyleClass().add("table-view");
         VBox.setVgrow(table, Priority.ALWAYS);
 
-        String[] cols = {"Staff ID", "Name", "Role", "Status"};
+        String[] cols = {"Staff ID", "Username", "Role", "Status"};
         int[] widths = {80, 180, 140, 100};
         for (int i = 0; i < cols.length; i++) {
             final int idx = i;
@@ -748,16 +752,88 @@ public class StaffDashboardController {
             table.getColumns().add(col);
         }
 
-        table.getItems().addAll(
-                new String[]{"001", "Admin User",  "Admin",        "Active"},
-                new String[]{"002", "John Mensah", "Waiter",       "Active"},
-                new String[]{"003", "Chef Mary",   "Kitchen Staff","Active"},
-                new String[]{"004", "Ama Owusu",   "Cashier",      "Active"},
-                new String[]{"005", "Kofi Asante", "Supervisor",   "Active"}
-        );
+        StaffDAO staffDAO = new SQLiteStaffDAO();
+        for (Staff s : staffDAO.getAllActiveStaff()) {
+            table.getItems().add(new String[]{
+                    String.valueOf(s.getStaffId()),
+                    s.getUsername(),
+                    s.getRole(),
+                    s.getStatus()
+            });
+        }
 
         view.getChildren().addAll(headerRow, table);
         return view;
+    }
+
+    /**
+     * Shows a dialog for entering a new staff member's username, password,
+     * and role. On confirm, inserts the record via SQLiteStaffDAO and
+     * refreshes the Staff Management table.
+     */
+    @FXML
+    private void showAddStaffDialog() {
+        Dialog<Staff> dialog = new Dialog<>();
+        dialog.setTitle("Add New Staff");
+        dialog.getDialogPane().getStyleClass().add("dialog-pane");
+
+        ButtonType saveButtonType = new ButtonType("Add Staff", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username");
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+
+        ComboBox<String> roleBox = new ComboBox<>();
+        roleBox.getItems().addAll("waiter", "kitchen staff", "cashier", "supervisor", "admin");
+        roleBox.setValue("waiter");
+        roleBox.setMaxWidth(Double.MAX_VALUE);
+
+        Label errorLabel = new Label();
+        errorLabel.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 12px;");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+
+        VBox content = new VBox(10,
+                new Label("Username:"), usernameField,
+                new Label("Password:"), passwordField,
+                new Label("Role:"), roleBox,
+                errorLabel
+        );
+        content.setPadding(new Insets(10));
+        content.setPrefWidth(320);
+        dialog.getDialogPane().setContent(content);
+
+        Button saveBtn = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
+        saveBtn.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
+            String username = usernameField.getText().trim();
+            String password = passwordField.getText().trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                errorLabel.setText("Username and password are required.");
+                errorLabel.setVisible(true);
+                errorLabel.setManaged(true);
+                event.consume();
+            }
+        });
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == saveButtonType) {
+                return new Staff(0, usernameField.getText().trim(),
+                        passwordField.getText().trim(),
+                        roleBox.getValue(), "active");
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(newStaff -> {
+            StaffDAO staffDAO = new SQLiteStaffDAO();
+            staffDAO.createStaff(newStaff);
+            // Refresh the staff management view to show the new entry
+            contentArea.getChildren().setAll(buildStaffManagementView());
+        });
     }
 
     // ── PLACEHOLDER ───────────────────────────────────────────
