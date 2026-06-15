@@ -526,6 +526,10 @@ public class OrderController {
         showScreen(tableEntryScreen);
         order = new Order();
         refreshCart();
+
+        SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
+
+
     }
 
     // ─── HELPERS ─────────────────────────────────────────────

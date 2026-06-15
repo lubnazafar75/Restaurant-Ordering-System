@@ -13,6 +13,17 @@
           alignment="CENTER"
           spacing="20"
           styleClass="screen-root">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT"
+              maxWidth="800">
+
+            <Button text="← Back to Home"
+                    onAction="#handleBack"
+                    styleClass="btn-ghost"/>
+        </HBox>
+        <Region prefHeight="40"/>
 
         <Label text="🍽 Welcome to Savoria"
                styleClass="label-heading"/>

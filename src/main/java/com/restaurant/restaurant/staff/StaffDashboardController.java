@@ -563,15 +563,15 @@ public class StaffDashboardController {
                 com.restaurant.restaurant.database.DBConnection.getConnection();
         if (conn == null) return result;
 
-        String sql = "SELECT order_id, table_id FROM orders WHERE status = ? " +
-                "ORDER BY order_date ASC";
+        String sql = "SELECT order_id, table_number FROM orders WHERE status = ? " +
+                "ORDER BY order_timestamp ASC";
 
         try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
             try (java.sql.ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     int orderId = rs.getInt("order_id");
-                    int tableNumber = rs.getInt("table_id");
+                    int tableNumber = rs.getInt("table_number");
                     String itemsSummary = fetchItemsSummary(conn, orderId);
                     result.add(new KitchenOrder(orderId, tableNumber, itemsSummary));
                 }
@@ -583,7 +583,6 @@ public class StaffDashboardController {
 
         return result;
     }
-
     /** Builds a comma-separated "ItemName x Qty" summary for an order. */
     private String fetchItemsSummary(java.sql.Connection conn, int orderId)
             throws java.sql.SQLException {

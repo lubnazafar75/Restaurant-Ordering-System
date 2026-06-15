@@ -4,7 +4,7 @@
 <?import javafx.geometry.Insets?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.restaurant.restaurant.tracking.TrackingController"
+           fx:controller="com.restaurant.restaurant.tracking.CustomerTrackingController"
            style="-fx-background-color: #0B0F19;">
 
     <!-- ═══════════════════════════════════════════════════ -->
@@ -65,6 +65,10 @@
                        style="-fx-text-fill: #a0aec0;
                               -fx-font-size: 13px;"
                        wrapText="true"/>
+                <Label fx:id="estimatedTimeLabel"
+                       text="Estimated wait: ~15 minutes"
+                       style="-fx-text-fill: #4a5568;
+                              -fx-font-size: 12px;"/>
             </VBox>
 
             <!-- Progress Steps -->
@@ -82,6 +86,20 @@
                               -fx-font-weight: bold;
                               -fx-padding: 0 0 16 0;"/>
 
+                <!-- Progress Bar -->
+                <StackPane style="-fx-padding: 0 0 16 0;">
+                    <Region prefHeight="6"
+                            style="-fx-background-color: #2A3350;
+                                   -fx-background-radius: 3;"
+                            StackPane.alignment="CENTER_LEFT"
+                            HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"/>
+                    <Region fx:id="progressFill" prefHeight="6" maxWidth="0"
+                            style="-fx-background-color: #00E676;
+                                   -fx-background-radius: 3;"
+                            StackPane.alignment="CENTER_LEFT"/>
+                </StackPane>
+
                 <!-- Step 1: Pending -->
                 <HBox fx:id="step1Row" spacing="16" alignment="CENTER_LEFT"
                       style="-fx-padding: 12 0;">
@@ -97,7 +115,7 @@
                                       -fx-alignment: center;"/>
                     </StackPane>
                     <VBox spacing="2" HBox.hgrow="ALWAYS">
-                        <Label text="Order Received"
+                        <Label fx:id="step1Title" text="Order Received"
                                style="-fx-text-fill: white;
                                       -fx-font-size: 14px;
                                       -fx-font-weight: bold;"/>
@@ -216,6 +234,11 @@
                                   -fx-font-size: 18px;"/>
                 </HBox>
             </VBox>
+
+            <!-- Step Description (optional helper line) -->
+            <Label fx:id="stepDescriptionLabel"
+                   text=""
+                   visible="false" managed="false"/>
 
             <!-- Food Received Button — shown when READY -->
             <Button fx:id="foodReceivedBtn"
