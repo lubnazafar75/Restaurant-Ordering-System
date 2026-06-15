@@ -223,44 +223,38 @@ public class BillingController {
     public VBox buildOrderCard(BillingService.OrderSummary item) {
         VBox card = new VBox(6);
         card.setStyle(
-            "-fx-background-color: #161D30;" +
-            "-fx-background-radius: 10;" +
-            "-fx-padding: 12;" +
-            "-fx-border-color: #2A3350;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-width: 1;"
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #E5E7EB;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(31,41,55,0.04), 6, 0, 0, 2);"
         );
 
         HBox topRow = new HBox();
         Label tableLabel = new Label("Table " + item.getTableNumber());
         tableLabel.setStyle(
-            "-fx-text-fill: white;" +
-            "-fx-font-size: 15px;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: #1F2937;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: bold;"
         );
         Label tsLabel = new Label(item.getTimestamp());
-        tsLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+        tsLabel.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 11px;");
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
         topRow.getChildren().addAll(tableLabel, spacer, tsLabel);
 
         HBox bottomRow = new HBox(10);
         Label badge = new Label("Ready to Bill");
-        badge.setStyle(
-            "-fx-background-color: #003320;" +
-            "-fx-text-fill: #00E676;" +
-            "-fx-font-size: 10px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-background-radius: 5;" +
-            "-fx-padding: 3 8 3 8;"
-        );
+        badge.getStyleClass().add("badge-success");
         Label amountLabel = new Label(
-            String.format("GHS %.2f", item.getTotalAmount())
+                String.format("GHS %.2f", item.getTotalAmount())
         );
         amountLabel.setStyle(
-            "-fx-text-fill: #FF4A85;" +
-            "-fx-font-size: 13px;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: #10B981;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: bold;"
         );
         HBox spacer2 = new HBox();
         HBox.setHgrow(spacer2, javafx.scene.layout.Priority.ALWAYS);
@@ -269,20 +263,22 @@ public class BillingController {
         card.getChildren().addAll(topRow, bottomRow);
 
         card.setOnMouseEntered(e -> card.setStyle(
-            "-fx-background-color: #1E2740;" +
-            "-fx-background-radius: 10;" +
-            "-fx-padding: 12;" +
-            "-fx-border-color: #FF4A85;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-width: 1;"
+                "-fx-background-color: #F0FDF4;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #10B981;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(16,185,129,0.15), 8, 0, 0, 3);"
         ));
         card.setOnMouseExited(e -> card.setStyle(
-            "-fx-background-color: #161D30;" +
-            "-fx-background-radius: 10;" +
-            "-fx-padding: 12;" +
-            "-fx-border-color: #2A3350;" +
-            "-fx-border-radius: 10;" +
-            "-fx-border-width: 1;"
+                "-fx-background-color: white;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-padding: 12;" +
+                        "-fx-border-color: #E5E7EB;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(31,41,55,0.04), 6, 0, 0, 2);"
         ));
 
         return card;
@@ -306,8 +302,8 @@ public class BillingController {
 
         Label hItem = new Label("ITEM");
         hItem.setStyle(
-            "-fx-text-fill: #555555; -fx-font-size: 11px;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: #9CA3AF; -fx-font-size: 11px;" +
+                        "-fx-font-weight: bold;"
         );
         hItem.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(hItem, javafx.scene.layout.Priority.ALWAYS);
@@ -316,38 +312,38 @@ public class BillingController {
         hQty.setPrefWidth(50);
         hQty.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         hQty.setStyle(
-            "-fx-text-fill: #555555; -fx-font-size: 11px;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: #9CA3AF; -fx-font-size: 11px;" +
+                        "-fx-font-weight: bold;"
         );
 
         Label hAmount = new Label("AMOUNT");
         hAmount.setPrefWidth(90);
         hAmount.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         hAmount.setStyle(
-            "-fx-text-fill: #555555; -fx-font-size: 11px;" +
-            "-fx-font-weight: bold;"
+                "-fx-text-fill: #9CA3AF; -fx-font-size: 11px;" +
+                        "-fx-font-weight: bold;"
         );
 
         header.getChildren().addAll(hItem, hQty, hAmount);
         itemsVBox.getChildren().add(header);
 
         Separator headerSep = new Separator();
-        headerSep.setStyle("-fx-background-color: #2A3350;");
+        headerSep.setStyle("-fx-background-color: #E5E7EB;");
         itemsVBox.getChildren().add(headerSep);
 
-        // Item rows
+// Item rows
         boolean alternate = false;
         for (Receipt.ReceiptItem item : receipt.getItems()) {
             HBox row = new HBox();
             row.setStyle(
-                "-fx-background-color: " +
-                (alternate ? "#1A2235" : "transparent") + ";" +
-                "-fx-padding: 7 4 7 4;" +
-                "-fx-background-radius: 5;"
+                    "-fx-background-color: " +
+                            (alternate ? "#F8FAFC" : "transparent") + ";" +
+                            "-fx-padding: 7 4 7 4;" +
+                            "-fx-background-radius: 5;"
             );
 
             Label nameLabel = new Label(item.getFoodName());
-            nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+            nameLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 14px;");
             nameLabel.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(nameLabel, javafx.scene.layout.Priority.ALWAYS);
 
@@ -355,15 +351,15 @@ public class BillingController {
             qtyLabel.setPrefWidth(50);
             qtyLabel.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
             qtyLabel.setStyle(
-                "-fx-text-fill: #aaaaaa; -fx-font-size: 14px;"
+                    "-fx-text-fill: #6B7280; -fx-font-size: 14px;"
             );
 
             Label priceLabel = new Label(
-                String.format("GHS %.2f", item.getLineTotal())
+                    String.format("GHS %.2f", item.getLineTotal())
             );
             priceLabel.setPrefWidth(90);
             priceLabel.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-            priceLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+            priceLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 14px;");
 
             row.getChildren().addAll(nameLabel, qtyLabel, priceLabel);
             itemsVBox.getChildren().add(row);
@@ -420,39 +416,41 @@ public class BillingController {
 
         try {
             double received = Double.parseDouble(
-                cashReceivedField.getText().trim()
+                    cashReceivedField.getText().trim()
             );
             double total  = currentReceipt.getTotal();
             double change = received - total;
 
             if (paymentReceivedLabel != null) {
                 paymentReceivedLabel.setText(
-                    String.format("GHS %.2f", received)
+                        String.format("GHS %.2f", received)
                 );
             }
+
             if (paymentChangeLabel != null) {
                 paymentChangeLabel.setText(
-                    String.format("GHS %.2f", Math.abs(change))
+                        String.format("GHS %.2f", Math.abs(change))
                 );
             }
+
             if (changeAmountLabel != null) {
                 if (change >= 0) {
                     changeAmountLabel.setText(
-                        String.format("GHS %.2f", change)
+                            String.format("GHS %.2f", change)
                     );
                     changeAmountLabel.setStyle(
-                        "-fx-text-fill: #00E676;" +
-                        "-fx-font-size: 20px;" +
-                        "-fx-font-weight: bold;"
+                            "-fx-text-fill: #10B981;" +
+                                    "-fx-font-size: 20px;" +
+                                    "-fx-font-weight: bold;"
                     );
                 } else {
                     changeAmountLabel.setText(
-                        String.format("Short GHS %.2f", Math.abs(change))
+                            String.format("Short GHS %.2f", Math.abs(change))
                     );
                     changeAmountLabel.setStyle(
-                        "-fx-text-fill: #FF3333;" +
-                        "-fx-font-size: 20px;" +
-                        "-fx-font-weight: bold;"
+                            "-fx-text-fill: #EF4444;" +
+                                    "-fx-font-size: 20px;" +
+                                    "-fx-font-weight: bold;"
                     );
                 }
             }
@@ -460,7 +458,7 @@ public class BillingController {
             if (changeAmountLabel != null) {
                 changeAmountLabel.setText("Enter amount above");
                 changeAmountLabel.setStyle(
-                    "-fx-text-fill: #888888; -fx-font-size: 14px;"
+                        "-fx-text-fill: #9CA3AF; -fx-font-size: 14px;"
                 );
             }
         }
@@ -477,21 +475,17 @@ public class BillingController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Payment");
         alert.setHeaderText(
-            "Confirm payment for Table " +
-            currentReceipt.getTableNumber() + "?"
+                "Confirm payment for Table " +
+                        currentReceipt.getTableNumber() + "?"
         );
         alert.setContentText(
-            "Order " + currentReceipt.getFormattedOrderId() +
-            "\nTotal: GHS " +
-            String.format("%.2f", currentReceipt.getTotal()) +
-            "\n\nThis action cannot be undone."
+                "Order " + currentReceipt.getFormattedOrderId() +
+                        "\nTotal: GHS " +
+                        String.format("%.2f", currentReceipt.getTotal()) +
+                        "\n\nThis action cannot be undone."
         );
 
-        alert.getDialogPane().setStyle("-fx-background-color: #161D30;");
-        alert.getDialogPane().lookup(".content.label")
-            .setStyle("-fx-text-fill: white;");
-        alert.getDialogPane().lookup(".header-panel")
-            .setStyle("-fx-background-color: #0B0F19;");
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -500,7 +494,7 @@ public class BillingController {
 
             if (success) {
                 orderListView.getItems().remove(
-                    orderListView.getSelectionModel().getSelectedItem()
+                        orderListView.getSelectionModel().getSelectedItem()
                 );
                 receiptDetailPanel.setVisible(false);
                 receiptDetailPanel.setManaged(false);
@@ -511,15 +505,16 @@ public class BillingController {
                 confirmPaymentButton.setDisable(true);
                 currentReceipt = null;
                 System.out.println(
-                    "Payment confirmed. Table reset to available."
+                        "Payment confirmed. Table reset to available."
                 );
             } else {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                 errorAlert.setTitle("Payment Failed");
                 errorAlert.setHeaderText("Could not confirm payment.");
                 errorAlert.setContentText(
-                    "Please check the database connection."
+                        "Please check the database connection."
                 );
+                errorAlert.getDialogPane().getStyleClass().add("dialog-pane");
                 errorAlert.showAndWait();
             }
         }

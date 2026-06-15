@@ -41,6 +41,7 @@ public class OrderController {
     @FXML private Label orderSummaryLabel;
 
     // State
+    public static int lastOrderId = -1;
     private int tableNumber = 0;
     private Order order = new Order();
     private String currentCategory = "All";
@@ -382,14 +383,137 @@ public class OrderController {
         summary.append("\nTotal: GHS ")
                 .append(String.format("%.2f", total));
 
+        // ── SAVE ORDER TO DATABASE ────────────────────────────
+        int newOrderId = saveOrderToDatabase(total);
+
+        if (newOrderId == -1) {
+            showAlert("Order Failed",
+                    "Could not save your order. Please try again or notify staff.");
+            return;
+        }
+
+        // Store order ID for tracking/receipt screens
+        OrderController.lastOrderId = newOrderId;
+
         confirmMessageLabel.setText(
                 "Order placed for Table " + tableNumber +
                         ". Your food is being prepared!");
         orderSummaryLabel.setText(summary.toString());
-//  before showScreen(confirmScreen):
-        com.restaurant.restaurant.billing.CustomerReceiptController
-                .setOrderData(tableNumber, "ORD-" + (1000 + tableNumber), total);
+
         showScreen(confirmScreen);
+    }
+
+    /**
+     * Inserts the current order and its items into the database.
+     * Returns the generated order_id, or -1 if the insert failed.
+     */
+    private int saveOrderToDatabase(double total) {
+        java.sql.Connection conn =
+                com.restaurant.restaurant.database.DBConnection.getConnection();
+
+        if (conn == null) {
+            System.err.println("[OrderController] No DB connection available.");
+            return -1;
+        }
+
+        String insertOrderSql =
+                "INSERT INTO orders (table_number, total_amount, status, order_timestamp) " +
+                        "VALUES (?, ?, 'pending', datetime('now','localtime'))";
+
+        int orderId = -1;
+
+        try {
+            conn.setAutoCommit(false);
+
+            // 1. Insert order header
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(
+                    insertOrderSql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+
+                stmt.setInt(1, tableNumber);
+                stmt.setDouble(2, total);
+                stmt.executeUpdate();
+
+                try (java.sql.ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        orderId = rs.getInt(1);
+                    }
+                }
+            }
+
+            if (orderId == -1) {
+                conn.rollback();
+                return -1;
+            }
+
+            // 2. Insert each order item
+            String insertItemSql =
+                    "INSERT INTO order_items (order_id, item_id, quantity, subtotal) " +
+                            "VALUES (?, ?, ?, ?)";
+
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(insertItemSql)) {
+                for (OrderItem item : order.getItems()) {
+                    int foodItemId = lookupFoodItemId(conn, item.getName());
+                    if (foodItemId == -1) {
+                        System.err.println(
+                                "[OrderController] Could not find food_items.item_id for: "
+                                        + item.getName());
+                        continue; // skip unmatched items rather than failing whole order
+                    }
+                    stmt.setInt(1, orderId);
+                    stmt.setInt(2, foodItemId);
+                    stmt.setInt(3, item.getQuantity());
+                    stmt.setDouble(4, item.getSubtotal());
+                    stmt.executeUpdate();
+                }
+            }
+
+            // 3. Log initial order history entry
+            String historySql =
+                    "INSERT INTO order_history (order_id, status, changed_at) " +
+                            "VALUES (?, 'pending', datetime('now','localtime'))";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(historySql)) {
+                stmt.setInt(1, orderId);
+                stmt.executeUpdate();
+            }
+
+            // 4. Mark table as occupied
+            String tableSql = "UPDATE tables SET status = 'occupied' WHERE table_number = ?";
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(tableSql)) {
+                stmt.setInt(1, tableNumber);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+            System.out.println("[OrderController] Order #" + orderId
+                    + " saved successfully for Table " + tableNumber);
+            return orderId;
+
+        } catch (java.sql.SQLException e) {
+            try { conn.rollback(); } catch (java.sql.SQLException ignored) {}
+            System.err.println("[OrderController] DB error saving order: "
+                    + e.getMessage());
+            return -1;
+        } finally {
+            try { conn.setAutoCommit(true); } catch (java.sql.SQLException ignored) {}
+        }
+    }
+
+    /**
+     * Looks up the food_items.item_id for a given food name.
+     * Returns -1 if not found.
+     */
+    private int lookupFoodItemId(java.sql.Connection conn, String foodName)
+            throws java.sql.SQLException {
+        String sql = "SELECT item_id FROM food_items WHERE name = ?";
+        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, foodName);
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("item_id");
+                }
+            }
+        }
+        return -1;
     }
 
     @FXML

@@ -13,7 +13,7 @@ public class TrackingController {
     @FXML private TextField searchField;
     @FXML private ComboBox<String> statusFilterComboBox;
     @FXML private ComboBox<OrderStatus> actionStatusComboBox;
-    
+
     @FXML private TableView<Order> ordersTable;
     @FXML private TableColumn<Order, Integer> idColumn;
     @FXML private TableColumn<Order, String> nameColumn;
@@ -36,7 +36,7 @@ public class TrackingController {
 
         // 2. Fetch the orders from your Service
         masterOrderList = trackingService.getOrders();
-        
+
         // Wrap it in a FilteredList so search bars update the screen dynamically
         filteredOrderList = new FilteredList<>(masterOrderList, p -> true);
         ordersTable.setItems(filteredOrderList);
@@ -66,10 +66,10 @@ public class TrackingController {
         filteredOrderList.setPredicate(order -> {
             // FIX: This now checks ONLY the table number field
             boolean matchesSearch = String.valueOf(order.getTableNo()).toLowerCase().contains(searchText);
-            
+
             // Check Status match
-            boolean matchesStatus = selectedStatusFilter.equals("All") || 
-                                    order.getStatus().name().equals(selectedStatusFilter);
+            boolean matchesStatus = selectedStatusFilter.equals("All") ||
+                    order.getStatus().name().equals(selectedStatusFilter);
 
             return matchesSearch && matchesStatus;
         });
@@ -95,10 +95,20 @@ public class TrackingController {
 
         // Apply new status value assignment update
         selectedOrder.setStatus(nextStatus);
-        
+
         // Visually redraw graphics array rows cleanly
         ordersTable.refresh();
-        applyFilters(); 
+        applyFilters();
+    }
+
+    /**
+     * Returns staff to the main dashboard.
+     * Wired to the "← Back to Menu" / back button in tracking.fxml.
+     */
+    @FXML
+    private void handleBackToMenu() {
+        com.restaurant.restaurant.navigation.SceneManager.navigateTo(
+                com.restaurant.restaurant.navigation.NavigationUtil.STAFF_DASHBOARD);
     }
 
     /**
@@ -109,20 +119,10 @@ public class TrackingController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
-        
+
         // Inject Custom Danger/Warning Palette to match your chosen style guidelines
         DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle(
-            "-fx-background-color: #161D30; " +        // Dark Navy Slate
-            "-fx-content-text-fill: #FFFFFF; " +       // White Text
-            "-fx-border-color: #FF3333; " +            // Vibrant Crimson Warning line
-            "-fx-border-width: 2px;"
-        );
-        
-        // Style the confirmation button neatly
-        dialogPane.lookupButton(ButtonType.OK).setStyle(
-            "-fx-background-color: #FF3333; -fx-text-fill: white; -fx-font-weight: bold;"
-        );
+        dialogPane.getStyleClass().add("dialog-pane");
 
         alert.showAndWait();
     }

@@ -97,8 +97,7 @@ public class StaffDashboardController {
         setActive(btnBilling);
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/com/restaurant/restaurant/billing/billing.fxml"));
+                    getClass().getResource("/fxml/billing.fxml"));
             Parent billingRoot = loader.load();
             contentArea.getChildren().setAll(billingRoot);
             System.out.println("[Dashboard] Billing loaded successfully");
@@ -110,7 +109,6 @@ public class StaffDashboardController {
                             "Error: " + e.getMessage()));
         }
     }
-
     @FXML public void showMenuManagement() {
         if (!isAdmin()) { showAccessDenied(); return; }
         setActive(btnMenu);
@@ -399,27 +397,19 @@ public class StaffDashboardController {
                 "Update order status — changes reflect on customer screen instantly");
         subtitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
 
-        // Status columns
         HBox columns = new HBox(12);
         columns.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(columns, Priority.ALWAYS);
 
-        String[][] statuses = {
-                {"⏳ Pending", "#6B7280",
-                        "Table 1|Fufu & Soup × 3", "Table 8|Waakye × 2"},
-                {"👨‍🍳 Preparing", "#F59E0B",
-                        "Table 3|Jollof Rice × 2", "Table 9|Kelewele × 1"},
-                {"✅ Ready", "#10B981",
-                        "Table 7|Fried Rice × 1", ""},
-                {"🚀 Delivered", "#3B82F6",
-                        "Table 5|Burger × 2", "Table 2|Salad × 1"}
-        };
+        columns.getChildren().addAll(
+                buildKitchenColumn("⏳ Pending",    "#6B7280", "pending"),
+                buildKitchenColumn("👨‍🍳 Preparing", "#F59E0B", "preparing"),
+                buildKitchenColumn("✅ Ready",      "#10B981", "ready"),
+                buildKitchenColumn("🚀 Delivered",  "#3B82F6", "delivered")
+        );
 
-        for (String[] col : statuses) {
-            VBox column = buildKitchenColumn(col[0], col[1],
-                    new String[]{col[2], col[3]});
-            HBox.setHgrow(column, Priority.ALWAYS);
-            columns.getChildren().add(column);
+        for (var col : columns.getChildren()) {
+            HBox.setHgrow(col, Priority.ALWAYS);
         }
 
         ScrollPane scroll = new ScrollPane(columns);
@@ -432,8 +422,11 @@ public class StaffDashboardController {
         return view;
     }
 
-    private VBox buildKitchenColumn(String status, String color,
-                                    String[] orders) {
+    /**
+     * Builds a kitchen status column showing real orders from the database
+     * that currently have the given status.
+     */
+    private VBox buildKitchenColumn(String statusLabel, String color, String dbStatus) {
         VBox col = new VBox(10);
         col.setPadding(new Insets(14));
         col.setStyle("-fx-background-color: white; " +
@@ -448,42 +441,183 @@ public class StaffDashboardController {
         header.setPadding(new Insets(0, 0, 10, 0));
         header.setStyle("-fx-border-color: " + color + "33; " +
                 "-fx-border-width: 0 0 1 0;");
-        Label statusLabel = new Label(status);
-        statusLabel.setStyle("-fx-text-fill: " + color + "; " +
+        Label headerLbl = new Label(statusLabel);
+        headerLbl.setStyle("-fx-text-fill: " + color + "; " +
                 "-fx-font-size: 13px; -fx-font-weight: bold;");
-        header.getChildren().add(statusLabel);
+        header.getChildren().add(headerLbl);
         col.getChildren().add(header);
 
-        // Order cards in column
-        for (String order : orders) {
-            if (order == null || order.isEmpty()) continue;
-            String[] parts = order.split("\\|");
-            VBox card = new VBox(4);
-            card.setPadding(new Insets(10, 12, 10, 12));
-            card.setStyle("-fx-background-color: #F8FAFC; " +
-                    "-fx-background-radius: 10; " +
-                    "-fx-border-color: #E5E7EB; -fx-border-width: 1; " +
-                    "-fx-border-radius: 10;");
-            Label tableL = new Label(parts[0]);
-            tableL.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; " +
-                    "-fx-font-weight: bold;");
-            Label itemsL = new Label(parts.length > 1 ? parts[1] : "");
-            itemsL.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
+        // Fetch real orders with this status
+        for (KitchenOrder order : fetchKitchenOrders(dbStatus)) {
+            col.getChildren().add(buildKitchenOrderCard(order, color, dbStatus));
+        }
 
-            // Status update buttons
-            HBox btns = new HBox(6);
-            btns.setPadding(new Insets(6, 0, 0, 0));
-            Button nextBtn = new Button("→ Next Status");
+        return col;
+    }
+
+    /**
+     * Builds a card for a single kitchen order, with a "Next Status" button
+     * that advances the order's status in the database.
+     */
+    private VBox buildKitchenOrderCard(KitchenOrder order, String color, String currentStatus) {
+        VBox card = new VBox(4);
+        card.setPadding(new Insets(10, 12, 10, 12));
+        card.setStyle("-fx-background-color: #F8FAFC; " +
+                "-fx-background-radius: 10; " +
+                "-fx-border-color: #E5E7EB; -fx-border-width: 1; " +
+                "-fx-border-radius: 10;");
+
+        Label tableL = new Label("Table " + order.tableNumber + "  ·  Order #" + order.orderId);
+        tableL.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; " +
+                "-fx-font-weight: bold;");
+        Label itemsL = new Label(order.itemsSummary);
+        itemsL.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
+        itemsL.setWrapText(true);
+
+        HBox btns = new HBox(6);
+        btns.setPadding(new Insets(6, 0, 0, 0));
+
+        String nextStatus = getNextStatus(currentStatus);
+        if (nextStatus != null) {
+            Button nextBtn = new Button("→ Mark " + capitalize(nextStatus));
             nextBtn.setStyle("-fx-background-color: " + color + "; " +
                     "-fx-text-fill: white; -fx-font-size: 10px; " +
                     "-fx-font-weight: bold; -fx-background-radius: 8; " +
                     "-fx-padding: 5 12; -fx-cursor: hand;");
+            nextBtn.setOnAction(e -> {
+                updateOrderStatus(order.orderId, nextStatus);
+                // Refresh the kitchen view to reflect the change
+                contentArea.getChildren().setAll(buildKitchenView());
+            });
             btns.getChildren().add(nextBtn);
-
-            card.getChildren().addAll(tableL, itemsL, btns);
-            col.getChildren().add(card);
         }
-        return col;
+
+        card.getChildren().addAll(tableL, itemsL, btns);
+        return card;
+    }
+
+    /** Returns the next status in the pending→preparing→ready→delivered flow, or null. */
+    private String getNextStatus(String current) {
+        switch (current.toLowerCase()) {
+            case "pending":   return "preparing";
+            case "preparing": return "ready";
+            case "ready":     return "delivered";
+            default:          return null; // delivered is final
+        }
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.isEmpty()) return s;
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+    /**
+     * Updates an order's status in the database and logs the change
+     * to order_history.
+     */
+    private void updateOrderStatus(int orderId, String newStatus) {
+        java.sql.Connection conn =
+                com.restaurant.restaurant.database.DBConnection.getConnection();
+        if (conn == null) return;
+
+        String updateSql = "UPDATE orders SET status = ? WHERE order_id = ?";
+        String historySql = "INSERT INTO order_history (order_id, status, changed_at) " +
+                "VALUES (?, ?, datetime('now','localtime'))";
+
+        try {
+            conn.setAutoCommit(false);
+
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+                stmt.setString(1, newStatus);
+                stmt.setInt(2, orderId);
+                stmt.executeUpdate();
+            }
+
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(historySql)) {
+                stmt.setInt(1, orderId);
+                stmt.setString(2, newStatus);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+            System.out.println("[Kitchen] Order #" + orderId + " → " + newStatus);
+        } catch (java.sql.SQLException e) {
+            try { conn.rollback(); } catch (java.sql.SQLException ignored) {}
+            System.err.println("[Kitchen] Failed to update order #" + orderId
+                    + ": " + e.getMessage());
+        } finally {
+            try { conn.setAutoCommit(true); } catch (java.sql.SQLException ignored) {}
+        }
+    }
+
+    /**
+     * Fetches orders with the given status, including a summary of their items.
+     *
+     * NOTE: The `orders` table uses `table_id` (not `table_number`) and
+     * `order_date` (not `order_timestamp`) — corrected here to match the
+     * actual schema used by SQLiteOrderDAO / Order.java.
+     */
+    private java.util.List<KitchenOrder> fetchKitchenOrders(String status) {
+        java.util.List<KitchenOrder> result = new java.util.ArrayList<>();
+        java.sql.Connection conn =
+                com.restaurant.restaurant.database.DBConnection.getConnection();
+        if (conn == null) return result;
+
+        String sql = "SELECT order_id, table_id FROM orders WHERE status = ? " +
+                "ORDER BY order_date ASC";
+
+        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int orderId = rs.getInt("order_id");
+                    int tableNumber = rs.getInt("table_id");
+                    String itemsSummary = fetchItemsSummary(conn, orderId);
+                    result.add(new KitchenOrder(orderId, tableNumber, itemsSummary));
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("[Kitchen] Failed to fetch orders for status '"
+                    + status + "': " + e.getMessage());
+        }
+
+        return result;
+    }
+
+    /** Builds a comma-separated "ItemName x Qty" summary for an order. */
+    private String fetchItemsSummary(java.sql.Connection conn, int orderId)
+            throws java.sql.SQLException {
+        String sql = "SELECT f.name, oi.quantity FROM order_items oi " +
+                "JOIN food_items f ON oi.item_id = f.item_id " +
+                "WHERE oi.order_id = ?";
+
+        StringBuilder sb = new StringBuilder();
+        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                boolean first = true;
+                while (rs.next()) {
+                    if (!first) sb.append(", ");
+                    sb.append(rs.getString("name"))
+                            .append(" × ").append(rs.getInt("quantity"));
+                    first = false;
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    /** Simple data holder for a kitchen order row. */
+    private static class KitchenOrder {
+        final int orderId;
+        final int tableNumber;
+        final String itemsSummary;
+
+        KitchenOrder(int orderId, int tableNumber, String itemsSummary) {
+            this.orderId = orderId;
+            this.tableNumber = tableNumber;
+            this.itemsSummary = itemsSummary;
+        }
     }
 
     // ── SALES VIEW ────────────────────────────────────────────
