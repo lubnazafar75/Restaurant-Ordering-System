@@ -58,12 +58,12 @@ public class StaffDashboardController {
         boolean isAdmin = LoginController.sessionRole.equalsIgnoreCase("Admin");
 
         if (!isAdmin) {
-            btnMenu.setVisible(false);
-            btnMenu.setManaged(false);
-            btnSales.setVisible(false);
-            btnSales.setManaged(false);
-            btnStaff.setVisible(false);
-            btnStaff.setManaged(false);
+            btnMenu.setVisible(true);
+            btnMenu.setManaged(true);
+            btnSales.setVisible(true);
+            btnSales.setManaged(true);
+            btnStaff.setVisible(true);
+            btnStaff.setManaged(true);
         }
     }
 
