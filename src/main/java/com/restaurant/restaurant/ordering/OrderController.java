@@ -36,6 +36,9 @@ public class OrderController {
     @FXML private Label vatLabel;
     @FXML private Label totalLabel;
 
+    // ── THIS WAS MISSING — fixes "cannot find symbol" error ──
+    @FXML private Button trackOrderBtn;
+
     // Confirm
     @FXML private Label confirmMessageLabel;
     @FXML private Label orderSummaryLabel;
@@ -53,6 +56,15 @@ public class OrderController {
     public void initialize() {
         buildMenuData();
         showScreen(tableEntryScreen);
+
+        // Show "Track My Order" button only if order already placed
+        if (OrderController.lastOrderId != -1) {
+            trackOrderBtn.setVisible(true);
+            trackOrderBtn.setManaged(true);
+        } else {
+            trackOrderBtn.setVisible(false);
+            trackOrderBtn.setManaged(false);
+        }
     }
 
     // ─── MENU DATA ───────────────────────────────────────────
@@ -122,6 +134,12 @@ public class OrderController {
         buildCategoryBar();
         loadFoodItems("All");
         showScreen(menuScreen);
+
+        // Show track button if order already placed (re-check when entering menu)
+        if (OrderController.lastOrderId != -1) {
+            trackOrderBtn.setVisible(true);
+            trackOrderBtn.setManaged(true);
+        }
     }
 
     // ─── SCREEN 2: MENU ──────────────────────────────────────
@@ -248,6 +266,7 @@ public class OrderController {
         if (lower.contains("roll")) return "🥟";
         return "🍽";
     }
+
     // Add this new public method:
     public void showMenuDirectly() {
         if (tableNumber > 0) {
@@ -256,6 +275,7 @@ public class OrderController {
             showScreen(tableEntryScreen);
         }
     }
+
     // ─── CART ────────────────────────────────────────────────
     private void addToCart(String name, double price) {
         // Check if item already in cart — increase quantity
@@ -395,6 +415,10 @@ public class OrderController {
         // Store order ID for tracking/receipt screens
         OrderController.lastOrderId = newOrderId;
 
+        // Show track button now that order is placed
+        trackOrderBtn.setVisible(true);
+        trackOrderBtn.setManaged(true);
+
         confirmMessageLabel.setText(
                 "Order placed for Table " + tableNumber +
                         ". Your food is being prepared!");
@@ -457,7 +481,7 @@ public class OrderController {
                         System.err.println(
                                 "[OrderController] Could not find food_items.item_id for: "
                                         + item.getName());
-                        continue; // skip unmatched items rather than failing whole order
+                        continue;
                     }
                     stmt.setInt(1, orderId);
                     stmt.setInt(2, foodItemId);
@@ -516,6 +540,8 @@ public class OrderController {
         return -1;
     }
 
+    // ─── BUTTON HANDLERS ─────────────────────────────────────
+
     @FXML
     public void handleTrackOrder() {
         SceneManager.navigateTo(NavigationUtil.CUSTOMER_TRACKING);
@@ -526,10 +552,7 @@ public class OrderController {
         showScreen(tableEntryScreen);
         order = new Order();
         refreshCart();
-
         SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
-
-
     }
 
     // ─── HELPERS ─────────────────────────────────────────────
