@@ -30,6 +30,6 @@ public class DBConnection {
     }
 
     private static String getDbUrl() {
-        return "jdbc:sqlite:C:/Users/LENOVO THINKPAD/Downloads/restaurant-db/restaurant.db";
+        return "jdbc:sqlite:C:/Users/tahir/Downloads/restaurant-db/restaurant.db";
     }
 }
