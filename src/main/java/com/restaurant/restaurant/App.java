@@ -85,7 +85,15 @@ public class App extends Application {
 
         // Boot and link SceneManager systems up live to content area contexts
         SceneManager.initialize(stage, contentViewportPane);
-        // Initialize database schema and seed data on first run
+        // Ensure schema/seed data exists. Launcher.main() already does this
+        // as the normal entry point, but App also has its own main() and can
+        // be launched directly (e.g. from an IDE), so we keep this call as a
+        // safety net. It's safe to call twice: every CREATE TABLE uses
+        // IF NOT EXISTS and seeding only runs against empty tables. The
+        // previous bug was not the double call itself, but that it used to
+        // go through two DIFFERENT connections to two different files
+        // (see SQLiteDatabaseConnection) — now both paths share one
+        // connection via DBConnection, so this is harmless.
         com.restaurant.restaurant.database.DatabaseInitializer.initializeDatabase();
         SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
     }
