@@ -279,12 +279,37 @@ public class StaffDashboardController {
 
         table.getColumns().addAll(tableCol, itemsCol, timeCol, statusCol);
 
-        table.getItems().addAll(
-                new String[]{"Table 3", "Jollof Rice, Chicken", "10:32", "Preparing"},
-                new String[]{"Table 7", "Fried Rice, Juice", "10:45", "Ready"},
-                new String[]{"Table 1", "Fufu & Soup", "11:02", "Pending"},
-                new String[]{"Table 5", "Burger, Chips, Malt", "11:15", "Delivered"}
-        );
+        // ✅ REAL DATABASE DATA (replaces hardcoded data)
+        try {
+            java.sql.Connection conn =
+                    com.restaurant.restaurant.database.DBConnection.getConnection();
+
+            String sql = "SELECT order_id, table_number, status, order_timestamp FROM orders ORDER BY order_timestamp DESC";
+
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                int tableNumber = rs.getInt("table_number");
+                String status = rs.getString("status");
+                String time = rs.getString("order_timestamp");
+
+                // reuse your existing method
+                String items = fetchItemsSummary(conn, orderId);
+
+                table.getItems().add(new String[]{
+                        "Table " + tableNumber,
+                        items,
+                        time,
+                        status
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return table;
     }
 
@@ -307,10 +332,9 @@ public class StaffDashboardController {
         view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("📋 Order Management");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; " +
-                "-fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
 
-        // Filter tabs
+        // Filter tabs (UI only for now)
         HBox tabs = new HBox(8);
         String[] tabNames = {"All Orders", "Incoming", "Active", "Completed"};
         for (int i = 0; i < tabNames.length; i++) {
@@ -319,25 +343,51 @@ public class StaffDashboardController {
             tabs.getChildren().add(tab);
         }
 
-        // Orders list
+        // Orders list container
         VBox ordersList = new VBox(10);
         VBox.setVgrow(ordersList, Priority.ALWAYS);
 
-        String[][] orders = {
-                {"Table 3", "Jollof Rice × 2, Chicken × 1", "10:32 AM",
-                        "PREPARING", "warning"},
-                {"Table 7", "Fried Rice × 1, Juice × 2", "10:45 AM",
-                        "READY", "success"},
-                {"Table 1", "Fufu & Soup × 3", "11:02 AM",
-                        "PENDING", "muted"},
-                {"Table 5", "Burger × 2, Chips × 2, Malt × 2", "11:15 AM",
-                        "DELIVERED", "info"},
-                {"Table 9", "Kelewele × 1, Spring Rolls × 2", "11:28 AM",
-                        "PREPARING", "warning"}
-        };
+        // ✅ LOAD REAL DATA FROM DATABASE
+        try {
+            java.sql.Connection conn =
+                    com.restaurant.restaurant.database.DBConnection.getConnection();
 
-        for (String[] order : orders) {
-            ordersList.getChildren().add(buildOrderCard(order));
+            String sql = "SELECT order_id, table_number, status, order_timestamp FROM orders ORDER BY order_timestamp DESC";
+
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                int tableNumber = rs.getInt("table_number");
+                String status = rs.getString("status").toUpperCase();
+                String time = rs.getString("order_timestamp");
+
+                String items = fetchItemsSummary(conn, orderId);
+
+                // Map status → UI style
+                String style;
+                switch (status.toLowerCase()) {
+                    case "pending": style = "muted"; break;
+                    case "preparing": style = "warning"; break;
+                    case "ready": style = "success"; break;
+                    case "delivered": style = "info"; break;
+                    default: style = "muted";
+                }
+
+                ordersList.getChildren().add(
+                        buildOrderCard(new String[]{
+                                "Table " + tableNumber,
+                                items,
+                                time,
+                                status,
+                                style
+                        })
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         ScrollPane scroll = new ScrollPane(ordersList);
