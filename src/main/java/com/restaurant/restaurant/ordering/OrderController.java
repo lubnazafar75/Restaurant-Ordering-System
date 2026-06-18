@@ -72,7 +72,7 @@ public class OrderController {
         chicken.add(new String[]{"Chicken Sandwich", "45.00"});
 
         List<String[]> appetizers = new ArrayList<>();
-        appetizers.add(new String[]{"Spring Rolls (4pcs)", "25.00"});
+        appetizers.add(new String[]{"Spring Rolls", "25.00"});
         appetizers.add(new String[]{"Kelewele", "20.00"});
         appetizers.add(new String[]{"Salad", "22.00"});
         appetizers.add(new String[]{"Chips", "18.00"});
