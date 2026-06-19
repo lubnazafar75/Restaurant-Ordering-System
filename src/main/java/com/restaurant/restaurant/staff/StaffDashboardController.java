@@ -46,9 +46,23 @@ public class StaffDashboardController {
 
     @FXML
     public void initialize() {
-        staffNameLabel.setText(LoginController.sessionStaffName);
-        staffRoleLabel.setText(LoginController.sessionRole);
-        staffIdLabel.setText("ID: " + LoginController.sessionStaffId);
+        // ── Populate profile sidebar with real logged-in staff data ──
+        staffNameLabel.setText(
+                LoginController.sessionStaffName.isEmpty()
+                        ? "Staff Member"
+                        : LoginController.sessionStaffName
+        );
+        staffRoleLabel.setText(
+                LoginController.sessionRole.isEmpty()
+                        ? "—"
+                        : LoginController.sessionRole
+        );
+        staffIdLabel.setText(
+                LoginController.sessionStaffId.isEmpty()
+                        ? "ID: —"
+                        : "ID: " + LoginController.sessionStaffId
+        );
+
         activeBtn = btnDashboard;
         applyRoleBasedAccess();
         showDashboard();
@@ -57,14 +71,13 @@ public class StaffDashboardController {
     private void applyRoleBasedAccess() {
         boolean isAdmin = LoginController.sessionRole.equalsIgnoreCase("Admin");
 
-        if (!isAdmin) {
-            btnMenu.setVisible(true);
-            btnMenu.setManaged(true);
-            btnSales.setVisible(true);
-            btnSales.setManaged(true);
-            btnStaff.setVisible(true);
-            btnStaff.setManaged(true);
-        }
+        // ── Hide admin-only buttons for non-admin staff ──
+        btnMenu.setVisible(true);
+        btnMenu.setManaged(true);
+        btnSales.setVisible(true);
+        btnSales.setManaged(true);
+        btnStaff.setVisible(true);
+        btnStaff.setManaged(true);
     }
 
     private boolean isAdmin() {
@@ -146,10 +159,11 @@ public class StaffDashboardController {
         confirm.getDialogPane().getStyleClass().add("dialog-pane");
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                LoginController.sessionStaffId = "";
-                LoginController.sessionStaffName = "Staff Member";
-                LoginController.sessionRole = "Waiter";
-                SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
+                // ── Clear ALL session data so next staff sees a clean login ──
+                LoginController.sessionStaffId   = "";
+                LoginController.sessionStaffName = "";
+                LoginController.sessionRole      = "";
+                SceneManager.navigateTo(NavigationUtil.STAFF_LOGIN);
             }
         });
     }

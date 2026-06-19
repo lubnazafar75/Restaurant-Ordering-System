@@ -24,8 +24,8 @@ public class NavigationUtil {
     public static final String CUSTOMER_TRACKING = "CUSTOMER_TRACKING";
     public static final String customer_billing = "customer_billing";
     public static final String customer_billing_STAFF = "customer_billing_STAFF";
-    public static final String STAFF_LOGIN      = "STAFF_LOGIN";
-    public static final String STAFF_DASHBOARD  = "STAFF_DASHBOARD";
+    public static final String STAFF_LOGIN = "/fxml/login.fxml";
+    public static final String STAFF_DASHBOARD = "/fxml/staff_dashboard.fxml";
     public static final String KITCHEN          = "KITCHEN";
     public static final String ORDER_CHECKING   = "ORDER_CHECKING";
 

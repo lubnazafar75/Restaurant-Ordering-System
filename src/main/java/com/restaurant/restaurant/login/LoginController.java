@@ -23,17 +23,14 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-
-        if (loginCard != null) {
-            AnimationUtil.fadeIn(loginCard);
+        // ── Always clear fields on load so previous credentials don't show ──
+        if (staffIdField   != null) staffIdField.clear();
+        if (passwordField  != null) passwordField.clear();
+        if (errorLabel     != null) {
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
+            errorLabel.setManaged(false);
         }
-
-        if (loginButton != null) {
-            AnimationUtil.addButtonHover(loginButton);
-        }
-
-        staffIdField.setOnAction(e -> passwordField.requestFocus());
-        passwordField.setOnAction(e -> handleLogin());
     }
 
     @FXML
