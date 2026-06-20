@@ -46,22 +46,27 @@ public class StaffDashboardController {
 
     @FXML
     public void initialize() {
-        // ── Populate profile sidebar with real logged-in staff data ──
+        // ── Display real logged-in staff info ─────────────────────
         staffNameLabel.setText(
-                LoginController.sessionStaffName.isEmpty()
-                        ? "Staff Member"
-                        : LoginController.sessionStaffName
+                !LoginController.sessionStaffName.isEmpty()
+                        ? LoginController.sessionStaffName
+                        : "Staff Member"
         );
         staffRoleLabel.setText(
-                LoginController.sessionRole.isEmpty()
-                        ? "—"
-                        : LoginController.sessionRole
+                !LoginController.sessionRole.isEmpty()
+                        ? LoginController.sessionRole
+                        : "—"
         );
         staffIdLabel.setText(
-                LoginController.sessionStaffId.isEmpty()
-                        ? "ID: —"
-                        : "ID: " + LoginController.sessionStaffId
+                !LoginController.sessionStaffId.isEmpty()
+                        ? "ID: " + LoginController.sessionStaffId
+                        : "ID: —"
         );
+
+        System.out.println("[Dashboard] Logged in as: "
+                + LoginController.sessionStaffName
+                + " | Role: " + LoginController.sessionRole
+                + " | ID: "   + LoginController.sessionStaffId);
 
         activeBtn = btnDashboard;
         applyRoleBasedAccess();
@@ -163,8 +168,8 @@ public class StaffDashboardController {
                 LoginController.sessionStaffId   = "";
                 LoginController.sessionStaffName = "";
                 LoginController.sessionRole      = "";
-                SceneManager.navigateTo(NavigationUtil.STAFF_LOGIN);
-            }
+                System.out.println("[Dashboard] Logged out. Session cleared.");
+                SceneManager.navigateTo(NavigationUtil.STAFF_LOGIN);            }
         });
     }
 

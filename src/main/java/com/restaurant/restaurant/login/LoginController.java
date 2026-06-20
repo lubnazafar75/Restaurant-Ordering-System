@@ -16,10 +16,10 @@ public class LoginController {
     @FXML private VBox loginCard;
     @FXML private Button loginButton;
 
-    // Static session data accessible from dashboard
+    // ── Session fields — ALL empty by default ─
     public static String sessionStaffId   = "";
-    public static String sessionStaffName = "Staff Member";
-    public static String sessionRole      = "Waiter";
+    public static String sessionStaffName = "";
+    public static String sessionRole      = "";
 
     @FXML
     public void initialize() {

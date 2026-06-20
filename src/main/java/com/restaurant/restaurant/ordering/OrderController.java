@@ -15,49 +15,47 @@ import java.util.Map;
 
 public class OrderController {
 
-    // Screen panels
+    // ─── SCREEN PANELS ───────────────────────────────────────
     @FXML private VBox tableEntryScreen;
     @FXML private HBox menuScreen;
     @FXML private VBox confirmScreen;
 
-    // Table entry
+    // ─── TABLE ENTRY ─────────────────────────────────────────
     @FXML private TextField tableNumberField;
 
-    // Menu
+    // ─── MENU ────────────────────────────────────────────────
     @FXML private Label tableLabel;
     @FXML private TextField searchField;
     @FXML private HBox categoryBar;
     @FXML private FlowPane foodGrid;
 
-    // Cart
+    // ─── CART ────────────────────────────────────────────────
     @FXML private VBox cartItemsBox;
     @FXML private Label cartCountLabel;
     @FXML private Label subtotalLabel;
     @FXML private Label vatLabel;
     @FXML private Label totalLabel;
-
-    // ── THIS WAS MISSING — fixes "cannot find symbol" error ──
     @FXML private Button trackOrderBtn;
 
-    // Confirm
+    // ─── CONFIRM ─────────────────────────────────────────────
     @FXML private Label confirmMessageLabel;
     @FXML private Label orderSummaryLabel;
 
-    // State
+    // ─── STATE ───────────────────────────────────────────────
     public static int lastOrderId = -1;
+    private static final int MAX_TABLES = 20; // ← single constant for easy changes
     private int tableNumber = 0;
     private Order order = new Order();
     private String currentCategory = "All";
 
-    // Menu data - category -> list of {name, price}
     private final Map<String, List<String[]>> menuData = new LinkedHashMap<>();
 
+    // ─── INIT ────────────────────────────────────────────────
     @FXML
     public void initialize() {
         buildMenuData();
         showScreen(tableEntryScreen);
 
-        // Show "Track My Order" button only if order already placed
         if (OrderController.lastOrderId != -1) {
             trackOrderBtn.setVisible(true);
             trackOrderBtn.setManaged(true);
@@ -70,86 +68,137 @@ public class OrderController {
     // ─── MENU DATA ───────────────────────────────────────────
     private void buildMenuData() {
         List<String[]> mains = new ArrayList<>();
-        mains.add(new String[]{"Jollof Rice", "45.00"});
-        mains.add(new String[]{"Fried Rice", "40.00"});
-        mains.add(new String[]{"Banku & Tilapia", "55.00"});
-        mains.add(new String[]{"Fufu & Soup", "50.00"});
-        mains.add(new String[]{"Waakye", "35.00"});
-        mains.add(new String[]{"Kenkey & Fish", "40.00"});
+        mains.add(new String[]{"Jollof Rice",      "45.00"});
+        mains.add(new String[]{"Fried Rice",        "40.00"});
+        mains.add(new String[]{"Banku & Tilapia",   "55.00"});
+        mains.add(new String[]{"Fufu & Soup",       "50.00"});
+        mains.add(new String[]{"Waakye",            "35.00"});
+        mains.add(new String[]{"Kenkey & Fish",     "40.00"});
 
         List<String[]> chicken = new ArrayList<>();
-        chicken.add(new String[]{"Grilled Chicken", "65.00"});
-        chicken.add(new String[]{"Fried Chicken", "60.00"});
-        chicken.add(new String[]{"Chicken Burger", "50.00"});
+        chicken.add(new String[]{"Grilled Chicken",  "65.00"});
+        chicken.add(new String[]{"Fried Chicken",    "60.00"});
+        chicken.add(new String[]{"Chicken Burger",   "50.00"});
         chicken.add(new String[]{"Chicken Sandwich", "45.00"});
 
         List<String[]> appetizers = new ArrayList<>();
         appetizers.add(new String[]{"Spring Rolls", "25.00"});
-        appetizers.add(new String[]{"Kelewele", "20.00"});
-        appetizers.add(new String[]{"Salad", "22.00"});
-        appetizers.add(new String[]{"Chips", "18.00"});
+        appetizers.add(new String[]{"Kelewele",     "20.00"});
+        appetizers.add(new String[]{"Salad",        "22.00"});
+        appetizers.add(new String[]{"Chips",        "18.00"});
 
         List<String[]> drinks = new ArrayList<>();
-        drinks.add(new String[]{"Coca-Cola", "8.00"});
-        drinks.add(new String[]{"Malt Drink", "10.00"});
+        drinks.add(new String[]{"Coca-Cola",   "8.00"});
+        drinks.add(new String[]{"Malt Drink",  "10.00"});
         drinks.add(new String[]{"Fresh Juice", "15.00"});
-        drinks.add(new String[]{"Water", "5.00"});
-        drinks.add(new String[]{"Sobolo", "12.00"});
+        drinks.add(new String[]{"Water",       "5.00"});
+        drinks.add(new String[]{"Sobolo",      "12.00"});
 
         List<String[]> desserts = new ArrayList<>();
-        desserts.add(new String[]{"Ice Cream", "20.00"});
-        desserts.add(new String[]{"Cake Slice", "25.00"});
+        desserts.add(new String[]{"Ice Cream",   "20.00"});
+        desserts.add(new String[]{"Cake Slice",  "25.00"});
         desserts.add(new String[]{"Fruit Salad", "18.00"});
 
-        menuData.put("Main Meals", mains);
-        menuData.put("Chicken", chicken);
-        menuData.put("Appetizers", appetizers);
-        menuData.put("Drinks", drinks);
-        menuData.put("Desserts", desserts);
+        menuData.put("Main Meals",  mains);
+        menuData.put("Chicken",     chicken);
+        menuData.put("Appetizers",  appetizers);
+        menuData.put("Drinks",      drinks);
+        menuData.put("Desserts",    desserts);
     }
 
     // ─── SCREEN 1: TABLE ENTRY ───────────────────────────────
     @FXML
     public void handleStartOrder() {
         String input = tableNumberField.getText().trim();
+
+        // Empty check
         if (input.isEmpty()) {
             showAlert("Table Number Required",
                     "Please enter your table number to continue.");
             return;
         }
+
+        // Numeric check
+        int num;
         try {
-            tableNumber = Integer.parseInt(input);
-            if (tableNumber <= 0) {
-                showAlert("Invalid Table Number",
-                        "Please enter a valid table number.");
-                return;
-            }
+            num = Integer.parseInt(input);
         } catch (NumberFormatException e) {
             showAlert("Invalid Input",
                     "Table number must be a number.");
+            tableNumberField.clear();
+            tableNumberField.requestFocus();
             return;
         }
 
+        // Lower bound check
+        if (num < 1) {
+            showAlert("Invalid Table Number",
+                    "Table number must be at least 1.");
+            tableNumberField.clear();
+            tableNumberField.requestFocus();
+            return;
+        }
+
+        // Upper bound check — MAX_TABLES constant
+        if (num > MAX_TABLES) {
+            showAlert("Table Not Found",
+                    "This restaurant only has " + MAX_TABLES + " tables.\n" +
+                            "Please enter a table number between 1 and " + MAX_TABLES + ".");
+            tableNumberField.clear();
+            tableNumberField.requestFocus();
+            return;
+        }
+
+        // DB availability check
+        if (!isTableAvailable(num)) {
+            showAlert("Table Unavailable",
+                    "Table " + num + " is currently occupied.\n" +
+                            "Please speak to a staff member for assistance.");
+            tableNumberField.clear();
+            tableNumberField.requestFocus();
+            return;
+        }
+
+        // All checks passed
+        tableNumber = num;
         tableLabel.setText("Table " + tableNumber);
         buildCategoryBar();
         loadFoodItems("All");
         showScreen(menuScreen);
 
-        // Show track button if order already placed (re-check when entering menu)
         if (OrderController.lastOrderId != -1) {
             trackOrderBtn.setVisible(true);
             trackOrderBtn.setManaged(true);
         }
     }
 
+    /**
+     * Checks the DB to confirm the table exists and is available.
+     * Returns true (fail open) if no DB connection.
+     */
+    private boolean isTableAvailable(int tableNum) {
+        java.sql.Connection conn =
+                com.restaurant.restaurant.database.DBConnection.getConnection();
+        if (conn == null) return true;
+
+        String sql = "SELECT status FROM tables WHERE table_number = ?";
+        try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, tableNum);
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return false; // not found in DB
+                return "available".equalsIgnoreCase(rs.getString("status"));
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("[OrderController] Table check error: "
+                    + e.getMessage());
+            return true; // fail open
+        }
+    }
+
     // ─── SCREEN 2: MENU ──────────────────────────────────────
     private void buildCategoryBar() {
         categoryBar.getChildren().clear();
-
-        // "All" button
         addCategoryButton("All", true);
-
-        // Category buttons
         for (String category : menuData.keySet()) {
             addCategoryButton(category, false);
         }
@@ -161,16 +210,13 @@ public class OrderController {
 
         btn.setOnAction(e -> {
             currentCategory = name;
-            // Reset all buttons
             categoryBar.getChildren().forEach(node -> {
                 if (node instanceof Button) {
                     ((Button) node).getStyleClass().removeAll("btn-pill-active");
-                    if (!((Button) node).getStyleClass().contains("btn-pill")) {
+                    if (!((Button) node).getStyleClass().contains("btn-pill"))
                         ((Button) node).getStyleClass().add("btn-pill");
-                    }
                 }
             });
-            // Highlight active
             btn.getStyleClass().remove("btn-pill");
             btn.getStyleClass().add("btn-pill-active");
             loadFoodItems(name);
@@ -181,25 +227,20 @@ public class OrderController {
 
     private void loadFoodItems(String category) {
         foodGrid.getChildren().clear();
-        String search = searchField != null ?
-                searchField.getText().toLowerCase().trim() : "";
+        String search = searchField != null
+                ? searchField.getText().toLowerCase().trim() : "";
 
         List<String[]> items = new ArrayList<>();
-
         if (category.equals("All")) {
-            for (List<String[]> list : menuData.values()) {
-                items.addAll(list);
-            }
+            for (List<String[]> list : menuData.values()) items.addAll(list);
         } else {
             items = menuData.getOrDefault(category, new ArrayList<>());
         }
 
         for (String[] item : items) {
-            String name = item[0];
-            String price = item[1];
             if (!search.isEmpty() &&
-                    !name.toLowerCase().contains(search)) continue;
-            foodGrid.getChildren().add(buildFoodCard(name, price));
+                    !item[0].toLowerCase().contains(search)) continue;
+            foodGrid.getChildren().add(buildFoodCard(item[0], item[1]));
         }
     }
 
@@ -217,68 +258,116 @@ public class OrderController {
         card.setPadding(new Insets(14));
         card.getStyleClass().add("food-card");
 
-        // Food emoji
         Label emoji = new Label(getFoodEmoji(name));
         emoji.setStyle("-fx-font-size: 32px;");
 
         Label nameLabel = new Label(name);
         nameLabel.setStyle(
-                "-fx-text-fill: #1F2937; -fx-font-size: 13px; " +
-                        "-fx-font-weight: bold;");
+                "-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
         nameLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         Label priceLabel = new Label("GHS " + priceStr);
         priceLabel.setStyle(
-                "-fx-text-fill: #10B981; -fx-font-size: 13px; " +
-                        "-fx-font-weight: bold;");
+                "-fx-text-fill: #10B981; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button addBtn = new Button("+ Add");
         addBtn.setPrefWidth(120);
         addBtn.getStyleClass().add("btn-primary");
-        addBtn.setStyle(addBtn.getStyle() +
-                "-fx-font-size: 12px; -fx-padding: 8 6;");
-
+        addBtn.setStyle(addBtn.getStyle() + "-fx-font-size: 12px; -fx-padding: 8 6;");
         addBtn.setOnAction(e -> addToCart(name, price));
 
         card.getChildren().addAll(emoji, nameLabel, priceLabel, addBtn);
-
         return card;
     }
 
     private String getFoodEmoji(String name) {
-        String lower = name.toLowerCase();
-        if (lower.contains("rice")) return "🍚";
-        if (lower.contains("chicken")) return "🍗";
-        if (lower.contains("burger")) return "🍔";
-        if (lower.contains("sandwich")) return "🥪";
-        if (lower.contains("salad")) return "🥗";
-        if (lower.contains("chips") || lower.contains("fries")) return "🍟";
-        if (lower.contains("juice") || lower.contains("sobolo")) return "🧃";
-        if (lower.contains("water")) return "💧";
-        if (lower.contains("cola") || lower.contains("malt")) return "🥤";
-        if (lower.contains("ice cream")) return "🍦";
-        if (lower.contains("cake")) return "🍰";
-        if (lower.contains("fruit")) return "🍓";
-        if (lower.contains("fish") || lower.contains("tilapia")) return "🐟";
-        if (lower.contains("soup") || lower.contains("fufu")) return "🍲";
-        if (lower.contains("roll")) return "🥟";
+        String n = name.toLowerCase();
+        if (n.contains("rice"))                        return "🍚";
+        if (n.contains("chicken"))                     return "🍗";
+        if (n.contains("burger"))                      return "🍔";
+        if (n.contains("sandwich"))                    return "🥪";
+        if (n.contains("salad"))                       return "🥗";
+        if (n.contains("chips") || n.contains("fries"))return "🍟";
+        if (n.contains("juice") || n.contains("sobolo"))return "🧃";
+        if (n.contains("water"))                       return "💧";
+        if (n.contains("cola") || n.contains("malt")) return "🥤";
+        if (n.contains("ice cream"))                   return "🍦";
+        if (n.contains("cake"))                        return "🍰";
+        if (n.contains("fruit"))                       return "🍓";
+        if (n.contains("fish") || n.contains("tilapia"))return "🐟";
+        if (n.contains("soup") || n.contains("fufu")) return "🍲";
+        if (n.contains("roll"))                        return "🥟";
         return "🍽";
     }
+    // ─── FOOD IMAGE URLs ─────────────────────────────────────
+// Paste the image URL for each food item here.
+// If a URL is missing or fails to load, falls back to emoji.
+    private static final Map<String, String> foodImages = new LinkedHashMap<>();
 
-    // Add this new public method:
+    static {
+        // ── Main Meals ────────────────────────────────────────
+        foodImages.put("Jollof Rice",
+                "https://unsplash.com/photos/cooked-food-on-white-ceramic-plate-Yo8RWHcPwps");
+        foodImages.put("Fried Rice",
+                "");  // ← paste URL here
+        foodImages.put("Banku & Tilapia",
+                "");
+        foodImages.put("Fufu & Soup",
+                "");
+        foodImages.put("Waakye",
+                "");
+        foodImages.put("Kenkey & Fish",
+                "");
+
+        // ── Chicken ───────────────────────────────────────────
+        foodImages.put("Grilled Chicken",
+                "");
+        foodImages.put("Fried Chicken",
+                "");
+        foodImages.put("Chicken Burger",
+                "");
+        foodImages.put("Chicken Sandwich",
+                "");
+
+        // ── Appetizers ────────────────────────────────────────
+        foodImages.put("Spring Rolls",
+                "");
+        foodImages.put("Kelewele",
+                "");
+        foodImages.put("Salad",
+                "");
+        foodImages.put("Chips",
+                "");
+
+        // ── Drinks ────────────────────────────────────────────
+        foodImages.put("Coca-Cola",
+                "");
+        foodImages.put("Malt Drink",
+                "");
+        foodImages.put("Fresh Juice",
+                "");
+        foodImages.put("Water",
+                "");
+        foodImages.put("Sobolo",
+                "");
+
+        // ── Desserts ──────────────────────────────────────────
+        foodImages.put("Ice Cream",
+                "");
+        foodImages.put("Cake Slice",
+                "");
+        foodImages.put("Fruit Salad",
+                "");
+    }
     public void showMenuDirectly() {
-        if (tableNumber > 0) {
-            showScreen(menuScreen);
-        } else {
-            showScreen(tableEntryScreen);
-        }
+        if (tableNumber > 0) showScreen(menuScreen);
+        else showScreen(tableEntryScreen);
     }
 
     // ─── CART ────────────────────────────────────────────────
     private void addToCart(String name, double price) {
-        // Check if item already in cart — increase quantity
         for (OrderItem existing : order.getItems()) {
             if (existing.getName().equals(name)) {
                 existing.incrementQuantity();
@@ -286,7 +375,6 @@ public class OrderController {
                 return;
             }
         }
-        // New item
         order.addItem(new OrderItem(name, price, 1));
         refreshCart();
     }
@@ -301,14 +389,13 @@ public class OrderController {
             cartCountLabel.setText("0 items");
         } else {
             cartCountLabel.setText(order.getItems().size() + " item(s)");
-            for (OrderItem item : order.getItems()) {
+            for (OrderItem item : order.getItems())
                 cartItemsBox.getChildren().add(buildCartRow(item));
-            }
         }
 
         double subtotal = order.getTotal();
-        double vat = subtotal * 0.10;
-        double total = subtotal + vat;
+        double vat      = subtotal * 0.10;
+        double total    = subtotal + vat;
 
         subtotalLabel.setText(String.format("GHS %.2f", subtotal));
         vatLabel.setText(String.format("GHS %.2f", vat));
@@ -320,11 +407,8 @@ public class OrderController {
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(8, 12, 8, 12));
         row.setStyle(
-                "-fx-background-color: #F8FAFC; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-border-color: #E5E7EB; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-border-width: 1;");
+                "-fx-background-color: #F8FAFC; -fx-background-radius: 10; " +
+                        "-fx-border-color: #E5E7EB; -fx-border-radius: 10; -fx-border-width: 1;");
 
         Label nameLabel = new Label(item.getName());
         nameLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px;");
@@ -339,18 +423,16 @@ public class OrderController {
                         "-fx-background-radius: 6; -fx-cursor: hand; " +
                         "-fx-border-color: #E5E7EB; -fx-border-radius: 6; -fx-border-width: 1;");
         minusBtn.setOnAction(e -> {
-            if (item.getQuantity() > 1) {
-                item.decrementQuantity();
-            } else {
-                order.removeItem(item);
-            }
+            if (item.getQuantity() > 1) item.decrementQuantity();
+            else order.removeItem(item);
             refreshCart();
         });
 
         Label qtyLabel = new Label(String.valueOf(item.getQuantity()));
         qtyLabel.setPrefWidth(28);
         qtyLabel.setAlignment(Pos.CENTER);
-        qtyLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
+        qtyLabel.setStyle(
+                "-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button plusBtn = new Button("+");
         plusBtn.setPrefSize(28, 28);
@@ -358,21 +440,15 @@ public class OrderController {
                 "-fx-background-color: #10B981; -fx-text-fill: white; " +
                         "-fx-font-size: 14px; -fx-font-weight: bold; " +
                         "-fx-background-radius: 6; -fx-cursor: hand;");
-        plusBtn.setOnAction(e -> {
-            item.incrementQuantity();
-            refreshCart();
-        });
+        plusBtn.setOnAction(e -> { item.incrementQuantity(); refreshCart(); });
 
-        Label priceLabel = new Label(
-                String.format("GHS %.2f", item.getSubtotal()));
+        Label priceLabel = new Label(String.format("GHS %.2f", item.getSubtotal()));
         priceLabel.setStyle(
-                "-fx-text-fill: #10B981; -fx-font-size: 13px; " +
-                        "-fx-font-weight: bold;");
+                "-fx-text-fill: #10B981; -fx-font-size: 13px; -fx-font-weight: bold;");
         priceLabel.setPrefWidth(80);
         priceLabel.setAlignment(Pos.CENTER_RIGHT);
 
-        row.getChildren().addAll(
-                nameLabel, minusBtn, qtyLabel, plusBtn, priceLabel);
+        row.getChildren().addAll(nameLabel, minusBtn, qtyLabel, plusBtn, priceLabel);
         return row;
     }
 
@@ -386,10 +462,9 @@ public class OrderController {
         }
 
         double subtotal = order.getTotal();
-        double vat = subtotal * 0.10;
-        double total = subtotal + vat;
+        double vat      = subtotal * 0.10;
+        double total    = subtotal + vat;
 
-        // Build order summary text
         StringBuilder summary = new StringBuilder();
         for (OrderItem item : order.getItems()) {
             summary.append(item.getQuantity())
@@ -398,12 +473,9 @@ public class OrderController {
                     .append(String.format("%.2f", item.getSubtotal()))
                     .append("\n");
         }
-        summary.append("\nVAT (10%): GHS ")
-                .append(String.format("%.2f", vat));
-        summary.append("\nTotal: GHS ")
-                .append(String.format("%.2f", total));
+        summary.append("\nVAT (10%): GHS ").append(String.format("%.2f", vat));
+        summary.append("\nTotal: GHS ").append(String.format("%.2f", total));
 
-        // ── SAVE ORDER TO DATABASE ────────────────────────────
         int newOrderId = saveOrderToDatabase(total);
 
         if (newOrderId == -1) {
@@ -412,10 +484,8 @@ public class OrderController {
             return;
         }
 
-        // Store order ID for tracking/receipt screens
         OrderController.lastOrderId = newOrderId;
 
-        // Show track button now that order is placed
         trackOrderBtn.setVisible(true);
         trackOrderBtn.setManaged(true);
 
@@ -427,16 +497,11 @@ public class OrderController {
         showScreen(confirmScreen);
     }
 
-    /**
-     * Inserts the current order and its items into the database.
-     * Returns the generated order_id, or -1 if the insert failed.
-     */
     private int saveOrderToDatabase(double total) {
         java.sql.Connection conn =
                 com.restaurant.restaurant.database.DBConnection.getConnection();
-
         if (conn == null) {
-            System.err.println("[OrderController] No DB connection available.");
+            System.err.println("[OrderController] No DB connection.");
             return -1;
         }
 
@@ -452,35 +517,28 @@ public class OrderController {
             // 1. Insert order header
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(
                     insertOrderSql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
-
                 stmt.setInt(1, tableNumber);
                 stmt.setDouble(2, total);
                 stmt.executeUpdate();
-
                 try (java.sql.ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        orderId = rs.getInt(1);
-                    }
+                    if (rs.next()) orderId = rs.getInt(1);
                 }
             }
 
-            if (orderId == -1) {
-                conn.rollback();
-                return -1;
-            }
+            if (orderId == -1) { conn.rollback(); return -1; }
 
-            // 2. Insert each order item
+            // 2. Insert order items
             String insertItemSql =
                     "INSERT INTO order_items (order_id, item_id, quantity, subtotal) " +
                             "VALUES (?, ?, ?, ?)";
 
-            try (java.sql.PreparedStatement stmt = conn.prepareStatement(insertItemSql)) {
+            try (java.sql.PreparedStatement stmt =
+                         conn.prepareStatement(insertItemSql)) {
                 for (OrderItem item : order.getItems()) {
                     int foodItemId = lookupFoodItemId(conn, item.getName());
                     if (foodItemId == -1) {
-                        System.err.println(
-                                "[OrderController] Could not find food_items.item_id for: "
-                                        + item.getName());
+                        System.err.println("[OrderController] Item not found: "
+                                + item.getName());
                         continue;
                     }
                     stmt.setInt(1, orderId);
@@ -491,50 +549,42 @@ public class OrderController {
                 }
             }
 
-            // 3. Log initial order history entry
-            String historySql =
+            // 3. Log initial history
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(
                     "INSERT INTO order_history (order_id, status, changed_at) " +
-                            "VALUES (?, 'pending', datetime('now','localtime'))";
-            try (java.sql.PreparedStatement stmt = conn.prepareStatement(historySql)) {
+                            "VALUES (?, 'pending', datetime('now','localtime'))")) {
                 stmt.setInt(1, orderId);
                 stmt.executeUpdate();
             }
 
-            // 4. Mark table as occupied
-            String tableSql = "UPDATE tables SET status = 'occupied' WHERE table_number = ?";
-            try (java.sql.PreparedStatement stmt = conn.prepareStatement(tableSql)) {
+            // 4. Mark table occupied
+            try (java.sql.PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE tables SET status = 'occupied' WHERE table_number = ?")) {
                 stmt.setInt(1, tableNumber);
                 stmt.executeUpdate();
             }
 
             conn.commit();
             System.out.println("[OrderController] Order #" + orderId
-                    + " saved successfully for Table " + tableNumber);
+                    + " saved for Table " + tableNumber);
             return orderId;
 
         } catch (java.sql.SQLException e) {
             try { conn.rollback(); } catch (java.sql.SQLException ignored) {}
-            System.err.println("[OrderController] DB error saving order: "
-                    + e.getMessage());
+            System.err.println("[OrderController] DB error: " + e.getMessage());
             return -1;
         } finally {
             try { conn.setAutoCommit(true); } catch (java.sql.SQLException ignored) {}
         }
     }
 
-    /**
-     * Looks up the food_items.item_id for a given food name.
-     * Returns -1 if not found.
-     */
     private int lookupFoodItemId(java.sql.Connection conn, String foodName)
             throws java.sql.SQLException {
         String sql = "SELECT item_id FROM food_items WHERE name = ?";
         try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, foodName);
             try (java.sql.ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("item_id");
-                }
+                if (rs.next()) return rs.getInt("item_id");
             }
         }
         return -1;
@@ -557,13 +607,9 @@ public class OrderController {
 
     // ─── HELPERS ─────────────────────────────────────────────
     private void showScreen(javafx.scene.Node screen) {
-        tableEntryScreen.setVisible(false);
-        tableEntryScreen.setManaged(false);
-        menuScreen.setVisible(false);
-        menuScreen.setManaged(false);
-        confirmScreen.setVisible(false);
-        confirmScreen.setManaged(false);
-
+        tableEntryScreen.setVisible(false); tableEntryScreen.setManaged(false);
+        menuScreen.setVisible(false);       menuScreen.setManaged(false);
+        confirmScreen.setVisible(false);    confirmScreen.setManaged(false);
         screen.setVisible(true);
         screen.setManaged(true);
     }
