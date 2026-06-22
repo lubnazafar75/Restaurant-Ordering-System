@@ -28,6 +28,8 @@ import java.time.format.DateTimeFormatter;
 public class CustomerTrackingController {
 
     @FXML private VBox trackingScreen;
+    @FXML private VBox receivedScreen;
+
     @FXML private Label statusEmojiLabel;
     @FXML private Label currentStatusLabel;
     @FXML private Label statusDescLabel;
@@ -46,7 +48,7 @@ public class CustomerTrackingController {
     @FXML private Label confirmationHintLabel;
     @FXML private Button foodReceivedBtn;
 
-    @FXML private Label navMenuLabel, navTrackLabel, navBillLabel, navRateLabel;
+    @FXML private Label orderInfoLabel;
 
     private int currentStep = 1;
     private Timeline statusPoller;
@@ -56,57 +58,125 @@ public class CustomerTrackingController {
     public void initialize() {
         trackedOrderId = OrderController.lastOrderId;
 
-        // Simulation for testing (uncomment to test)
+        if (orderInfoLabel != null) {
+            orderInfoLabel.setText(trackedOrderId != -1
+                    ? "Order #" + trackedOrderId
+                    : "Tracking your order...");
+        }
 
+        // Animate through steps for visual feedback
         Timeline simulation = new Timeline(
-            new KeyFrame(Duration.seconds(0), e -> setStep(1)),
-            new KeyFrame(Duration.seconds(4), e -> setStep(2)),
-            new KeyFrame(Duration.seconds(8), e -> setStep(3)),
-            new KeyFrame(Duration.seconds(12), e -> setStep(4))
+                new KeyFrame(Duration.seconds(0),  e -> setStep(1)),
+                new KeyFrame(Duration.seconds(4),  e -> setStep(2)),
+                new KeyFrame(Duration.seconds(8),  e -> setStep(3)),
+                new KeyFrame(Duration.seconds(12), e -> setStep(4))
         );
         simulation.play();
-
 
         loadOrderDetails();
         loadCulinarySummary();
         Platform.runLater(this::startTracking);
-
-        if (navTrackLabel != null) navTrackLabel.getStyleClass().add("nav-label-active");
     }
 
+    // ── BACK TO MENU (called by tracking.fxml) ────────────────
+    @FXML
+    public void handleBackToMenu() {
+        SceneManager.navigateToMenu();
+    }
+
+    // ── FOOD RECEIVED BUTTON (called by tracking.fxml) ────────
+    @FXML
+    public void handleFoodReceived() {
+        // Switch to the received/confirmation screen
+        if (trackingScreen != null) {
+            trackingScreen.setVisible(false);
+            trackingScreen.setManaged(false);
+        }
+        if (receivedScreen != null) {
+            receivedScreen.setVisible(true);
+            receivedScreen.setManaged(true);
+        }
+        if (statusPoller != null) statusPoller.stop();
+
+        // Mark order as delivered in DB
+        markOrderDelivered();
+    }
+
+    // ── REQUEST RECEIPT (from received screen) ─────────────────
+    @FXML
+    public void handleRequestReceipt() {
+        SceneManager.navigateTo(NavigationUtil.customer_billing);
+    }
+
+    // ── ORDER MORE (from received screen) ─────────────────────
+    @FXML
+    public void handleOrderMore() {
+        SceneManager.navigateToMenu();
+    }
+
+    // ── CONFIRM DELIVERY (alias, keep for safety) ─────────────
+    @FXML
+    public void handleConfirmDelivery() {
+        handleFoodReceived();
+    }
+
+    // ── NAV HANDLERS ──────────────────────────────────────────
+    @FXML public void handleNavMenu()  { SceneManager.navigateToMenu(); }
+    @FXML public void handleNavTrack() { /* already here */ }
+    @FXML public void handleNavBill()  { SceneManager.navigateTo(NavigationUtil.customer_billing); }
+    @FXML public void handleNavRate()  { SceneManager.navigateTo(NavigationUtil.customer_billing); }
+
+    // ── DB: load order header ─────────────────────────────────
     private void loadOrderDetails() {
         if (trackedOrderId == -1) return;
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT status, order_date FROM orders WHERE order_id = ?";
+            // FIX: use order_timestamp (not order_date)
+            String sql = "SELECT status, order_timestamp FROM orders WHERE order_id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, trackedOrderId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         String status = rs.getString("status");
-                        LocalDateTime dt = rs.getTimestamp("order_date").toLocalDateTime();
-                        currentStep = mapStatusToStep(status);
+                        String tsStr  = rs.getString("order_timestamp");
+                        currentStep   = mapStatusToStep(status);
                         Platform.runLater(() -> {
-                            culinarySummaryDateLabel.setText(dt.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")));
+                            if (culinarySummaryDateLabel != null && tsStr != null) {
+                                try {
+                                    LocalDateTime dt = LocalDateTime.parse(tsStr,
+                                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                                    culinarySummaryDateLabel.setText(
+                                            dt.format(DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")));
+                                } catch (Exception ex) {
+                                    culinarySummaryDateLabel.setText(tsStr);
+                                }
+                            }
                             updateProgressDisplay();
                         });
                     }
                 }
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    // ── DB: load order items ──────────────────────────────────
     private void loadCulinarySummary() {
         if (trackedOrderId == -1) return;
-        orderItemsList.getChildren().clear();
+        if (orderItemsList != null) orderItemsList.getChildren().clear();
         double total = 0.0;
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT m.name, oi.quantity, m.price FROM order_items oi JOIN menu m ON oi.item_id = m.item_id WHERE oi.order_id = ?";
+            // FIX: JOIN food_items (not menu), correct column names
+            String sql = "SELECT f.name, oi.quantity, f.price " +
+                    "FROM order_items oi " +
+                    "JOIN food_items f ON oi.item_id = f.item_id " +
+                    "WHERE oi.order_id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, trackedOrderId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        String name = rs.getString("name");
-                        int qty = rs.getInt("quantity");
+                        String name   = rs.getString("name");
+                        int    qty    = rs.getInt("quantity");
                         double subtotal = rs.getDouble("price") * qty;
                         total += subtotal;
                         addSummaryItem(name, qty, subtotal);
@@ -115,17 +185,21 @@ public class CustomerTrackingController {
             }
             final double finalTotal = total;
             Platform.runLater(() -> {
-                itemsTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
-                grandTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
+                if (itemsTotalLabel != null)
+                    itemsTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
+                if (grandTotalLabel != null)
+                    grandTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
             });
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addSummaryItem(String name, int qty, double subtotal) {
+        if (orderItemsList == null) return;
         Platform.runLater(() -> {
-            HBox row = new HBox();
+            HBox row = new HBox(12);
             row.setAlignment(Pos.CENTER_LEFT);
-            row.setSpacing(12);
 
             Label qtyBadge = new Label(qty + "x");
             qtyBadge.getStyleClass().add("qty-badge");
@@ -144,17 +218,33 @@ public class CustomerTrackingController {
         });
     }
 
+    // ── DB: mark order delivered ──────────────────────────────
+    private void markOrderDelivered() {
+        if (trackedOrderId == -1) return;
+        try (Connection conn = DBConnection.getConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE orders SET status = 'delivered' WHERE order_id = ?")) {
+                stmt.setInt(1, trackedOrderId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ── POLLING ───────────────────────────────────────────────
     private void startTracking() {
         if (trackedOrderId == -1) return;
-        statusPoller = new Timeline(new KeyFrame(Duration.seconds(3), e -> pollOrderStatus()));
+        statusPoller = new Timeline(
+                new KeyFrame(Duration.seconds(3), e -> pollOrderStatus()));
         statusPoller.setCycleCount(Timeline.INDEFINITE);
         statusPoller.play();
     }
 
     private void pollOrderStatus() {
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT status FROM orders WHERE order_id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT status FROM orders WHERE order_id = ?")) {
                 stmt.setInt(1, trackedOrderId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
@@ -163,17 +253,24 @@ public class CustomerTrackingController {
                             currentStep = newStep;
                             Platform.runLater(this::updateProgressDisplay);
                         }
-                        if (currentStep == 4 && statusPoller != null) statusPoller.stop();
+                        if (currentStep == 4 && statusPoller != null)
+                            statusPoller.stop();
                     }
                 }
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private int mapStatusToStep(String status) {
         if (status == null) return 1;
         return switch (status.toLowerCase()) {
-            case "pending" -> 1; case "preparing" -> 2; case "ready" -> 3; case "delivered" -> 4; default -> 1;
+            case "pending"   -> 1;
+            case "preparing" -> 2;
+            case "ready"     -> 3;
+            case "delivered" -> 4;
+            default          -> 1;
         };
     }
 
@@ -182,39 +279,51 @@ public class CustomerTrackingController {
         Platform.runLater(this::updateProgressDisplay);
     }
 
+    // ── UI UPDATE ─────────────────────────────────────────────
     private void updateProgressDisplay() {
         switch (currentStep) {
-            case 1 -> updateStatusUI("⏳", "Order Received", "Your order has been received and will be prepared shortly.", "Estimated wait: ~15 minutes");
-            case 2 -> updateStatusUI("👨‍🍳", "Being Prepared", "Our chefs are working on your order right now!", "Estimated wait: ~10 minutes");
-            case 3 -> updateStatusUI("🍽️", "Ready for Delivery", "Your order is ready! A waiter will bring it to your table.", "Almost there — just a few more minutes!");
-            case 4 -> updateStatusUI("✅", "Delivered!", "Your food has been delivered. Enjoy your meal!", "Enjoy your meal! 🎉");
+            case 1 -> updateStatusUI("⏳", "Order Received",
+                    "Your order has been received and will be prepared shortly.",
+                    "Estimated wait: ~15 minutes");
+            case 2 -> updateStatusUI("👨‍🍳", "Being Prepared",
+                    "Our chefs are working on your order right now!",
+                    "Estimated wait: ~10 minutes");
+            case 3 -> updateStatusUI("🍽️", "Ready for Delivery",
+                    "Your order is ready! A waiter will bring it to your table.",
+                    "Almost there — just a few more minutes!");
+            case 4 -> updateStatusUI("✅", "Delivered!",
+                    "Your food has been delivered. Enjoy your meal!",
+                    "Enjoy your meal! 🎉");
         }
+
         updateStepCircle(step1Circle, step1Title, 1, "1");
         updateStepCircle(step2Circle, step2Title, 2, "2");
         updateStepCircle(step3Circle, step3Title, 3, "3");
         updateStepCircle(step4Circle, step4Title, 4, "4");
         updateProgressBar();
 
+        // Show/hide Food Received button
         if (foodReceivedBtn != null) {
-            boolean isDelivered = (currentStep == 4);
-            foodReceivedBtn.setDisable(!isDelivered);
-            if (isDelivered) {
-                foodReceivedBtn.getStyleClass().setAll("btn-confirm-persistent-enabled");
-                confirmationHintLabel.setText("Your order is here! Please confirm receipt to proceed.");
-                confirmationHintLabel.getStyleClass().setAll("hint-label-delivered");
+            boolean delivered = (currentStep == 4);
+            foodReceivedBtn.setVisible(delivered);
+            foodReceivedBtn.setManaged(delivered);
+        }
+        if (confirmationHintLabel != null) {
+            if (currentStep == 4) {
+                confirmationHintLabel.setText(
+                        "Your order is here! Press the button to confirm receipt.");
             } else {
-                foodReceivedBtn.getStyleClass().setAll("btn-confirm-persistent-disabled");
-                confirmationHintLabel.setText("Wait until the progress timeline shifts to 'Delivered' to mark receipt.");
-                confirmationHintLabel.getStyleClass().setAll("hint-label-waiting");
+                confirmationHintLabel.setText(
+                        "Wait until your order is delivered to confirm receipt.");
             }
         }
     }
 
     private void updateStatusUI(String emoji, String title, String desc, String time) {
-        statusEmojiLabel.setText(emoji);
-        currentStatusLabel.setText(title);
-        statusDescLabel.setText(desc);
-        estimatedTimeLabel.setText(time);
+        if (statusEmojiLabel   != null) statusEmojiLabel.setText(emoji);
+        if (currentStatusLabel != null) currentStatusLabel.setText(title);
+        if (statusDescLabel    != null) statusDescLabel.setText(desc);
+        if (estimatedTimeLabel != null) estimatedTimeLabel.setText(time);
     }
 
     private void updateProgressBar() {
@@ -222,21 +331,24 @@ public class CustomerTrackingController {
         double percent = (currentStep - 1) / 3.0;
         Platform.runLater(() -> {
             double totalWidth = progressTrackContainer.getWidth();
-            if (totalWidth > 0) progressFill.setPrefWidth(totalWidth * percent);
+            if (totalWidth > 0)
+                progressFill.setPrefWidth(totalWidth * percent);
         });
     }
 
     private void updateStepCircle(Label circle, Label title, int stepNum, String text) {
         if (circle == null || title == null) return;
-        circle.getStyleClass().removeAll("step-circle-done", "step-circle-active", "step-circle-inactive");
-        if (stepNum < currentStep) { circle.getStyleClass().add("step-circle-done"); circle.setText("✓"); }
-        else if (stepNum == currentStep) { circle.getStyleClass().add("step-circle-active"); circle.setText(text); }
-        else { circle.getStyleClass().add("step-circle-inactive"); circle.setText(text); }
+        circle.getStyleClass().removeAll(
+                "step-circle-done", "step-circle-active", "step-circle-inactive");
+        if (stepNum < currentStep) {
+            circle.getStyleClass().add("step-circle-done");
+            circle.setText("✓");
+        } else if (stepNum == currentStep) {
+            circle.getStyleClass().add("step-circle-active");
+            circle.setText(text);
+        } else {
+            circle.getStyleClass().add("step-circle-inactive");
+            circle.setText(text);
+        }
     }
-
-    @FXML public void handleConfirmDelivery() { SceneManager.navigateTo(NavigationUtil.customer_billing); }
-    @FXML public void handleNavMenu() { SceneManager.navigateToMenu(); }
-    @FXML public void handleNavTrack() { /* Active */ }
-    @FXML public void handleNavBill() { SceneManager.navigateTo(NavigationUtil.customer_billing); }
-    @FXML public void handleNavRate() { SceneManager.navigateTo(NavigationUtil.customer_billing); }
 }
