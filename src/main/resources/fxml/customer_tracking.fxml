@@ -1,288 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.restaurant.restaurant.tracking.CustomerTrackingController"
-           styleClass="screen-root">
+<VBox fx:id="trackingScreen" alignment="TOP_CENTER" prefHeight="800.0" prefWidth="450.0" spacing="20.0" style="-fx-background-color: #F9FAFB;" stylesheets="@../css/application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.restaurant.restaurant.tracking.CustomerTrackingController">
+    <children>
+        <!-- Status Card -->
+        <VBox alignment="CENTER" spacing="15.0" styleClass="status-card-polished">
+            <children>
+                <VBox alignment="CENTER" prefHeight="90.0" prefWidth="90.0" styleClass="status-icon-bg">
+                    <children><Label fx:id="statusEmojiLabel" text="⏳"><font><Font size="48.0" /></font></Label></children>
+                </VBox>
+                <Label fx:id="currentStatusLabel" styleClass="status-title-label" text="Order Received" />
+                <Label fx:id="statusDescLabel" alignment="CENTER" text="Your order has been received and will be prepared shortly." textAlignment="CENTER" wrapText="true" />
+                <HBox alignment="CENTER" styleClass="estimate-badge">
+                    <children><Label fx:id="estimatedTimeLabel" styleClass="estimate-text" text="Estimated wait: ~15 minutes" /></children>
+                </HBox>
+            </children>
+            <VBox.margin><Insets left="20.0" right="20.0" top="20.0" /></VBox.margin>
+        </VBox>
 
-    <!-- SCREEN 1: TRACKING VIEW -->
-    <VBox fx:id="trackingScreen" alignment="TOP_CENTER"
-          styleClass="screen-root"
-          maxHeight="Infinity">
+        <!-- Progress Tracker (Continuous Bar ) -->
+        <VBox alignment="CENTER" spacing="10.0">
+            <children>
+                <StackPane fx:id="progressTrackContainer" prefHeight="60.0">
+                    <children>
+                        <!-- Background Track -->
+                        <Region maxHeight="8.0" styleClass="progress-track-bg" StackPane.alignment="CENTER">
+                            <StackPane.margin><Insets left="40.0" right="40.0" /></StackPane.margin>
+                        </Region>
+                        <!-- Dynamic Fill -->
+                        <HBox alignment="CENTER_LEFT" maxHeight="8.0" mouseTransparent="true">
+                            <children>
+                                <Region fx:id="progressFill" maxHeight="8.0" prefWidth="0.0" styleClass="progress-fill-polished" />
+                            </children>
+                            <StackPane.margin><Insets left="40.0" right="40.0" /></StackPane.margin>
+                        </HBox>
+                        <!-- Step Circles -->
+                        <HBox alignment="CENTER">
+                            <children>
+                                <VBox alignment="CENTER" spacing="5.0">
+                                    <children><Label fx:id="step1Circle" styleClass="step-circle-active" text="1" /><Label fx:id="step1Title" styleClass="step-title" text="Pending" /></children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <VBox alignment="CENTER" spacing="5.0">
+                                    <children><Label fx:id="step2Circle" styleClass="step-circle-inactive" text="2" /><Label fx:id="step2Title" styleClass="step-title" text="Preparing" /></children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <VBox alignment="CENTER" spacing="5.0">
+                                    <children><Label fx:id="step3Circle" styleClass="step-circle-inactive" text="3" /><Label fx:id="step3Title" styleClass="step-title" text="Ready" /></children>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <VBox alignment="CENTER" spacing="5.0">
+                                    <children><Label fx:id="step4Circle" styleClass="step-circle-inactive" text="4" /><Label fx:id="step4Title" styleClass="step-title" text="Delivered" /></children>
+                                </VBox>
+                            </children>
+                            <padding><Insets left="40.0" right="40.0" /></padding>
+                        </HBox>
+                    </children>
+                </StackPane>
+            </children>
+        </VBox>
 
-        <!-- Header -->
-        <HBox alignment="CENTER_LEFT" spacing="12"
-              styleClass="panel-header">
-            <VBox HBox.hgrow="ALWAYS" spacing="3">
-                <Label text="🍽 Order Tracking"
-                       styleClass="label-heading"/>
-                <Label fx:id="orderInfoLabel"
-                       text="Tracking your order..."
-                       styleClass="label-muted"/>
-            </VBox>
-            <Button text="← Back to Menu"
-                    onAction="#handleBackToMenu"
-                    styleClass="btn-ghost"/>
+        <!-- Side-by-Side Cards -->
+        <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+            <children>
+                <!-- Culinary Summary -->
+                <VBox spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT">
+                            <children>
+                                <Label styleClass="summary-header" text="CULINARY SUMMARY" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="culinarySummaryDateLabel" styleClass="summary-date" text="Date/Time" />
+                            </children>
+                        </HBox>
+                        <VBox fx:id="orderItemsList" spacing="12.0" VBox.vgrow="ALWAYS" />
+                        <VBox spacing="5.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children><Label styleClass="items-total-label" text="Items Total" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="itemsTotalLabel" styleClass="items-total-price" text="GH₵ 0.00" /></children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children><Label styleClass="grand-total-label" text="Grand Total" /><Region HBox.hgrow="ALWAYS" /><Label fx:id="grandTotalLabel" styleClass="grand-total-price" text="GH₵ 0.00" /></children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                </VBox>
+
+                <!-- Delivered Confirmation -->
+                <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="64.0" prefWidth="64.0" styleClass="status-icon-bg-small">
+                            <children><Label text="🛍️"><font><Font size="32.0" /></font></Label></children>
+                        </VBox>
+                        <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Delivered Confirmation" />
+                        <Label fx:id="confirmationHintLabel" alignment="CENTER" styleClass="hint-label-waiting" text="Wait until status is 'Delivered'..." textAlignment="CENTER" wrapText="true" />
+                        <Region VBox.vgrow="ALWAYS" />
+                        <Button fx:id="foodReceivedBtn" disable="true" onAction="#handleConfirmDelivery" prefHeight="45.0" prefWidth="180.0" styleClass="btn-confirm-persistent-disabled" text="Food Received" />
+                    </children>
+                    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                </VBox>
+            </children>
+            <padding><Insets left="20.0" right="20.0" /></padding>
         </HBox>
 
-        <!-- Main Content (no scroll needed) -->
-        <VBox alignment="CENTER" spacing="28"
-              VBox.vgrow="ALWAYS"
-              style="-fx-padding: 30 60 90 60;">
-
-            <!-- Status Card -->
-            <VBox alignment="CENTER" spacing="10"
-                  maxWidth="700"
-                  style="-fx-background-color: white;
-                         -fx-background-radius: 20;
-                         -fx-border-color: #D1FAE5;
-                         -fx-border-radius: 20;
-                         -fx-border-width: 2;
-                         -fx-padding: 28 32;
-                         -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.15), 20, 0, 0, 6);">
-
-                <!-- Icon in soft circle -->
-                <StackPane>
-                    <VBox prefWidth="84" prefHeight="84"
-                          style="-fx-background-color: #F0FDF4;
-                                 -fx-background-radius: 50;"/>
-                    <Label fx:id="statusEmojiLabel" text="⏳"
-                           style="-fx-font-size: 40px;"/>
-                </StackPane>
-
-                <Label fx:id="currentStatusLabel" text="Order Received"
-                       style="-fx-text-fill: #1F2937;
-                              -fx-font-size: 24px;
-                              -fx-font-weight: bold;">
-                    <VBox.margin><Insets top="6"/></VBox.margin>
-                </Label>
-
-                <Label fx:id="statusDescLabel"
-                       text="Your order has been received and will be prepared shortly."
-                       styleClass="label-muted"
-                       wrapText="true"
-                       textAlignment="CENTER"
-                       maxWidth="420"/>
-
-                <!-- Estimated time hint -->
-                <HBox alignment="CENTER" spacing="6"
-                      style="-fx-background-color: #FFFBEB;
-                             -fx-background-radius: 20;
-                             -fx-padding: 6 16;">
-                    <Label text="⏱"
-                           style="-fx-font-size: 13px;"/>
-                    <Label fx:id="estimatedTimeLabel"
-                           text="Estimated wait: ~15 minutes"
-                           style="-fx-text-fill: #D97706;
-                                  -fx-font-size: 12px;
-                                  -fx-font-weight: bold;"/>
-                </HBox>
-            </VBox>
-
-            <!-- Horizontal Progress Tracker -->
-            <VBox maxWidth="700" spacing="0"
-                  styleClass="card">
-
-                <Label text="ORDER PROGRESS"
-                       styleClass="label-caption">
-                    <VBox.margin><Insets bottom="20"/></VBox.margin>
-                </Label>
-
-                <!-- Progress bar with step circles overlaid -->
-                <StackPane>
-                    <!-- Background track -->
-                    <Region prefHeight="4"
-                            maxWidth="Infinity"
-                            style="-fx-background-color: #E5E7EB;
-                                   -fx-background-radius: 2;">
-                        <StackPane.margin><Insets left="22" right="22"/></StackPane.margin>
-                    </Region>
-
-                    <!-- Filled progress -->
-                    <Region fx:id="progressFill"
-                            prefHeight="4"
-                            maxWidth="Infinity"
-                            style="-fx-background-color: #10B981;
-                                   -fx-background-radius: 2;">
-                        <StackPane.margin><Insets left="22" right="22"/></StackPane.margin>
-                        <StackPane.alignment>CENTER_LEFT</StackPane.alignment>
-                    </Region>
-
-                    <!-- Step circles -->
-                    <HBox alignment="CENTER" spacing="0"
-                          maxWidth="Infinity">
-                        <Label fx:id="step1Circle" text="✓"
-                               styleClass="step-circle-active"
-                               HBox.hgrow="NEVER"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="step2Circle" text="2"
-                               styleClass="step-circle-inactive"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="step3Circle" text="3"
-                               styleClass="step-circle-inactive"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="step4Circle" text="4"
-                               styleClass="step-circle-inactive"/>
-                    </HBox>
-                </StackPane>
-
-                <!-- Step labels below the bar -->
-                <HBox alignment="TOP_CENTER" spacing="0">
-                    <VBox.margin><Insets top="10"/></VBox.margin>
-
-                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
-                          HBox.hgrow="ALWAYS">
-                        <Label fx:id="step1Title" text="Order Received"
-                               style="-fx-text-fill: #1F2937; -fx-font-size: 12px;
-                                      -fx-font-weight: bold;"
-                               textAlignment="CENTER" wrapText="true"/>
-                    </VBox>
-
-                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
-                          HBox.hgrow="ALWAYS">
-                        <Label fx:id="step2Title" text="Being Prepared"
-                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
-                                      -fx-font-weight: bold;"
-                               textAlignment="CENTER" wrapText="true"/>
-                    </VBox>
-
-                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
-                          HBox.hgrow="ALWAYS">
-                        <Label fx:id="step3Title" text="Ready for Delivery"
-                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
-                                      -fx-font-weight: bold;"
-                               textAlignment="CENTER" wrapText="true"/>
-                    </VBox>
-
-                    <VBox alignment="CENTER" spacing="2" maxWidth="140"
-                          HBox.hgrow="ALWAYS">
-                        <Label fx:id="step4Title" text="Delivered"
-                               style="-fx-text-fill: #9CA3AF; -fx-font-size: 12px;
-                                      -fx-font-weight: bold;"
-                               textAlignment="CENTER" wrapText="true"/>
-                    </VBox>
-                </HBox>
-
-                <!-- Current step description -->
-                <Label fx:id="stepDescriptionLabel"
-                       text="Your order has been placed successfully"
-                       styleClass="label-muted"
-                       style="-fx-font-size: 12px;"
-                       textAlignment="CENTER"
-                       wrapText="true"
-                       maxWidth="Infinity">
-                    <VBox.margin><Insets top="16"/></VBox.margin>
-                </Label>
-            </VBox>
-
-            <!-- Reassurance note -->
-            <Label text="💡 This page updates automatically as our staff process your order."
-                   styleClass="label-muted"
-                   style="-fx-font-size: 12px;"
-                   wrapText="true"
-                   textAlignment="CENTER"
-                   maxWidth="500"/>
-
-            <!-- Food Received Button -->
-            <Button fx:id="foodReceivedBtn"
-                    text="✅ Food Received"
-                    onAction="#handleFoodReceived"
-                    visible="false" managed="false"
-                    maxWidth="700"
-                    styleClass="btn-primary"
-                    style="-fx-font-size: 16px;"/>
-        </VBox>
-    </VBox>
-
-    <!-- SCREEN 2: FOOD RECEIVED -->
-    <VBox fx:id="receivedScreen" visible="false" managed="false"
-          alignment="CENTER" spacing="20"
-          styleClass="screen-root">
-        <StackPane>
-            <VBox prefWidth="120" prefHeight="120"
-                  style="-fx-background-color: #F0FDF4;
-                         -fx-background-radius: 60;"/>
-            <Label text="🎉" style="-fx-font-size: 64px;"/>
-        </StackPane>
-        <Label text="Enjoy Your Meal!"
-               style="-fx-text-fill: #10B981;
-                      -fx-font-size: 32px;
-                      -fx-font-weight: bold;">
-            <VBox.margin><Insets top="8"/></VBox.margin>
-        </Label>
-        <Label text="Thank you for dining with us!"
-               styleClass="label-muted" style="-fx-font-size: 15px;"/>
-        <VBox spacing="12" maxWidth="360" alignment="CENTER"
-              style="-fx-padding: 20 0 0 0;">
-            <Button text="🧾 Request Receipt"
-                    onAction="#handleRequestReceipt"
-                    maxWidth="Infinity"
-                    styleClass="btn-primary"
-                    style="-fx-font-size: 15px;"/>
-            <Button text="🍽 Order More"
-                    onAction="#handleOrderMore"
-                    maxWidth="Infinity"
-                    styleClass="btn-ghost"
-                    style="-fx-font-size: 14px; -fx-padding: 12;"/>
-        </VBox>
-    </VBox>
-
-    <!-- Customer Bottom Navigation Bar -->
-    <VBox alignment="BOTTOM_CENTER"
-          style="-fx-background-color: transparent;"
-          pickOnBounds="false">
-        <HBox alignment="CENTER" spacing="0"
-              maxWidth="Infinity"
-              styleClass="bottom-nav">
-
-            <VBox alignment="CENTER" spacing="4"
-                  HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
-                  styleClass="bottom-nav-item"
-                  onMouseClicked="#handleNavMenu">
-                <Label text="🍔" style="-fx-font-size: 20px;"/>
-                <Label text="Menu"
-                       styleClass="label-muted" style="-fx-font-size: 11px;"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="4"
-                  HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
-                  styleClass="bottom-nav-item, bottom-nav-item-active">
-                <Label text="📍" style="-fx-font-size: 20px;"/>
-                <Label text="Track Order"
-                       style="-fx-text-fill: #10B981;
-                              -fx-font-size: 11px;
-                              -fx-font-weight: bold;"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="4"
-                  HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
-                  styleClass="bottom-nav-item"
-                  onMouseClicked="#handleNavBill">
-                <Label text="🧾" style="-fx-font-size: 20px;"/>
-                <Label text="My Bill"
-                       styleClass="label-muted" style="-fx-font-size: 11px;"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="4"
-                  HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
-                  styleClass="bottom-nav-item"
-                  onMouseClicked="#handleNavRate">
-                <Label text="⭐" style="-fx-font-size: 20px;"/>
-                <Label text="Rate Us"
-                       styleClass="label-muted" style="-fx-font-size: 11px;"/>
-            </VBox>
-
-            <VBox alignment="CENTER" spacing="4"
-                  HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="64"
-                  styleClass="bottom-nav-item"
-                  onMouseClicked="#handleNavHelp">
-                <Label text="💬" style="-fx-font-size: 20px;"/>
-                <Label text="Help"
-                       styleClass="label-muted" style="-fx-font-size: 11px;"/>
-            </VBox>
-
+        <!-- Navigation Bar -->
+        <HBox alignment="CENTER" prefHeight="70.0" style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 1 0 0 0;">
+            <children>
+                <VBox alignment="CENTER" onMouseClicked="#handleNavMenu" prefWidth="100.0" spacing="5.0" styleClass="nav-item">
+                    <children><Label text="🍽️"><font><Font size="20.0" /></font></Label><Label fx:id="navMenuLabel" styleClass="nav-label" text="Menu" /></children>
+                </VBox>
+                <VBox alignment="CENTER" onMouseClicked="#handleNavTrack" prefWidth="100.0" spacing="5.0" styleClass="nav-item">
+                    <children><Label text="🚚"><font><Font size="20.0" /></font></Label><Label fx:id="navTrackLabel" styleClass="nav-label" text="Track" /></children>
+                </VBox>
+                <VBox alignment="CENTER" onMouseClicked="#handleNavBill" prefWidth="100.0" spacing="5.0" styleClass="nav-item">
+                    <children><Label text="🧾"><font><Font size="20.0" /></font></Label><Label fx:id="navBillLabel" styleClass="nav-label" text="My Bill" /></children>
+                </VBox>
+                <VBox alignment="CENTER" onMouseClicked="#handleNavRate" prefWidth="100.0" spacing="5.0" styleClass="nav-item">
+                    <children><Label text="⭐"><font><Font size="20.0" /></font></Label><Label fx:id="navRateLabel" styleClass="nav-label" text="Rate Us" /></children>
+                </VBox>
+            </children>
         </HBox>
-    </VBox>
-</StackPane>
+    </children>
+</VBox>

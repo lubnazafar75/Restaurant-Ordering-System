@@ -191,13 +191,14 @@ public class DatabaseInitializer {
             if (isEmpty(conn, "tables")) {
                 try (PreparedStatement pstmt = conn.prepareStatement(
                         "INSERT INTO tables (table_number, capacity, status) VALUES (?, ?, 'available')")) {
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 20; i++) {
                         pstmt.setInt(1, i);
-                        pstmt.setInt(2, (i % 3 == 0) ? 6 : 4);
+                        // Tables 1-10: capacity 4, Tables 11-20: capacity 6
+                        pstmt.setInt(2, (i <= 10) ? 4 : 6);
                         pstmt.executeUpdate();
                     }
                 }
-                System.out.println("[Initializer] Seeded 12 restaurant tables.");
+                System.out.println("[Initializer] Seeded 20 restaurant tables.");
             }
 
         } catch (SQLException e) {

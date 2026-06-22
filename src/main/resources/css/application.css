@@ -946,3 +946,180 @@
 .title-bar-close:hover {
     -fx-background-color: #DC2626;
 }
+/* ═══════════════════════════════════════════════════════════════
+   ADDITIONAL POLISHED STYLES FOR ORDER TRACKING
+   ═══════════════════════════════════════════════════════════════ */
+
+.status-card-polished {
+    -fx-background-color: white;
+    -fx-background-radius: 24;
+    -fx-border-color: #D1FAE5;
+    -fx-border-radius: 24;
+    -fx-border-width: 2;
+    -fx-padding: 35 40;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.12), 25, 0, 0, 8);
+}
+
+.status-icon-bg {
+    -fx-background-color: #F0FDF4;
+    -fx-background-radius: 45;
+}
+
+.status-title-label {
+    -fx-text-fill: #1F2937;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.estimate-badge {
+    -fx-background-color: #FFFBEB;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20;
+}
+
+.estimate-text {
+    -fx-text-fill: #D97706;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.progress-track-bg {
+    -fx-background-color: #F1F5F9;
+    -fx-background-radius: 10;
+}
+
+.progress-fill-polished {
+    -fx-background-color: linear-gradient(to right, #10B981, #34D399);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.2), 8, 0, 0, 2);
+}
+
+.step-title {
+    -fx-font-size: 12px;
+    -fx-text-alignment: center;
+}
+
+.delivery-confirm-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 24;
+    -fx-border-color: #10B981;
+    -fx-border-radius: 24;
+    -fx-border-width: 3;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.25), 30, 0, 0, 10);
+}
+
+.confirm-heading {
+    -fx-text-fill: #065F46;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.confirm-separator {
+    -fx-border-color: #D1FAE5;
+    -fx-border-width: 1 0 0 0;
+    -fx-max-width: 300;
+}
+
+.nav-label {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11px;
+}
+
+.nav-label-active {
+    -fx-text-fill: #10B981;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.status-icon-bg-small { -fx-background-color: #F0FDF4; -fx-background-radius: 32; }
+.btn-confirm-persistent {
+     -fx-background-color: #F1F5F9; -fx-text-fill: #94A3B8; -fx-font-size: 15px;
+     -fx-font-weight: bold; -fx-padding: 14 28; -fx-background-radius: 14; -fx-cursor: default;
+ }
+ .btn-confirm-persistent:enabled {
+     -fx-background-color: #10B981; -fx-text-fill: white; -fx-cursor: hand;
+     -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3 ), 10, 0, 0, 3);
+ }
+ .btn-confirm-persistent:enabled:hover { -fx-background-color: #059669; }
+/* --- Polished Order Tracking Styles --- */
+
+.status-card-polished {
+    -fx-background-color: white;
+    -fx-background-radius: 24;
+    -fx-border-color: #D1FAE5;
+    -fx-border-width: 2px;
+    -fx-padding: 35 40;
+    -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.05), 15, 0, 0, 0);
+}
+
+.status-icon-bg { -fx-background-color: #F0FDF4; -fx-background-radius: 45; }
+.status-icon-bg-small { -fx-background-color: #F0FDF4; -fx-background-radius: 32; }
+.status-title-label { -fx-text-fill: #1F2937; -fx-font-size: 28px; -fx-font-weight: bold; }
+.estimate-badge { -fx-background-color: #FFFBEB; -fx-background-radius: 25; -fx-padding: 8 20; }
+.estimate-text { -fx-text-fill: #D97706; -fx-font-size: 13px; -fx-font-weight: bold; }
+
+/* Continuous Progress Bar */
+.progress-track-bg { -fx-background-color: #F1F5F9; -fx-background-radius: 10; }
+.progress-fill-polished {
+    -fx-background-color: linear-gradient(to right, #10B981, #34D399);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, #10B981, 8, 0, 0, 0);
+}
+
+.step-circle-inactive {
+    -fx-background-color: #E5E7EB; -fx-background-radius: 20;
+    -fx-min-width: 40; -fx-min-height: 40; -fx-alignment: center;
+    -fx-text-fill: #6B7280; -fx-font-weight: bold;
+}
+.step-circle-active {
+    -fx-background-color: #10B981; -fx-background-radius: 20;
+    -fx-min-width: 40; -fx-min-height: 40; -fx-alignment: center;
+    -fx-text-fill: white; -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #10B981, 10, 0, 0, 0);
+}
+.step-circle-done {
+    -fx-background-color: #10B981; -fx-background-radius: 20;
+    -fx-min-width: 40; -fx-min-height: 40; -fx-alignment: center;
+    -fx-text-fill: white;
+}
+.step-title { -fx-font-size: 12px; -fx-text-fill: #6B7280; }
+
+/* Cards */
+.card {
+    -fx-background-color: white; -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 15, 0, 0, 5);
+}
+
+/* Culinary Summary Styling */
+.summary-header { -fx-text-fill: #6B7280; -fx-font-size: 11px; -fx-font-weight: bold; }
+.summary-date { -fx-text-fill: #9CA3AF; -fx-font-size: 10px; }
+.qty-badge {
+    -fx-background-color: #F3F4F6; -fx-background-radius: 6;
+    -fx-padding: 4 8; -fx-text-fill: #4B5563; -fx-font-size: 11px; -fx-font-weight: bold;
+}
+.order-item-name { -fx-text-fill: #374151; -fx-font-size: 13px; }
+.order-item-price { -fx-text-fill: #374151; -fx-font-size: 13px; }
+.items-total-label { -fx-text-fill: #6B7280; -fx-font-size: 13px; }
+.items-total-price { -fx-text-fill: #374151; -fx-font-size: 13px; }
+.grand-total-label { -fx-text-fill: #111827; -fx-font-size: 15px; -fx-font-weight: bold; }
+.grand-total-price { -fx-text-fill: #10B981; -fx-font-size: 16px; -fx-font-weight: bold; }
+
+/* Confirmation Button */
+.btn-confirm-persistent-disabled {
+    -fx-background-color: #F3F4F6; -fx-text-fill: #9CA3AF;
+    -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 14;
+}
+.btn-confirm-persistent-enabled {
+    -fx-background-color: #10B981; -fx-text-fill: white;
+    -fx-font-size: 15px; -fx-font-weight: bold; -fx-background-radius: 14;
+    -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(16, 185, 129, 0.3), 10, 0, 0, 5);
+}
+.hint-label-waiting { -fx-text-fill: #9CA3AF; -fx-font-size: 12px; }
+.hint-label-delivered { -fx-text-fill: #059669; -fx-font-size: 12px; -fx-font-weight: bold; }
+
+/* Nav */
+.nav-item { -fx-cursor: hand; }
+.nav-label { -fx-text-fill: #9CA3AF; -fx-font-size: 11px; }
+.nav-label-active { -fx-text-fill: #10B981; -fx-font-size: 11px; -fx-font-weight: bold; }
+
+

@@ -184,6 +184,23 @@
                         onAction="#handleBack"
                         maxWidth="Infinity"
                         styleClass="btn-secondary"/>
+                <!-- Track Order Button (only visible if order already placed) -->
+                <Button fx:id="trackOrderBtn"
+                        text="📍 Track My Order"
+                        onAction="#handleTrackOrder"
+                        visible="false"
+                        managed="false"
+                        maxWidth="Infinity"
+                        style="-fx-padding: 14;
+               -fx-font-size: 14px;
+               -fx-font-weight: bold;
+               -fx-background-color: transparent;
+               -fx-border-color: #10B981;
+               -fx-border-width: 2;
+               -fx-border-radius: 8;
+               -fx-background-radius: 8;
+               -fx-text-fill: #10B981;
+               -fx-cursor: hand;"/>
             </VBox>
         </VBox>
     </HBox>
