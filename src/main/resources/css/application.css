@@ -822,7 +822,7 @@
     -fx-min-width: 38;
     -fx-min-height: 38;
     -fx-alignment: center;
-    -fx-effect: dropshadow(gaussian, rgb(199 5 46 / 0.45), 10, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgb(199 5 46  0.45), 10, 0, 0, 3);
 }
 
 .step-circle-done {
@@ -917,7 +917,7 @@
     -fx-border-width: 2;
     -fx-border-radius: 18;
     -fx-padding: 20;
-    -fx-effect: dropshadow(gaussian, rgb(199 5 46 / 0.45), 16, 0, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgb(199 5 46  0.45), 16, 0, 0, 6);
 }
 
 .receipt-total {
@@ -1014,7 +1014,7 @@
 .progress-fill-polished {
     -fx-background-color: linear-gradient(to right, #c7052e, #ff2929);
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgb(199 5 46 / 0.45), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgb(199 5 46  0.45), 8, 0, 0, 2);
 }
 
 .step-title {
