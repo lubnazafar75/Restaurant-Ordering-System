@@ -347,7 +347,7 @@ public class StaffDashboardController {
         String[] tabNames = {"All Orders", "Incoming", "Active", "Completed"};
         for (int i = 0; i < tabNames.length; i++) {
             Button tab = new Button(tabNames[i]);
-            tab.getStyleClass().add(i == 0 ? "btn-pill-active1 " : "btn-pill1");
+            tab.getStyleClass().add(i == 0 ? "btn-pill-active " : "btn-pill");
             tabs.getChildren().add(tab);
         }
 
@@ -743,7 +743,7 @@ public class StaffDashboardController {
         double pct = Double.parseDouble(item[3]) / 100.0;
         Region barFill = new Region();
         barFill.setPrefSize(120 * pct, 6);
-        barFill.setStyle("-fx-background-color: #10B981; -fx-background-radius: 3;");
+        barFill.setStyle("-fx-background-color: #74c69d; -fx-background-radius: 3;");
         barBg.getChildren().add(barFill);
         StackPane.setAlignment(barFill, Pos.CENTER_LEFT);
 
@@ -752,7 +752,7 @@ public class StaffDashboardController {
         orders.setPrefWidth(80);
 
         Label revenue = new Label(item[2]);
-        revenue.setStyle("-fx-text-fill: #10B981; -fx-font-size: 13px; -fx-font-weight: bold;");
+        revenue.setStyle("-fx-text-fill: #74c69d; -fx-font-size: 13px; -fx-font-weight: bold;");
         revenue.setPrefWidth(100);
 
         row.getChildren().addAll(name, barBg, orders, revenue);

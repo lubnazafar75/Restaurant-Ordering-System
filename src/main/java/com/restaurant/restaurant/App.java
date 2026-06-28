@@ -174,7 +174,7 @@ public class App extends Application {
         leftPanel.setMaxHeight(Double.MAX_VALUE);
         HBox.setHgrow(leftPanel, Priority.ALWAYS);
         leftPanel.setStyle(
-                "-fx-background-color: linear-gradient(to bottom right, #a6092a, #ff2929);");
+                "-fx-background-color: linear-gradient(to bottom right, #054f38, #10b981);");
 
         VBox brandContent = new VBox(14);
         brandContent.setAlignment(Pos.CENTER);
@@ -231,7 +231,7 @@ public class App extends Application {
 
         Label savoriaTitle = new Label("Savoria");
         savoriaTitle.setStyle(
-                "-fx-text-fill: rgb(199 5 46 / 0.45); -fx-font-size: 52px; " +
+                "-fx-text-fill: rgb(16 185 129); -fx-font-size: 52px; " +
                         "-fx-font-weight: bold;");
 
         // Orange divider with fork icon
@@ -335,7 +335,7 @@ public class App extends Application {
             VBox txt = new VBox(1);
             Label t1 = new Label(features[i][1]);
             t1.setStyle(
-                    "-fx-text-fill: rgb(199 5 46 / 0.45); -fx-font-size: 12px; " +
+                    "-fx-text-fill: rgb(16 185 129 / 0.3); -fx-font-size: 12px; " +
                             "-fx-font-weight: bold;");
             Label t2 = new Label(features[i][2]);
             t2.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 10px;");
