@@ -198,7 +198,7 @@ public class StaffDashboardController {
         // Recent orders table
         VBox ordersSection = new VBox(12);
         Label ordersTitle = new Label("Recent Orders");
-        ordersTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; -fx-font-weight: bold;");
+        ordersTitle.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 16px; -fx-font-weight: bold;");
         TableView<String[]> table = buildOrdersTable();
         VBox.setVgrow(table, Priority.ALWAYS);
         ordersSection.getChildren().addAll(ordersTitle, table);
@@ -215,7 +215,7 @@ public class StaffDashboardController {
 
         VBox qaSection = new VBox(12);
         Label qaTitle = new Label("Quick Actions");
-        qaTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; -fx-font-weight: bold;");
+        qaTitle.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 16px; -fx-font-weight: bold;");
         qaSection.getChildren().addAll(qaTitle, quickActions);
 
         view.getChildren().addAll(header, stats, ordersSection, qaSection);
