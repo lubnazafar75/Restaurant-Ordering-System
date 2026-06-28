@@ -48,6 +48,8 @@ public class OrderController {
 
     // ─── STATE ───────────────────────────────────────────────
     public static int lastOrderId = -1;
+    public static int lastTableNumber = 0;
+    public static double lastOrderTotal  = 0.0;
     private static final int MAX_TABLES = 20; // ← single constant for easy changes
     private int tableNumber = 0;
     private Order order = new Order();
@@ -508,6 +510,8 @@ public class OrderController {
         }
 
         OrderController.lastOrderId = newOrderId;
+        OrderController.lastTableNumber = tableNumber;
+        OrderController.lastOrderTotal  = total;
 
         trackOrderBtn.setVisible(true);
         trackOrderBtn.setManaged(true);

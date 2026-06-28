@@ -289,32 +289,70 @@ public class StaffDashboardController {
         table.getStyleClass().add("table-view");
         table.setPrefHeight(220);
 
-        String[] colNames = {"Table", "Items", "Time", "Status"};
-        int[]    colWidths = {80, 280, 160, 120};
+        String[] colNames  = {"Table", "Items", "Time", "Status", "Customer Rating"};
+        int[]    colWidths = {80, 240, 160, 100, 140};
         for (int i = 0; i < colNames.length; i++) {
             final int idx = i;
             TableColumn<String[], String> col = new TableColumn<>(colNames[i]);
             col.setCellValueFactory(d ->
                     new javafx.beans.property.SimpleStringProperty(d.getValue()[idx]));
             col.setPrefWidth(colWidths[i]);
+
+            // Style the Rating column cells
+            if (colNames[i].equals("Customer Rating")) {
+                col.setCellFactory(c -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.isBlank()) {
+                            setText("—");
+                            setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 12px;");
+                        } else {
+                            setText(item);
+                            setStyle("-fx-text-fill: #F59E0B; -fx-font-size: 13px; -fx-font-weight: bold;");
+                        }
+                    }
+                });
+            }
             table.getColumns().add(col);
         }
 
         java.sql.Connection conn =
                 com.restaurant.restaurant.database.DBConnection.getConnection();
         if (conn != null) {
-            String sql = "SELECT order_id, table_number, status, order_timestamp " +
-                    "FROM orders ORDER BY order_timestamp DESC LIMIT 20";
+            String sql =
+                    "SELECT o.order_id, o.table_number, o.status, o.order_timestamp, " +
+                            "       f.overall, f.food_quality, f.service_quality, f.delivery_speed " +
+                            "FROM orders o " +
+                            "LEFT JOIN feedback f ON f.order_id = o.order_id " +
+                            "ORDER BY o.order_timestamp DESC LIMIT 20";
             try (java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
                  java.sql.ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    int orderId      = rs.getInt("order_id");
-                    int tableNumber  = rs.getInt("table_number");
-                    String status    = rs.getString("status");
-                    String time      = rs.getString("order_timestamp");
-                    String items     = fetchItemsSummary(conn, orderId);
+                    int orderId     = rs.getInt("order_id");
+                    int tableNumber = rs.getInt("table_number");
+                    String status   = rs.getString("status");
+                    String time     = rs.getString("order_timestamp");
+                    String items    = fetchItemsSummary(conn, orderId);
+
+                    // Build rating string from feedback
+                    String rating;
+                    int overall = rs.getInt("overall");
+                    if (rs.wasNull()) {
+                        rating = ""; // no feedback yet
+                    } else {
+                        // Show stars for overall rating (1-5)
+                        StringBuilder stars = new StringBuilder();
+                        for (int i = 0; i < 5; i++)
+                            stars.append(i < overall ? "★" : "☆");
+                        int food     = rs.getInt("food_quality");
+                        int service  = rs.getInt("service_quality");
+                        int delivery = rs.getInt("delivery_speed");
+                        rating = stars + "  (" + overall + "/5)";
+                    }
+
                     table.getItems().add(new String[]{
-                            "Table " + tableNumber, items, time, status});
+                            "Table " + tableNumber, items, time, status, rating});
                 }
             } catch (java.sql.SQLException e) {
                 System.err.println("[Dashboard] Orders table error: " + e.getMessage());
