@@ -13,9 +13,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.sql.Connection;
@@ -47,7 +48,6 @@ public class CustomerTrackingController {
 
     @FXML private Label confirmationHintLabel;
     @FXML private Button foodReceivedBtn;
-
     @FXML private Label orderInfoLabel;
 
     private int currentStep = 1;
@@ -64,75 +64,44 @@ public class CustomerTrackingController {
                     : "Tracking your order...");
         }
 
-        // Animate through steps for visual feedback
-        Timeline simulation = new Timeline(
-                new KeyFrame(Duration.seconds(0),  e -> setStep(1)),
-                new KeyFrame(Duration.seconds(4),  e -> setStep(2)),
-                new KeyFrame(Duration.seconds(8),  e -> setStep(3)),
-                new KeyFrame(Duration.seconds(12), e -> setStep(4))
-        );
-        simulation.play();
-
+        // FIX: Remove the simulation — it was overriding real DB status
+        // Load real status from DB instead
         loadOrderDetails();
         loadCulinarySummary();
-        Platform.runLater(this::startTracking);
+
+        // FIX: Wait for layout to complete before starting tracker
+        // so progressTrackContainer.getWidth() returns a real value
+        Platform.runLater(() -> {
+            updateProgressDisplay(); // initial render with correct step
+            startTracking();         // then begin polling
+        });
     }
 
-    // ── BACK TO MENU (called by tracking.fxml) ────────────────
-    @FXML
-    public void handleBackToMenu() {
-        SceneManager.navigateToMenu();
-    }
-
-    // ── FOOD RECEIVED BUTTON (called by tracking.fxml) ────────
-    @FXML
-    public void handleFoodReceived() {
-        // Switch to the received/confirmation screen
-        if (trackingScreen != null) {
-            trackingScreen.setVisible(false);
-            trackingScreen.setManaged(false);
-        }
-        if (receivedScreen != null) {
-            receivedScreen.setVisible(true);
-            receivedScreen.setManaged(true);
-        }
+    // ── NAV / BUTTON HANDLERS ─────────────────────────────────
+    @FXML public void handleBackToMenu()     { SceneManager.navigateToMenu(); }
+    @FXML public void handleConfirmDelivery(){ handleFoodReceived(); }
+    @FXML public void handleFoodReceived() {
         if (statusPoller != null) statusPoller.stop();
-
-        // Mark order as delivered in DB
         markOrderDelivered();
-    }
-
-    // ── REQUEST RECEIPT (from received screen) ─────────────────
-    @FXML
-    public void handleRequestReceipt() {
         SceneManager.navigateTo(NavigationUtil.customer_billing);
     }
+    @FXML public void handleRequestReceipt() { SceneManager.navigateTo(NavigationUtil.customer_billing); }
+    @FXML public void handleOrderMore()      { SceneManager.navigateToMenu(); }
+    @FXML public void handleNavMenu()        { SceneManager.navigateToMenu(); }
+    @FXML public void handleNavTrack()       { /* already here */ }
+    @FXML public void handleNavBill()        { SceneManager.navigateTo(NavigationUtil.customer_billing); }
+    @FXML public void handleNavRate()        { SceneManager.navigateTo(NavigationUtil.customer_billing); }
 
-    // ── ORDER MORE (from received screen) ─────────────────────
-    @FXML
-    public void handleOrderMore() {
-        SceneManager.navigateToMenu();
-    }
-
-    // ── CONFIRM DELIVERY (alias, keep for safety) ─────────────
-    @FXML
-    public void handleConfirmDelivery() {
-        handleFoodReceived();
-    }
-
-    // ── NAV HANDLERS ──────────────────────────────────────────
-    @FXML public void handleNavMenu()  { SceneManager.navigateToMenu(); }
-    @FXML public void handleNavTrack() { /* already here */ }
-    @FXML public void handleNavBill()  { SceneManager.navigateTo(NavigationUtil.customer_billing); }
-    @FXML public void handleNavRate()  { SceneManager.navigateTo(NavigationUtil.customer_billing); }
-
-    // ── DB: load order header ─────────────────────────────────
+    // ── LOAD ORDER HEADER FROM DB ─────────────────────────────
     private void loadOrderDetails() {
         if (trackedOrderId == -1) return;
-        try (Connection conn = DBConnection.getConnection()) {
-            // FIX: use order_timestamp (not order_date)
+        // FIX: Don't use try-with-resources on the singleton connection
+        // — closing it kills the shared connection for the whole app
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) return;
+        try {
             String sql = "SELECT status, order_timestamp FROM orders WHERE order_id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = conn.prepareStatement(sql);) {
                 stmt.setInt(1, trackedOrderId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
@@ -150,7 +119,6 @@ public class CustomerTrackingController {
                                     culinarySummaryDateLabel.setText(tsStr);
                                 }
                             }
-                            updateProgressDisplay();
                         });
                     }
                 }
@@ -160,13 +128,19 @@ public class CustomerTrackingController {
         }
     }
 
-    // ── DB: load order items ──────────────────────────────────
+    // ── LOAD ORDER ITEMS FROM DB ──────────────────────────────
     private void loadCulinarySummary() {
         if (trackedOrderId == -1) return;
-        if (orderItemsList != null) orderItemsList.getChildren().clear();
-        double total = 0.0;
-        try (Connection conn = DBConnection.getConnection()) {
-            // FIX: JOIN food_items (not menu), correct column names
+        if (orderItemsList != null) {
+            Platform.runLater(() -> orderItemsList.getChildren().clear());
+        }
+
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) return;
+
+        double[] total = {0.0}; // array to allow lambda mutation
+
+        try {
             String sql = "SELECT f.name, oi.quantity, f.price " +
                     "FROM order_items oi " +
                     "JOIN food_items f ON oi.item_id = f.item_id " +
@@ -175,58 +149,62 @@ public class CustomerTrackingController {
                 stmt.setInt(1, trackedOrderId);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        String name   = rs.getString("name");
-                        int    qty    = rs.getInt("quantity");
+                        String name     = rs.getString("name");
+                        int    qty      = rs.getInt("quantity");
                         double subtotal = rs.getDouble("price") * qty;
-                        total += subtotal;
-                        addSummaryItem(name, qty, subtotal);
+                        total[0] += subtotal;
+
+                        // Build row — must capture final values for lambda
+                        final String n = name;
+                        final int    q = qty;
+                        final double s = subtotal;
+
+                        Platform.runLater(() -> {
+                            if (orderItemsList == null) return;
+                            HBox row = new HBox(12);
+                            row.setAlignment(Pos.CENTER_LEFT);
+
+                            Label qtyBadge = new Label(q + "x");
+                            qtyBadge.getStyleClass().add("qty-badge");
+
+                            Label nameLabel = new Label(n);
+                            nameLabel.getStyleClass().add("order-item-name");
+
+                            Region spacer = new Region();
+                            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                            Label priceLabel = new Label(String.format("GH₵ %.2f", s));
+                            priceLabel.getStyleClass().add("order-item-price");
+
+                            row.getChildren().addAll(qtyBadge, nameLabel, spacer, priceLabel);
+                            orderItemsList.getChildren().add(row);
+                        });
                     }
                 }
             }
-            final double finalTotal = total;
+
+            final double finalTotal = total[0];
             Platform.runLater(() -> {
                 if (itemsTotalLabel != null)
                     itemsTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
                 if (grandTotalLabel != null)
                     grandTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
             });
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void addSummaryItem(String name, int qty, double subtotal) {
-        if (orderItemsList == null) return;
-        Platform.runLater(() -> {
-            HBox row = new HBox(12);
-            row.setAlignment(Pos.CENTER_LEFT);
-
-            Label qtyBadge = new Label(qty + "x");
-            qtyBadge.getStyleClass().add("qty-badge");
-
-            Label nameLabel = new Label(name);
-            nameLabel.getStyleClass().add("order-item-name");
-
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
-
-            Label priceLabel = new Label(String.format("GH₵ %.2f", subtotal));
-            priceLabel.getStyleClass().add("order-item-price");
-
-            row.getChildren().addAll(qtyBadge, nameLabel, spacer, priceLabel);
-            orderItemsList.getChildren().add(row);
-        });
-    }
-
-    // ── DB: mark order delivered ──────────────────────────────
+    // ── MARK DELIVERED IN DB ──────────────────────────────────
     private void markOrderDelivered() {
         if (trackedOrderId == -1) return;
-        try (Connection conn = DBConnection.getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE orders SET status = 'delivered' WHERE order_id = ?")) {
-                stmt.setInt(1, trackedOrderId);
-                stmt.executeUpdate();
-            }
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) return;
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "UPDATE orders SET status = 'delivered' WHERE order_id = ?")) {
+            stmt.setInt(1, trackedOrderId);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -242,20 +220,20 @@ public class CustomerTrackingController {
     }
 
     private void pollOrderStatus() {
-        try (Connection conn = DBConnection.getConnection()) {
-            try (PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT status FROM orders WHERE order_id = ?")) {
-                stmt.setInt(1, trackedOrderId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        int newStep = mapStatusToStep(rs.getString("status"));
-                        if (newStep != currentStep) {
-                            currentStep = newStep;
-                            Platform.runLater(this::updateProgressDisplay);
-                        }
-                        if (currentStep == 4 && statusPoller != null)
-                            statusPoller.stop();
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) return;
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT status FROM orders WHERE order_id = ?")) {
+            stmt.setInt(1, trackedOrderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int newStep = mapStatusToStep(rs.getString("status"));
+                    if (newStep != currentStep) {
+                        currentStep = newStep;
+                        Platform.runLater(this::updateProgressDisplay);
                     }
+                    if (currentStep == 4 && statusPoller != null)
+                        statusPoller.stop();
                 }
             }
         } catch (SQLException e) {
@@ -302,20 +280,19 @@ public class CustomerTrackingController {
         updateStepCircle(step4Circle, step4Title, 4, "4");
         updateProgressBar();
 
-        // Show/hide Food Received button
         if (foodReceivedBtn != null) {
             boolean delivered = (currentStep == 4);
-            foodReceivedBtn.setVisible(delivered);
-            foodReceivedBtn.setManaged(delivered);
+            foodReceivedBtn.setDisable(!delivered);
+            foodReceivedBtn.getStyleClass().removeAll(
+                    "btn-confirm-persistent-disabled", "btn-confirm-persistent-enabled");
+            foodReceivedBtn.getStyleClass().add(delivered
+                    ? "btn-confirm-persistent-enabled"
+                    : "btn-confirm-persistent-disabled");
         }
         if (confirmationHintLabel != null) {
-            if (currentStep == 4) {
-                confirmationHintLabel.setText(
-                        "Your order is here! Press the button to confirm receipt.");
-            } else {
-                confirmationHintLabel.setText(
-                        "Wait until your order is delivered to confirm receipt.");
-            }
+            confirmationHintLabel.setText(currentStep == 4
+                    ? "Your order is here! Press the button to confirm receipt."
+                    : "Wait until your order is delivered to confirm receipt.");
         }
     }
 
@@ -329,11 +306,18 @@ public class CustomerTrackingController {
     private void updateProgressBar() {
         if (progressFill == null || progressTrackContainer == null) return;
         double percent = (currentStep - 1) / 3.0;
-        Platform.runLater(() -> {
-            double totalWidth = progressTrackContainer.getWidth();
-            if (totalWidth > 0)
-                progressFill.setPrefWidth(totalWidth * percent);
-        });
+
+        // FIX: Use scene listener to guarantee layout width is available
+        if (progressTrackContainer.getWidth() > 0) {
+            progressFill.setPrefWidth(progressTrackContainer.getWidth() * percent);
+        } else {
+            // Layout not done yet — wait for it
+            progressTrackContainer.widthProperty().addListener((obs, oldW, newW) -> {
+                if (newW.doubleValue() > 0) {
+                    progressFill.setPrefWidth(newW.doubleValue() * percent);
+                }
+            });
+        }
     }
 
     private void updateStepCircle(Label circle, Label title, int stepNum, String text) {

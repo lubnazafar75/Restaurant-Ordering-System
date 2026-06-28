@@ -110,6 +110,18 @@ public class DatabaseInitializer {
                         "  request_time TEXT DEFAULT (datetime('now','localtime'))," +
                         "  FOREIGN KEY(order_id) REFERENCES orders(order_id)" +
                         ");";
+        String createFeedbackTable =
+                "CREATE TABLE IF NOT EXISTS feedback (" +
+                        "  feedback_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "  order_id INTEGER NOT NULL," +
+                        "  food_quality INTEGER," +
+                        "  service_quality INTEGER," +
+                        "  delivery_speed INTEGER," +
+                        "  overall INTEGER," +
+                        "  comment TEXT," +
+                        "  submitted_at TEXT DEFAULT (datetime('now','localtime'))," +
+                        "  FOREIGN KEY(order_id) REFERENCES orders(order_id)" +
+                        ");";
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(createStaffTable);
@@ -121,6 +133,8 @@ public class DatabaseInitializer {
             stmt.execute(createOrderHistoryTable);
             stmt.execute(createSalesDataTable);
             stmt.execute(createReceiptRequestsTable);
+            stmt.execute(createFeedbackTable);
+
 
             System.out.println("[Initializer] Schema verification complete! All core tables validated.");
 
