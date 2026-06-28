@@ -292,7 +292,7 @@ public class OrderController {
 
         Label priceLabel = new Label("GHS " + priceStr);
         priceLabel.setStyle(
-                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #054f38; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button addBtn = new Button("+ Add");
         addBtn.setPrefWidth(120);
@@ -441,7 +441,7 @@ public class OrderController {
         Button minusBtn = new Button("−");
         minusBtn.setPrefSize(28, 28);
         minusBtn.setStyle(
-                "-fx-background-color: #F1F5F9; -fx-text-fill: #c7052e; " +
+                "-fx-background-color: #F1F5F9; -fx-text-fill: #054f38; " +
                         "-fx-font-size: 14px; -fx-font-weight: bold; " +
                         "-fx-background-radius: 6; -fx-cursor: hand; " +
                         "-fx-border-color: #E5E7EB; -fx-border-radius: 6; -fx-border-width: 1;");
@@ -455,19 +455,19 @@ public class OrderController {
         qtyLabel.setPrefWidth(28);
         qtyLabel.setAlignment(Pos.CENTER);
         qtyLabel.setStyle(
-                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #054f38; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button plusBtn = new Button("+");
         plusBtn.setPrefSize(28, 28);
         plusBtn.setStyle(
-                "-fx-background-color: #c7052e; -fx-text-fill: white; " +
+                "-fx-background-color: #054f38; -fx-text-fill: white; " +
                         "-fx-font-size: 14px; -fx-font-weight: bold; " +
                         "-fx-background-radius: 6; -fx-cursor: hand;");
         plusBtn.setOnAction(e -> { item.incrementQuantity(); refreshCart(); });
 
         Label priceLabel = new Label(String.format("GHS %.2f", item.getSubtotal()));
         priceLabel.setStyle(
-                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #054f38; -fx-font-size: 13px; -fx-font-weight: bold;");
         priceLabel.setPrefWidth(80);
         priceLabel.setAlignment(Pos.CENTER_RIGHT);
 
