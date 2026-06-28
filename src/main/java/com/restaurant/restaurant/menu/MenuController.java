@@ -53,8 +53,8 @@ public class MenuController {
 
         // Style table
         menuTable.setStyle(
-                "-fx-background-color: #0B0F19; " +
-                        "-fx-control-inner-background: #0B0F19;");
+                "-fx-background-color: #a6092a; " +
+                        "-fx-control-inner-background: #ff2929;");
 
         // Category combo for form
         categoryCombo.setItems(CATEGORIES);
@@ -158,7 +158,7 @@ public class MenuController {
         confirm.setTitle("Delete Item");
         confirm.setHeaderText("Delete \"" + selected.getName() + "\"?");
         confirm.setContentText("This action cannot be undone.");
-        confirm.getDialogPane().setStyle("-fx-background-color: #161D30;");
+        confirm.getDialogPane().setStyle("-fx-background-color: #00fa3f;");
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -251,7 +251,7 @@ public class MenuController {
         alert.setTitle("Success");
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.getDialogPane().setStyle("-fx-background-color: #161D30;");
+        alert.getDialogPane().setStyle("-fx-background-color: #00fa3f;");
         alert.showAndWait();
     }
 
@@ -260,7 +260,7 @@ public class MenuController {
         alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.getDialogPane().setStyle("-fx-background-color: #161D30;");
+        alert.getDialogPane().setStyle("-fx-background-color: #00fa3f;");
         alert.showAndWait();
     }
 

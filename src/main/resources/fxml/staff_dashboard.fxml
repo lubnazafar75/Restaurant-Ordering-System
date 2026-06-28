@@ -15,12 +15,12 @@
         <!-- Logo -->
         <VBox alignment="CENTER" spacing="4"
               styleClass="sidebar-logo-area">
-            <Label text="🍽" style="-fx-font-size: 32px;"/>
+            <Label text="🍽" style="-fx-font-size: 62px; -fx-text-fill: #74c69d"/>
             <Label text="Savoria"
-                   style="-fx-text-fill: #10B981; -fx-font-size: 18px;
+                   style="-fx-text-fill: #74c69d; -fx-font-size: 28px;
                           -fx-font-weight: bold;"/>
             <Label text="STAFF PORTAL"
-                   style="-fx-text-fill: #F59E0B; -fx-font-size: 9px;
+                   style="-fx-text-fill: #d8f3dc; -fx-font-size: 9px;
                           -fx-font-weight: bold;"/>
         </VBox>
 
@@ -90,7 +90,8 @@
                      -fx-border-color: #374151;
                      -fx-border-width: 1 0 0 0;">
             <Button text="← Logout" onAction="#handleLogout"
-                    maxWidth="Infinity"
+                    maxWidth="Infinity" style="-fx-background-color: #2d6a4f;
+                    -fx-text-fill: #d8f3dc; -fx-border-color: #74c69d"
                     styleClass="btn-logout"/>
         </VBox>
     </VBox>

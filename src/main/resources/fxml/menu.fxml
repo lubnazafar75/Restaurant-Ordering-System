@@ -6,20 +6,20 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.restaurant.restaurant.menu.MenuController"
-            style="-fx-background-color: #0B0F19;">
+            style="-fx-background-color: #163b2c;">
 
     <!-- TOP: Search Bar -->
     <top>
-        <VBox style="-fx-background-color: #161D30;
-                     -fx-border-color: #1E2740;
+        <VBox style="-fx-background-color: #163b2c;
+                     -fx-border-color: #74c69d;
                      -fx-border-width: 0 0 1 0;">
             <!-- Back button row -->
             <HBox style="-fx-padding: 10 15 0 15;">
                 <Button text="← Back"
                         onAction="#handleBack"
-                        style="-fx-background-color: transparent;
-                               -fx-text-fill: #a0aec0; -fx-font-size: 12px;
-                               -fx-border-color: #2A3350; -fx-border-radius: 6;
+                        style="-fx-background-color: #2d6a4f;
+                               -fx-text-fill: #ffffff; -fx-font-size: 12px;
+                               -fx-border-color: #74c69d; -fx-border-radius: 6;
                                -fx-background-radius: 6; -fx-padding: 6 12;
                                -fx-cursor: hand;"/>
             </HBox>
@@ -31,25 +31,25 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <TextField fx:id="searchField"
                            promptText="🔍 Search food item..."
-                           style="-fx-background-color: #0B0F19;
+                           style="-fx-background-color: #163b2c;
                                   -fx-text-fill: white;
-                                  -fx-prompt-text-fill: #4a5568;
-                                  -fx-border-color: #2A3350;
+                                  -fx-prompt-text-fill: #40916c;
+                                  -fx-border-color: #40916c;
                                   -fx-border-radius: 8;
                                   -fx-background-radius: 8;
                                   -fx-padding: 8 12;"
                            prefWidth="220"/>
                 <Button text="Search"
                         onAction="#handleSearch"
-                        style="-fx-background-color: #FF4A85;
+                        style="-fx-background-color: #74c69d;
                                -fx-text-fill: white; -fx-font-weight: bold;
                                -fx-padding: 8 16; -fx-background-radius: 8;
                                -fx-cursor: hand;"/>
                 <ComboBox fx:id="filterCombo"
                           promptText="All Categories"
                           onAction="#handleFilterCategory"
-                          style="-fx-background-color: #0B0F19;
-                                 -fx-text-fill: white;"
+                          style="-fx-background-color: #163b2c;
+                                 -fx-text-fill: white;-fx-border-color: #40916c;"
                           prefWidth="160"/>
             </HBox>
         </VBox>
@@ -80,49 +80,49 @@
     <!-- RIGHT: Form Panel -->
     <right>
         <VBox spacing="12"
-              style="-fx-background-color: #161D30;
+              style="-fx-background-color: #163b2c;
                      -fx-padding: 20;
                      -fx-min-width: 260;
-                     -fx-border-color: #1E2740;
+                     -fx-border-color: #74c69d;
                      -fx-border-width: 0 0 0 1;">
 
             <Label text="Add / Edit Item"
-                   style="-fx-text-fill: #FF4A85; -fx-font-size: 16px;
+                   style="-fx-text-fill: #d8f3dc; -fx-font-size: 16px;
                           -fx-font-weight: bold;"/>
 
-            <Separator style="-fx-background-color: #1E2740;"/>
+            <Separator style="-fx-background-color: #d8f3dc;"/>
 
             <Label text="Item Name"
-                   style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;
+                   style="-fx-text-fill: #d8f3dc; -fx-font-size: 12px;
                           -fx-font-weight: bold;"/>
             <TextField fx:id="nameField"
                        promptText="Enter item name"
-                       style="-fx-background-color: #0B0F19;
+                       style="-fx-background-color: #163b2c;
                               -fx-text-fill: white;
-                              -fx-prompt-text-fill: #4a5568;
-                              -fx-border-color: #2A3350;
+                              -fx-prompt-text-fill: #d8f3dc;
+                              -fx-border-color: #2d6a4f;
                               -fx-border-radius: 8;
-                              -fx-background-radius: 8;
+                              -fx-background-radius: 18;
                               -fx-padding: 10;"/>
 
             <Label text="Category"
-                   style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;
+                   style="-fx-text-fill: #163b2c; -fx-font-size: 12px;
                           -fx-font-weight: bold;"/>
             <ComboBox fx:id="categoryCombo"
                       promptText="Select category"
                       maxWidth="Infinity"
-                      style="-fx-background-color: #0B0F19;
-                             -fx-text-fill: white;"/>
+                      style="-fx-background-color: #163b2c;
+                             -fx-text-fill: #40916c; -fx-border-color: #40916c"/>
 
             <Label text="Price (GHS)"
-                   style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;
+                   style="-fx-text-fill: #d8f3dc; -fx-font-size: 12px;
                           -fx-font-weight: bold;"/>
             <TextField fx:id="priceField"
                        promptText="e.g. 45.00"
-                       style="-fx-background-color: #0B0F19;
-                              -fx-text-fill: white;
-                              -fx-prompt-text-fill: #4a5568;
-                              -fx-border-color: #2A3350;
+                       style="-fx-background-color: #163b2c;
+                              -fx-text-fill: #d8f3dc;
+                              -fx-prompt-text-fill: #74c69d;
+                              -fx-border-color: #40916c;
                               -fx-border-radius: 8;
                               -fx-background-radius: 8;
                               -fx-padding: 10;"/>
@@ -130,9 +130,9 @@
             <CheckBox fx:id="availableCheck"
                       text="Mark as Available"
                       selected="true"
-                      style="-fx-text-fill: #a0aec0;"/>
+                      style="-fx-text-fill: #d8f3dc;"/>
 
-            <Separator style="-fx-background-color: #1E2740;"/>
+            <Separator style="-fx-background-color: #2d6a4f;"/>
 
             <Button text="✚ Add Item"
                     onAction="#handleAdd"
@@ -153,7 +153,7 @@
             <Button text="✕ Delete Item"
                     onAction="#handleDelete"
                     maxWidth="Infinity"
-                    style="-fx-background-color: #EF4444;
+                    style="-fx-background-color: rgb(16 185 129 / 0.19);
                            -fx-text-fill: white; -fx-font-weight: bold;
                            -fx-padding: 11; -fx-background-radius: 8;
                            -fx-cursor: hand;"/>
@@ -162,17 +162,17 @@
                     onAction="#handleClear"
                     maxWidth="Infinity"
                     style="-fx-background-color: transparent;
-                           -fx-text-fill: #6B7280; -fx-font-size: 12px;
-                           -fx-border-color: #2A3350; -fx-border-radius: 8;
+                           -fx-text-fill: #d8f3dc; -fx-font-size: 12px;
+                           -fx-border-color: #2d6a4f; -fx-border-radius: 8;
                            -fx-background-radius: 8; -fx-padding: 8;
                            -fx-cursor: hand;"/>
 
-            <Separator style="-fx-background-color: #1E2740;"/>
+            <Separator style="-fx-background-color: #2d6a4f;"/>
 
             <!-- Item count -->
             <Label fx:id="itemCountLabel"
                    text="0 items in menu"
-                   style="-fx-text-fill: #4a5568; -fx-font-size: 11px;"/>
+                   style="-fx-text-fill: #d8f3dc; -fx-font-size: 11px;"/>
 
         </VBox>
     </right>

@@ -27,7 +27,7 @@
                          -fx-border-radius: 90;
                          -fx-background-radius: 90;"/>
             <Label text="🍽"
-                   style="-fx-font-size: 65px;"/>
+                   style="-fx-font-size: 65px;-fx-text-fill: #10B981"/>
         </StackPane>
 
         <Label text="Enjoy Your Meal!"
@@ -43,7 +43,7 @@
                 onAction="#handleShowReceipt"
                 prefWidth="280"
                 styleClass="btn-secondary"
-                style="-fx-font-size: 16px; -fx-background-radius: 30; -fx-border-radius: 30;">
+                style="-fx-font-size: 16px; -fx-background-radius: 30;-fx-border-color:#10B981 ; -fx-border-radius: 30;-fx-text-fill: #10B981">
             <VBox.margin><Insets top="4"/></VBox.margin>
         </Button>
 
@@ -64,7 +64,7 @@
                              -fx-border-width: 2;
                              -fx-border-radius: 23;
                              -fx-background-radius: 23;"/>
-                <Label text="💳" style="-fx-font-size: 18px;"/>
+                <Label text="💳" style="-fx-font-size: 18px;-fx-text-fill: #10B981"/>
             </StackPane>
             <Label text="Payment is collected at the counter"
                    wrapText="true" prefWidth="180"
@@ -100,7 +100,7 @@
                                minWidth="64" minHeight="64">
                         <VBox prefWidth="64" prefHeight="64"
                               style="-fx-background-color: #F0FDF4;
-                                     -fx-border-color: #10B981;
+                                     -fx-border-color: #10b981;
                                      -fx-border-width: 2.5;
                                      -fx-border-radius: 32;
                                      -fx-background-radius: 32;"/>
@@ -111,8 +111,8 @@
                     </StackPane>
 
                     <Label text="Dined &amp; Delighted!"
-                           style="-fx-text-fill: #1F2937;
-                                  -fx-font-size: 34px;
+                           style="-fx-text-fill: #10b981;
+                                  -fx-font-size: 45px;
                                   -fx-font-weight: bold;"/>
 
                     <Label text="We hope your culinary session with Savoria was nothing short of extraordinary."
@@ -213,8 +213,10 @@
                                 maxWidth="Infinity"
                                 styleClass="btn-secondary"
                                 style="-fx-font-size: 14px;
+                                -fx-text-fill: #10B981;
                                        -fx-background-radius: 12;
                                        -fx-border-radius: 12;
+                                       -fx-border-color: #10B981;
                                        -fx-padding: 13 0;">
                             <VBox.margin><Insets top="20"/></VBox.margin>
                         </Button>
@@ -318,6 +320,9 @@
                                 maxWidth="Infinity"
                                 styleClass="btn-primary"
                                 style="-fx-font-size: 15px;
+
+                                -fx-background-color: #F59E0B;
+
                                        -fx-background-radius: 12;
                                        -fx-padding: 14 0;">
                             <VBox.margin><Insets top="16"/></VBox.margin>
@@ -345,7 +350,7 @@
                   style="-fx-background-color:
                          radial-gradient(center 50% 50%,
                          radius 50%,
-                         #10B98130 0%,
+                         rgb(16 185 129 / 0.19) 0%,
                          #10B98110 60%,
                          transparent 100%);
                          -fx-background-radius: 65;"/>

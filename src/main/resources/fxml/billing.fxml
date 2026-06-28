@@ -258,6 +258,6 @@
                 onAction="#handleConfirmPayment"
                 maxWidth="Infinity"
                 styleClass="btn-primary"
-                style="-fx-font-size: 14px; -fx-padding: 13;"/>
+                style="-fx-font-size: 14px; -fx-padding: 13;-fx-background-color: #163b2c"/>
     </VBox>
 </HBox>

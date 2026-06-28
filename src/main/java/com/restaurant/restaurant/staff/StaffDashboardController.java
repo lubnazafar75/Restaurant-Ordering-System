@@ -33,7 +33,7 @@ public class StaffDashboardController {
     private Button activeBtn;
 
     private static final String NAV_INACTIVE =
-            "-fx-background-color: transparent; -fx-text-fill: #D1D5DB; " +
+            "-fx-background-color: #163b2c; -fx-text-fill: #D1D5DB; " +
                     "-fx-font-size: 13px; -fx-alignment: CENTER_LEFT; " +
                     "-fx-background-radius: 10; -fx-padding: 11 14; -fx-cursor: hand;";
 
@@ -179,7 +179,7 @@ public class StaffDashboardController {
         // Header
         VBox header = new VBox(4);
         Label title = new Label("Dashboard Overview");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 24px; -fx-font-weight: bold;");
         Label subtitle = new Label("Welcome back, "
                 + LoginController.sessionStaffName + " · " + LoginController.sessionRole);
         subtitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
@@ -341,13 +341,13 @@ public class StaffDashboardController {
         view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("📋 Order Management");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 24px; -fx-font-weight: bold;");
 
         HBox tabs = new HBox(8);
         String[] tabNames = {"All Orders", "Incoming", "Active", "Completed"};
         for (int i = 0; i < tabNames.length; i++) {
             Button tab = new Button(tabNames[i]);
-            tab.getStyleClass().add(i == 0 ? "btn-pill-active" : "btn-pill");
+            tab.getStyleClass().add(i == 0 ? "btn-pill-active1 " : "btn-pill1");
             tabs.getChildren().add(tab);
         }
 
@@ -410,7 +410,7 @@ public class StaffDashboardController {
         VBox details = new VBox(4);
         HBox.setHgrow(details, Priority.ALWAYS);
         Label tableName = new Label(order[0]);
-        tableName.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 15px; -fx-font-weight: bold;");
+        tableName.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 15px; -fx-font-weight: bold;");
         Label items = new Label(order[1]);
         items.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 12px;");
         details.getChildren().addAll(tableName, items);
@@ -432,7 +432,7 @@ public class StaffDashboardController {
         view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("👨\u200d🍳 Kitchen Monitor");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 24px; -fx-font-weight: bold;");
         Label subtitle = new Label("Update order status — changes reflect on customer screen instantly");
         subtitle.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 13px;");
 
@@ -486,7 +486,7 @@ public class StaffDashboardController {
                 "-fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 10;");
 
         Label tableL = new Label("Table " + order.tableNumber + "  ·  Order #" + order.orderId);
-        tableL.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
+        tableL.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 13px; -fx-font-weight: bold;");
         Label itemsL = new Label(order.itemsSummary);
         itemsL.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
         itemsL.setWrapText(true);
@@ -627,7 +627,7 @@ public class StaffDashboardController {
         view.setStyle("-fx-background-color: #F8FAFC;");
 
         Label title = new Label("📈 Sales Analytics");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 24px; -fx-font-weight: bold;");
 
         HBox tabs = new HBox(8);
         String[] periods = {"Today", "This Week", "This Month"};
@@ -654,7 +654,7 @@ public class StaffDashboardController {
         // Top selling items from DB
         VBox topItems = new VBox(12);
         Label topTitle = new Label("🏆 Top Selling Items");
-        topTitle.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 16px; -fx-font-weight: bold;");
+        topTitle.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 16px; -fx-font-weight: bold;");
         topItems.getChildren().add(topTitle);
 
         java.sql.Connection conn =
@@ -733,7 +733,7 @@ public class StaffDashboardController {
                 "-fx-effect: dropshadow(gaussian, rgba(31,41,55,0.04), 6, 0, 0, 2);");
 
         Label name = new Label(item[0]);
-        name.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 14px; -fx-font-weight: bold;");
+        name.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 14px; -fx-font-weight: bold;");
         HBox.setHgrow(name, Priority.ALWAYS);
         name.setMaxWidth(Double.MAX_VALUE);
 
@@ -768,7 +768,7 @@ public class StaffDashboardController {
         HBox headerRow = new HBox(12);
         headerRow.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("👥 Staff Management");
-        title.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 24px; -fx-font-weight: bold;");
         HBox.setHgrow(title, Priority.ALWAYS);
         title.setMaxWidth(Double.MAX_VALUE);
 
@@ -876,7 +876,7 @@ public class StaffDashboardController {
         box.setAlignment(Pos.CENTER);
         box.setStyle("-fx-background-color: #F8FAFC;");
         Label lbl = new Label(icon);
-        lbl.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 18px;");
+        lbl.setStyle("-fx-text-fill: #163b2c; -fx-font-size: 18px;");
         Label msg = new Label(message);
         msg.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 14px;");
         box.getChildren().addAll(lbl, msg);

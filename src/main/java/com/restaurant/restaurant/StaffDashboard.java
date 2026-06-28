@@ -30,14 +30,14 @@ public class StaffDashboard {
 
         VBox headerAreaContainerPanel = new VBox(6, title, subtitle);
         headerAreaContainerPanel.setPadding(new Insets(28, 32, 20, 32));
-        headerAreaContainerPanel.setStyle("-fx-background-color: #161D30;"); // Dark Navy Slate Surface
+        headerAreaContainerPanel.setStyle("-fx-background-color: #a6092a;"); // Dark Navy Slate Surface
 
         // Responsive Flow layout automatically shifts cards cleanly to new lines during screen resizing
         FlowPane modularControlCardsGridDeck = new FlowPane();
         modularControlCardsGridDeck.setHgap(22);
         modularControlCardsGridDeck.setVgap(22);
         modularControlCardsGridDeck.setPadding(new Insets(28, 32, 28, 32));
-        modularControlCardsGridDeck.setStyle("-fx-background-color: #0B0F19;"); // Deep Night Blue
+        modularControlCardsGridDeck.setStyle("-fx-background-color: #c7052e;"); // Deep Night Blue
 
         // Injects your operational card system elements mapping accents to designated team targets
         modularControlCardsGridDeck.getChildren().addAll(
@@ -54,7 +54,7 @@ public class StaffDashboard {
         );
 
         VBox rootMainLayoutBlock = new VBox(headerAreaContainerPanel, modularControlCardsGridDeck);
-        rootMainLayoutBlock.setStyle("-fx-background-color: #0B0F19;");
+        rootMainLayoutBlock.setStyle("-fx-background-color: #c7052e;");
         return rootMainLayoutBlock;
     }
 
@@ -73,7 +73,7 @@ public class StaffDashboard {
 
         Button actionExecuteButton = new Button("Launch Module →");
         actionExecuteButton.setStyle(
-                "-fx-background-color: #161D30; -fx-text-fill: white; " +
+                "-fx-background-color: rgb(199 5 46 / 0.45); -fx-text-fill: white; " +
                         "-fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 6 14; " +
                         "-fx-background-radius: 4; -fx-border-color: " + borderAccentColorHex + "; -fx-border-radius: 4; -fx-cursor: hand;"
         );
@@ -83,19 +83,19 @@ public class StaffDashboard {
         structuralControlCardWidgetBox.setPrefSize(230, 175);
         structuralControlCardWidgetBox.setPadding(new Insets(18));
         structuralControlCardWidgetBox.setStyle(
-                "-fx-background-color: #161D30; -fx-background-radius: 8; " +
-                        "-fx-border-color: #161D30; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0, 0, 3);"
+                "-fx-background-color: #a6092a; -fx-background-radius: 8; " +
+                        "-fx-border-color: #a6092a; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgb(255 41 41), 6, 0, 0, 3);"
         );
 
         // Hover animations: adds high-contrast accent glowing rings on active states
         structuralControlCardWidgetBox.setOnMouseEntered(e -> structuralControlCardWidgetBox.setStyle(
-                "-fx-background-color: #1F2942; -fx-background-radius: 8; " +
+                "-fx-background-color: #a6092a; -fx-background-radius: 8; " +
                         "-fx-border-color: " + borderAccentColorHex + "; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, " + borderAccentColorHex + "33, 10, 0, 0, 4);"
         ));
 
         structuralControlCardWidgetBox.setOnMouseExited(e -> structuralControlCardWidgetBox.setStyle(
-                "-fx-background-color: #161D30; -fx-background-radius: 8; " +
-                        "-fx-border-color: #161D30; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0, 0, 3);"
+                "-fx-background-color: #a6092a; -fx-background-radius: 8; " +
+                        "-fx-border-color: #a6092a; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgb(255 41 41), 6, 0, 0, 3);"
         ));
 
         return structuralControlCardWidgetBox;

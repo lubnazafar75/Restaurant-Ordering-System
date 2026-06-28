@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -15,10 +17,13 @@ import java.util.Map;
 
 public class OrderController {
 
+
+
     // ─── SCREEN PANELS ───────────────────────────────────────
     @FXML private VBox tableEntryScreen;
     @FXML private HBox menuScreen;
     @FXML private VBox confirmScreen;
+
 
     // ─── TABLE ENTRY ─────────────────────────────────────────
     @FXML private TextField tableNumberField;
@@ -258,19 +263,36 @@ public class OrderController {
         card.setPadding(new Insets(14));
         card.getStyleClass().add("food-card");
 
-        Label emoji = new Label(getFoodEmoji(name));
-        emoji.setStyle("-fx-font-size: 32px;");
+        ImageView imageView = new ImageView();
+
+        imageView.setStyle(
+                "-fx-background-color: #f0f0f0;-fx-border-radius: 60;-fx-max-width: 200"
+
+        );
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(80);
+        imageView.setPreserveRatio(true);
+
+// get image for this food
+        String path = foodImages.get(name);
+
+        Image image;
+
+        if (path != null) {
+            image = new Image(getClass().getResourceAsStream(path));
+            imageView.setImage(image);
+        }
 
         Label nameLabel = new Label(name);
         nameLabel.setStyle(
-                "-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #747474; -fx-font-size: 13px; -fx-font-weight: bold;");
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
         nameLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         Label priceLabel = new Label("GHS " + priceStr);
         priceLabel.setStyle(
-                "-fx-text-fill: #10B981; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button addBtn = new Button("+ Add");
         addBtn.setPrefWidth(120);
@@ -278,7 +300,8 @@ public class OrderController {
         addBtn.setStyle(addBtn.getStyle() + "-fx-font-size: 12px; -fx-padding: 8 6;");
         addBtn.setOnAction(e -> addToCart(name, price));
 
-        card.getChildren().addAll(emoji, nameLabel, priceLabel, addBtn);
+        card.getChildren().addAll(imageView, nameLabel, priceLabel, addBtn);
+
         return card;
     }
 
@@ -308,58 +331,58 @@ public class OrderController {
 
     static {
         // ── Main Meals ────────────────────────────────────────
-        foodImages.put("Jollof Rice",
-                "https://unsplash.com/photos/cooked-food-on-white-ceramic-plate-Yo8RWHcPwps");
+        foodImages.put("Jollof Rice", "/images/jollof.jpg");
+
         foodImages.put("Fried Rice",
-                "");  // ← paste URL here
+                "/images/friedRice.jpg");  // ← paste URL here
         foodImages.put("Banku & Tilapia",
-                "");
+                "/images/banku.jpg");
         foodImages.put("Fufu & Soup",
-                "");
+                "/images/fufu.jpg");
         foodImages.put("Waakye",
-                "");
+                "/images/waakye.jpg");
         foodImages.put("Kenkey & Fish",
-                "");
+                "/images/kenkey.jpg");
 
         // ── Chicken ───────────────────────────────────────────
         foodImages.put("Grilled Chicken",
-                "");
+                "/images/roastedChick.jpg");
         foodImages.put("Fried Chicken",
-                "");
+                "/images/friedChick.jpg");
         foodImages.put("Chicken Burger",
-                "");
+                "/images/burger.jpg");
         foodImages.put("Chicken Sandwich",
-                "");
+                "/images/sandW.jpg");
 
         // ── Appetizers ────────────────────────────────────────
         foodImages.put("Spring Rolls",
-                "");
+                "/images/springRoll.jpg");
         foodImages.put("Kelewele",
-                "");
+                "/images/Kelewele.jpg");
         foodImages.put("Salad",
-                "");
+                "/images/Salad.jpg");
         foodImages.put("Chips",
-                "");
+                "/images/Chips.jpg");
 
         // ── Drinks ────────────────────────────────────────────
         foodImages.put("Coca-Cola",
-                "");
+                "/images/coca.jpg");
         foodImages.put("Malt Drink",
-                "");
+                "/images/malt.jpg");
         foodImages.put("Fresh Juice",
-                "");
+                "/images/Juice.jpg");
         foodImages.put("Water",
-                "");
+                "/images/water.jpg");
         foodImages.put("Sobolo",
-                "");
+                "/images/sobolo.jpg");
 
         // ── Desserts ──────────────────────────────────────────
         foodImages.put("Ice Cream",
-                "");
+                "/images/iceCream.jpg");
         foodImages.put("Cake Slice",
-                "");
+                "/images/cake.jpg");
         foodImages.put("Fruit Salad",
-                "");
+                "/images/Fruit_Salad.jpg");
     }
     public void showMenuDirectly() {
         if (tableNumber > 0) showScreen(menuScreen);
@@ -384,7 +407,7 @@ public class OrderController {
 
         if (order.getItems().isEmpty()) {
             Label empty = new Label("Your cart is empty");
-            empty.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 13px;");
+            empty.setStyle("-fx-text-fill: #747474; -fx-font-size: 13px;");
             cartItemsBox.getChildren().add(empty);
             cartCountLabel.setText("0 items");
         } else {
@@ -411,14 +434,14 @@ public class OrderController {
                         "-fx-border-color: #E5E7EB; -fx-border-radius: 10; -fx-border-width: 1;");
 
         Label nameLabel = new Label(item.getName());
-        nameLabel.setStyle("-fx-text-fill: #1F2937; -fx-font-size: 13px;");
+        nameLabel.setStyle("-fx-text-fill: #747474; -fx-font-size: 13px;");
         HBox.setHgrow(nameLabel, Priority.ALWAYS);
         nameLabel.setMaxWidth(Double.MAX_VALUE);
 
         Button minusBtn = new Button("−");
         minusBtn.setPrefSize(28, 28);
         minusBtn.setStyle(
-                "-fx-background-color: #F1F5F9; -fx-text-fill: #1F2937; " +
+                "-fx-background-color: #F1F5F9; -fx-text-fill: #c7052e; " +
                         "-fx-font-size: 14px; -fx-font-weight: bold; " +
                         "-fx-background-radius: 6; -fx-cursor: hand; " +
                         "-fx-border-color: #E5E7EB; -fx-border-radius: 6; -fx-border-width: 1;");
@@ -432,19 +455,19 @@ public class OrderController {
         qtyLabel.setPrefWidth(28);
         qtyLabel.setAlignment(Pos.CENTER);
         qtyLabel.setStyle(
-                "-fx-text-fill: #1F2937; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
 
         Button plusBtn = new Button("+");
         plusBtn.setPrefSize(28, 28);
         plusBtn.setStyle(
-                "-fx-background-color: #10B981; -fx-text-fill: white; " +
+                "-fx-background-color: #c7052e; -fx-text-fill: white; " +
                         "-fx-font-size: 14px; -fx-font-weight: bold; " +
                         "-fx-background-radius: 6; -fx-cursor: hand;");
         plusBtn.setOnAction(e -> { item.incrementQuantity(); refreshCart(); });
 
         Label priceLabel = new Label(String.format("GHS %.2f", item.getSubtotal()));
         priceLabel.setStyle(
-                "-fx-text-fill: #10B981; -fx-font-size: 13px; -fx-font-weight: bold;");
+                "-fx-text-fill: #c7052e; -fx-font-size: 13px; -fx-font-weight: bold;");
         priceLabel.setPrefWidth(80);
         priceLabel.setAlignment(Pos.CENTER_RIGHT);
 

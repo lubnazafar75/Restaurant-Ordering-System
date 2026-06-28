@@ -49,7 +49,7 @@ public class App extends Application {
 
         VBox layoutContainerRoot = new VBox(titleBar, workBodyLayoutFrame);
         layoutContainerRoot.setStyle(
-                "-fx-background-color: #F8FAFC; " +
+                "-fx-background-color: #c7052e; " +
                         "-fx-border-color: #E5E7EB; " +
                         "-fx-border-width: 1;"
         );
@@ -174,14 +174,14 @@ public class App extends Application {
         leftPanel.setMaxHeight(Double.MAX_VALUE);
         HBox.setHgrow(leftPanel, Priority.ALWAYS);
         leftPanel.setStyle(
-                "-fx-background-color: linear-gradient(to bottom right, #10B981, #059669);");
+                "-fx-background-color: linear-gradient(to bottom right, #a6092a, #ff2929);");
 
         VBox brandContent = new VBox(14);
         brandContent.setAlignment(Pos.CENTER);
         brandContent.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         Label logoIcon = new Label("🍽");
-        logoIcon.setStyle("-fx-font-size: 72px;");
+        logoIcon.setStyle("-fx-font-size: 172px;-fx-text-fill: #ffffff;");
 
         Label brandName = new Label("Savoria");
         brandName.setStyle(
@@ -227,11 +227,11 @@ public class App extends Application {
 
         Label welcomeSmall = new Label("Welcome to");
         welcomeSmall.setStyle(
-                "-fx-text-fill: #6B7280; -fx-font-size: 18px;");
+                "-fx-text-fill: #747474; -fx-font-size: 18px;");
 
         Label savoriaTitle = new Label("Savoria");
         savoriaTitle.setStyle(
-                "-fx-text-fill: #1F2937; -fx-font-size: 52px; " +
+                "-fx-text-fill: rgb(199 5 46 / 0.45); -fx-font-size: 52px; " +
                         "-fx-font-weight: bold;");
 
         // Orange divider with fork icon
@@ -335,7 +335,7 @@ public class App extends Application {
             VBox txt = new VBox(1);
             Label t1 = new Label(features[i][1]);
             t1.setStyle(
-                    "-fx-text-fill: #1F2937; -fx-font-size: 12px; " +
+                    "-fx-text-fill: rgb(199 5 46 / 0.45); -fx-font-size: 12px; " +
                             "-fx-font-weight: bold;");
             Label t2 = new Label(features[i][2]);
             t2.setStyle("-fx-text-fill: #9CA3AF; -fx-font-size: 10px;");
