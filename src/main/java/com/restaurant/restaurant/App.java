@@ -49,7 +49,7 @@ public class App extends Application {
 
         VBox layoutContainerRoot = new VBox(titleBar, workBodyLayoutFrame);
         layoutContainerRoot.setStyle(
-                "-fx-background-color: #c7052e; " +
+                "-fx-background-color: #163b2c; " +
                         "-fx-border-color: #E5E7EB; " +
                         "-fx-border-width: 1;"
         );
