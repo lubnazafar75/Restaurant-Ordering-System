@@ -95,6 +95,8 @@ public class App extends Application {
         // (see SQLiteDatabaseConnection) — now both paths share one
         // connection via DBConnection, so this is harmless.
         com.restaurant.restaurant.database.DatabaseInitializer.initializeDatabase();
+
+        SceneManager.initialize(stage, contentViewportPane);
         SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY);
     }
 
