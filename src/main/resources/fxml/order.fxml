@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.restaurant.restaurant.ordering.OrderController"
+           styleClass="screen-root">
+
+    <!-- TABLE ENTRY SCREEN -->
+    <VBox fx:id="tableEntryScreen"
+          alignment="CENTER"
+          spacing="20"
+          styleClass="screen-root">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT"
+              maxWidth="800">
+
+            <Button text="← Back to Home"
+                    onAction="#handleBack"
+                    styleClass="btn-ghost"/>
+        </HBox>
+        <Region prefHeight="40"/>
+
+        <Label text="🍽 Welcome to Savoria"
+               styleClass="label-heading"/>
+
+        <Label text="Please enter your table number to begin"
+               styleClass="label-secondary"/>
+
+        <VBox alignment="CENTER"
+              spacing="12"
+              maxWidth="360">
+
+            <TextField fx:id="tableNumberField"
+                       promptText="Enter Table Number"
+                       maxWidth="320"/>
+
+            <Button text="Start Order →"
+                    onAction="#handleStartOrder"
+                    maxWidth="320"
+                    styleClass="btn-primary"/>
+        </VBox>
+    </VBox>
+
+    <!-- MENU SCREEN -->
+    <HBox fx:id="menuScreen"
+          visible="false"
+          managed="false"
+          styleClass="screen-root">
+
+        <!-- LEFT PANEL -->
+        <VBox prefWidth="580"
+              spacing="0">
+
+            <HBox alignment="CENTER_LEFT"
+                  spacing="12"
+                  styleClass="panel-header">
+
+                <VBox HBox.hgrow="ALWAYS"
+                      spacing="2">
+
+                    <Label text="🍔 Our Menu"
+                           styleClass="label-subheading"/>
+
+                    <Label fx:id="tableLabel"
+                           text="Table —"
+                           styleClass="label-primary"/>
+
+                </VBox>
+
+                <TextField fx:id="searchField"
+                           promptText="🔍 Search food..."
+                           onKeyReleased="#handleSearch"
+                           prefWidth="220"/>
+            </HBox>
+
+            <HBox fx:id="categoryBar"
+                  spacing="8"
+                  style="-fx-padding: 12 20;"/>
+
+            <ScrollPane VBox.vgrow="ALWAYS"
+                        fitToWidth="true">
+
+                <FlowPane fx:id="foodGrid"
+                          hgap="14"
+                          vgap="14"
+                          style="-fx-padding: 16 20;"/>
+            </ScrollPane>
+        </VBox>
+
+        <!-- CART PANEL -->
+        <VBox HBox.hgrow="ALWAYS"
+              spacing="0"
+              styleClass="panel-sidebar">
+
+            <VBox styleClass="panel-header">
+
+                <Label text="🛒 Your Order"
+                       styleClass="label-subheading"/>
+
+                <Label fx:id="cartCountLabel"
+                       text="0 items"
+                       styleClass="label-secondary"/>
+            </VBox>
+
+            <ScrollPane VBox.vgrow="ALWAYS"
+                        fitToWidth="true">
+
+                <VBox fx:id="cartItemsBox"
+                      spacing="8"
+                      style="-fx-padding: 12 16;"/>
+            </ScrollPane>
+
+            <VBox spacing="10"
+                  style="-fx-padding: 16 20;">
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Subtotal"
+                           HBox.hgrow="ALWAYS"
+                           maxWidth="Infinity"
+                           styleClass="label-secondary"/>
+
+                    <Label fx:id="subtotalLabel"
+                           text="GHS 0.00"
+                           styleClass="label-secondary"/>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="VAT (10%)"
+                           HBox.hgrow="ALWAYS"
+                           maxWidth="Infinity"
+                           styleClass="label-secondary"/>
+
+                    <Label fx:id="vatLabel"
+                           text="GHS 0.00"
+                           styleClass="label-secondary"/>
+                </HBox>
+
+                <Separator/>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Total"
+                           HBox.hgrow="ALWAYS"
+                           maxWidth="Infinity"
+                           styleClass="label-subheading"/>
+
+                    <Label fx:id="totalLabel"
+                           text="GHS 0.00"
+                           styleClass="label-primary"/>
+                </HBox>
+
+                <HBox>
+                    <Label text="VAT (10%)"
+                           HBox.hgrow="ALWAYS"
+                           styleClass="label-secondary"/>
+
+                    <Label fx:id="vatLabel"
+                           text="GHS 0.00"
+                           styleClass="label-secondary"/>
+                </HBox>
+
+                <Separator/>
+
+                <HBox>
+                    <Label text="Total"
+                           HBox.hgrow="ALWAYS"
+                           styleClass="label-subheading"/>
+
+                    <Label fx:id="totalLabel"
+                           text="GHS 0.00"
+                           styleClass="label-primary"/>
+                </HBox>
+
+                <Button text="✓ Place Order"
+                        onAction="#handleConfirmOrder"
+                        maxWidth="Infinity"
+                        styleClass="btn-primary"/>
+
+                <Button text="← Back"
+                        onAction="#handleBack"
+                        maxWidth="Infinity"
+                        styleClass="btn-secondary"/>
+                <!-- Track Order Button (only visible if order already placed) -->
+                <Button fx:id="trackOrderBtn"
+                        text="📍 Track My Order"
+                        onAction="#handleTrackOrder"
+                        visible="false"
+                        managed="false"
+                        maxWidth="Infinity"
+                        style="-fx-padding: 14;
+               -fx-font-size: 14px;
+               -fx-font-weight: bold;
+               -fx-background-color: transparent;
+               -fx-border-color: #10B981;
+               -fx-border-width: 2;
+               -fx-border-radius: 8;
+               -fx-background-radius: 8;
+               -fx-text-fill: #10B981;
+               -fx-cursor: hand;"/>
+            </VBox>
+        </VBox>
+    </HBox>
+
+    <!-- CONFIRM SCREEN -->
+    <VBox fx:id="confirmScreen"
+          visible="false"
+          managed="false"
+          alignment="CENTER"
+          spacing="20"
+          styleClass="screen-root">
+
+        <Label text="✅"
+               style="-fx-font-size: 64px;"/>
+
+        <Label text="Order Placed!"
+               styleClass="label-heading"/>
+
+        <Label fx:id="confirmMessageLabel"
+               text="Your order has been sent to the kitchen."
+               styleClass="label-secondary"/>
+
+        <Label fx:id="orderSummaryLabel"
+               text=""
+               wrapText="true"
+               maxWidth="400"
+               textAlignment="CENTER"
+               style="-fx-text-fill: #374151; -fx-font-size: 13px;"/>
+
+        <Button text="Track My Order →"
+                onAction="#handleTrackOrder"
+                styleClass="btn-primary"/>
+    </VBox>
+
+</StackPane>

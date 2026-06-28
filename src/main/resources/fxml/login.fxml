@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox maxHeight="Infinity" maxWidth="Infinity" styleClass="screen-root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.restaurant.restaurant.login.LoginController">
+
+    <!-- LEFT PANEL — Branding (Emerald gradient like landing page) -->
+    <VBox alignment="CENTER" minWidth="292.0" prefHeight="581.0" prefWidth="292.0" style="-fx-background-color: linear-gradient(to bottom right, #10b981, #059669);" HBox.hgrow="ALWAYS">
+
+        <padding><Insets bottom="60" left="50" right="50" top="60" /></padding>
+
+        <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="171.0" prefWidth="180.0" style="-fx-font-size: 150px; -fx-alignment: center; -fx-text-fill: #ffffff;" text="🍽" />
+
+        <Label prefHeight="54.0" prefWidth="167.0" style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;" text="Savoria">
+            <VBox.margin><Insets top="12" /></VBox.margin>
+        </Label>
+
+        <Label style="-fx-text-fill: #fde68a; -fx-font-size: 12px;                       -fx-font-weight: bold;" text="— RESTAURANT —">
+            <VBox.margin><Insets top="4" /></VBox.margin>
+        </Label>
+
+        <Label style="-fx-text-fill: #D1FAE5; -fx-font-size: 13px;" text="Exceptional Taste, Unforgettable Experience" textAlignment="CENTER" wrapText="true">
+            <VBox.margin><Insets top="16" /></VBox.margin>
+        </Label>
+
+        <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="49.0" prefWidth="171.0" VBox.vgrow="ALWAYS" />
+
+      
+
+        <Label layoutX="16.0" prefHeight="36.0" prefWidth="185.0" style="-fx-text-fill: #D1FAE5; -fx-font-size: 11px;" text="Staff Portal — Authorized Access Only" translateY="44.0">
+            <VBox.margin><Insets top="16" /></VBox.margin>
+        </Label>
+    </VBox>
+
+    <!-- RIGHT PANEL: Login Form -->
+    <VBox alignment="CENTER_LEFT" style="-fx-background-color: #F8FAFC;" HBox.hgrow="ALWAYS">
+        <padding><Insets bottom="60" left="80" right="80" top="60" /></padding>
+
+        <!-- Back Button -->
+        <HBox prefHeight="25.0" prefWidth="477.0">
+            <Button onAction="#handleBack" styleClass="btn-ghost" text="← Back to Home" />
+            <VBox.margin><Insets bottom="32" /></VBox.margin>
+        </HBox>
+
+        <!-- Header -->
+        <HBox alignment="CENTER" spacing="12">
+            <StackPane maxHeight="48" maxWidth="48" minHeight="48" minWidth="48">
+                <VBox prefHeight="48" prefWidth="48" style="-fx-background-color: #10B981;                              -fx-background-radius: 24;" />
+                <Label style="-fx-font-size: 22px;" text="👤" />
+            </StackPane>
+            <Label style="-fx-text-fill: #2d6a4f; -fx-font-size: 28px;                           -fx-font-weight: bold;" text="Staff Login" />
+        </HBox>
+
+        <!-- Orange divider -->
+        <HBox alignment="CENTER" spacing="8">
+            <VBox.margin><Insets bottom="28" top="8" /></VBox.margin>
+            <Region prefHeight="2" prefWidth="60" style="-fx-background-color: #F59E0B;" />
+            <Label style="-fx-font-size: 14px;" text="👨‍🍳" />
+            <Region prefHeight="2" prefWidth="60" style="-fx-background-color: #F59E0B;" />
+        </HBox>
+
+        <!-- Staff ID -->
+        <Label style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: rgb(116 198 157)" styleClass="label-secondary" text="Staff ID">
+            <VBox.margin><Insets bottom="6" /></VBox.margin>
+        </Label>
+        <HBox alignment="CENTER_LEFT" styleClass="input-box">
+            <Label style="-fx-font-size: 15px; -fx-padding: 0 10 0 0; -fx-text-fill:  rgb(116 198 157)" text="👤" />
+            <TextField fx:id="staffIdField" promptText="Enter your Staff ID" style="-fx-background-color: transparent;                               -fx-text-fill: #1F2937; -fx-font-size: 14px;                               -fx-border-color: transparent; -fx-padding: 14 0;                               -fx-prompt-text-fill: #9CA3AF;" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Password -->
+        <Label style="-fx-font-size: 13px; -fx-font-weight: bold;" styleClass="label-secondary" text="Password">
+            <VBox.margin><Insets bottom="6" top="16" /></VBox.margin>
+        </Label>
+        <HBox alignment="CENTER_LEFT" styleClass="input-box">
+            <Label style="-fx-font-size: 15px; -fx-padding: 0 10 0 0;" text="🔒" />
+            <PasswordField fx:id="passwordField" promptText="Enter your password" style="-fx-background-color: transparent;                                   -fx-text-fill: #1F2937; -fx-font-size: 14px;                                   -fx-border-color: transparent; -fx-padding: 14 0;                                   -fx-prompt-text-fill: #9CA3AF;" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <!-- Error label -->
+        <Label fx:id="errorLabel" managed="false" style="-fx-text-fill: #EF4444; -fx-font-size: 13px;" text="" visible="false" wrapText="true">
+            <VBox.margin><Insets top="10" /></VBox.margin>
+        </Label>
+
+        <!-- Login Button -->
+        <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" onAction="#handleLogin" prefHeight="52.0" prefWidth="488.0" style="-fx-font-size: 16px;-fx-background-color: #10b981" styleClass="btn-primary" text="→   LOGIN">
+            <VBox.margin><Insets bottom="24" top="20" /></VBox.margin>
+        </Button>
+
+        <!-- Security notice -->
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="login-security-badge">
+            <Label style="-fx-font-size: 22px;" text="🛡" />
+            <VBox spacing="2">
+                <Label style="-fx-text-fill: #059669; -fx-font-size: 13px;                               -fx-font-weight: bold;" text="Authorized access only." />
+                <Label style="-fx-font-size: 12px;" styleClass="label-muted" text="All activities are monitored." />
+            </VBox>
+        </HBox>
+
+    </VBox>
+</HBox>

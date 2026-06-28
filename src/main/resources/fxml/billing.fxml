@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.restaurant.restaurant.billing.BillingController"
+      styleClass="screen-root"
+      prefWidth="1100" prefHeight="680">
+
+    <!-- LEFT SIDEBAR — Order List -->
+    <VBox prefWidth="300"
+          style="-fx-background-color: white;
+                 -fx-border-color: #E5E7EB;
+                 -fx-border-width: 0 1 0 0;">
+
+        <!-- Back button -->
+        <HBox style="-fx-padding: 14 16 0 16;">
+            <Button text="← Back"
+                    onAction="#handleBack"
+                    styleClass="btn-ghost"
+                    style="-fx-font-size: 12px; -fx-padding: 6 12;"/>
+        </HBox>
+
+        <!-- Header -->
+        <VBox style="-fx-padding: 16 18 14 18;
+                     -fx-border-color: #E5E7EB;
+                     -fx-border-width: 0 0 1 0;">
+            <Label text="🧾 Billing"
+                   style="-fx-text-fill: #1F2937;
+                          -fx-font-size: 22px;
+                          -fx-font-weight: bold;"/>
+            <Label text="Manage bills, payments and receipts."
+                   styleClass="label-muted"
+                   style="-fx-font-size: 11px;"/>
+        </VBox>
+
+        <!-- Filter tabs -->
+        <HBox style="-fx-padding: 14 12 0 12; -fx-spacing: 6;">
+            <Button text="Active Tables"
+                    styleClass="btn-pill-active"/>
+            <Button text="Completed Bills"
+                    styleClass="btn-pill"/>
+        </HBox>
+
+        <!-- Search -->
+        <VBox style="-fx-padding: 12 12 6 12;">
+            <TextField fx:id="searchField"
+                       promptText="🔍 Search table or order..."
+                       styleClass="text-field"
+                       style="-fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- Pending payments label -->
+        <VBox style="-fx-padding: 8 18 6 18;">
+            <Label text="PENDING PAYMENTS"
+                   styleClass="label-caption"/>
+        </VBox>
+
+        <!-- Order list -->
+        <ListView fx:id="orderListView"
+                  VBox.vgrow="ALWAYS"
+                  styleClass="list-view"
+                  style="-fx-padding: 0 8 0 8;"/>
+    </VBox>
+
+    <!-- CENTER — Receipt Detail -->
+    <VBox fx:id="receiptDetailPanel"
+          HBox.hgrow="ALWAYS"
+          style="-fx-background-color: #F8FAFC;
+                 -fx-padding: 28;
+                 -fx-border-color: #E5E7EB;
+                 -fx-border-width: 0 1 0 0;">
+
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <VBox HBox.hgrow="ALWAYS" spacing="6">
+                <Label fx:id="tableNumberLabel"
+                       text="Select an order"
+                       style="-fx-text-fill: #1F2937;
+                              -fx-font-size: 24px;
+                              -fx-font-weight: bold;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Ready to Bill"
+                           styleClass="badge-success"/>
+                    <Label fx:id="orderIdLabel"
+                           text=""
+                           styleClass="label-muted"
+                           style="-fx-font-size: 12px;"/>
+                    <Label fx:id="timeLabel"
+                           text=""
+                           styleClass="label-muted"
+                           style="-fx-font-size: 12px;"/>
+                    <Label fx:id="dateLabel"
+                           text=""
+                           styleClass="label-muted"
+                           style="-fx-font-size: 12px;"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <Separator style="-fx-background-color: #E5E7EB;">
+            <VBox.margin><Insets top="16" bottom="16"/></VBox.margin>
+        </Separator>
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    styleClass="scroll-pane">
+            <VBox fx:id="itemsVBox" spacing="2"/>
+        </ScrollPane>
+
+        <Separator style="-fx-background-color: #E5E7EB;">
+            <VBox.margin><Insets top="14" bottom="14"/></VBox.margin>
+        </Separator>
+
+        <VBox spacing="8">
+            <HBox>
+                <Label text="Subtotal"
+                       HBox.hgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+                <Label fx:id="subtotalLabel"
+                       text="—"
+                       alignment="CENTER_RIGHT"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+            </HBox>
+            <HBox>
+                <Label text="Discount"
+                       HBox.hgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       style="-fx-text-fill: #10B981; -fx-font-size: 13px;"/>
+                <Label fx:id="discountLabel"
+                       text="—"
+                       alignment="CENTER_RIGHT"
+                       style="-fx-text-fill: #10B981; -fx-font-size: 13px;"
+                       visible="false" managed="false"/>
+            </HBox>
+            <HBox>
+                <Label text="VAT (10%)"
+                       HBox.hgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+                <Label fx:id="vatLabel"
+                       text="—"
+                       alignment="CENTER_RIGHT"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+            </HBox>
+            <HBox style="-fx-padding: 6 0 2 0;">
+                <Label text="Total Amount"
+                       HBox.hgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       style="-fx-text-fill: #1F2937;
+                              -fx-font-size: 16px;
+                              -fx-font-weight: bold;"/>
+                <Label fx:id="totalLabel"
+                       text="—"
+                       alignment="CENTER_RIGHT"
+                       style="-fx-text-fill: #10B981;
+                              -fx-font-size: 18px;
+                              -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+
+        <HBox spacing="10">
+            <VBox.margin><Insets top="18"/></VBox.margin>
+            <Button fx:id="printBillButton"
+                    text="🖨 Print Bill"
+                    onAction="#handlePrintReceipt"
+                    HBox.hgrow="ALWAYS"
+                    maxWidth="Infinity"
+                    styleClass="btn-ghost"
+                    style="-fx-font-size: 13px; -fx-padding: 12;"/>
+        </HBox>
+    </VBox>
+
+    <!-- RIGHT — Cash Payment Panel -->
+    <VBox fx:id="cashPanel"
+          prefWidth="280"
+          spacing="16"
+          style="-fx-background-color: white;
+                 -fx-padding: 28;">
+
+        <Label text="CASH PAYMENT"
+               style="-fx-text-fill: #1F2937;
+                      -fx-font-size: 15px;
+                      -fx-font-weight: bold;"/>
+
+        <VBox spacing="6">
+            <Label text="Cash Received"
+                   styleClass="label-muted" style="-fx-font-size: 11px;"/>
+            <HBox alignment="CENTER_LEFT" styleClass="input-box">
+                <Label text="GHS"
+                       styleClass="label-muted" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="cashReceivedField"
+                           promptText="0.00"
+                           onKeyReleased="#handleCashInput"
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-background-color: transparent;
+                                  -fx-text-fill: #1F2937;
+                                  -fx-font-size: 20px;
+                                  -fx-font-weight: bold;
+                                  -fx-border-color: transparent;
+                                  -fx-padding: 10 12 10 8;"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="4"
+              style="-fx-background-color: #F8FAFC;
+                     -fx-background-radius: 12;
+                     -fx-border-color: #E5E7EB;
+                     -fx-border-width: 1;
+                     -fx-padding: 16;">
+            <Label text="Change Amount"
+                   styleClass="label-muted" style="-fx-font-size: 11px;"/>
+            <Label fx:id="changeAmountLabel"
+                   text="Enter amount above"
+                   styleClass="label-muted" style="-fx-font-size: 14px;"/>
+        </VBox>
+
+        <Separator style="-fx-background-color: #E5E7EB;"/>
+
+        <VBox spacing="12">
+            <Label text="PAYMENT SUMMARY"
+                   styleClass="label-caption"/>
+            <HBox>
+                <Label text="Total Amount"
+                       HBox.hgrow="ALWAYS"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+                <Label fx:id="paymentTotalLabel"
+                       text="—"
+                       style="-fx-text-fill: #1F2937;
+                              -fx-font-size: 13px;
+                              -fx-font-weight: bold;"/>
+            </HBox>
+            <HBox>
+                <Label text="Amount Received"
+                       HBox.hgrow="ALWAYS"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+                <Label fx:id="paymentReceivedLabel"
+                       text="—"
+                       style="-fx-text-fill: #1F2937;
+                              -fx-font-size: 13px;
+                              -fx-font-weight: bold;"/>
+            </HBox>
+            <HBox>
+                <Label text="Change Amount"
+                       HBox.hgrow="ALWAYS"
+                       styleClass="label-muted" style="-fx-font-size: 13px;"/>
+                <Label fx:id="paymentChangeLabel"
+                       text="—"
+                       style="-fx-text-fill: #10B981;
+                              -fx-font-size: 13px;
+                              -fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+
+        <VBox VBox.vgrow="ALWAYS"/>
+
+        <Button fx:id="confirmPaymentButton"
+                text="✓ Confirm Payment"
+                onAction="#handleConfirmPayment"
+                maxWidth="Infinity"
+                styleClass="btn-primary"
+                style="-fx-font-size: 14px; -fx-padding: 13;-fx-background-color: #163b2c"/>
+    </VBox>
+</HBox>
