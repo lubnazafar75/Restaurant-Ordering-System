@@ -315,7 +315,10 @@ public class StaffDashboardController {
                 });
             }
             table.getColumns().add(col);
+
         }
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
         java.sql.Connection conn =
                 com.restaurant.restaurant.database.DBConnection.getConnection();

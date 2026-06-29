@@ -364,9 +364,7 @@ public class BillingController {
             Alert warn = new Alert(Alert.AlertType.WARNING);
             warn.setTitle("Rating Required");
             warn.setHeaderText(null);
-            warn.setContentText(
-                    "Please rate your Overall Experience before submitting."
-            );
+            warn.setContentText("Please rate your Overall Experience before submitting.");
             warn.getDialogPane().getStyleClass().add("dialog-pane");
             warn.showAndWait();
             return;
@@ -375,22 +373,45 @@ public class BillingController {
         String comments = commentsArea != null
                 ? commentsArea.getText().trim() : "";
 
-        System.out.println("[Feedback] Order: " + currentOrderId
-                + " | Table: " + currentTable
-                + " | Food: "     + ratingFoodQuality
-                + " | Service: "  + ratingServiceHospitality
-                + " | Delivery: " + ratingDeliverySpeed
-                + " | Overall: "  + ratingOverallExperience
-                + " | Comments: " + comments);
+        // ── Save to database ──────────────────────────────────
+        int orderId = com.restaurant.restaurant.ordering.OrderController.lastOrderId;
+        saveFeedback(orderId, ratingFoodQuality, ratingServiceHospitality,
+                ratingDeliverySpeed, ratingOverallExperience, comments);
 
-        // Show confirmed panel then auto-navigate home after 3 seconds
+        // ── Show confirmation then go home ────────────────────
         showPanel(paymentConfirmedPanel);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(e ->
-                SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY)
-        );
+        pause.setOnFinished(e -> SceneManager.navigateTo(NavigationUtil.MAIN_ENTRY));
         pause.play();
+    }
+
+    private void saveFeedback(int orderId, int foodQuality, int serviceQuality,
+                              int deliverySpeed, int overall, String comment) {
+        if (orderId == -1) {
+            System.err.println("[Feedback] No order ID — feedback not saved.");
+            return;
+        }
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) return;
+        String sql =
+                "INSERT INTO feedback " +
+                        "(order_id, food_quality, service_quality, delivery_speed, overall, comment) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, foodQuality);
+            stmt.setInt(3, serviceQuality);
+            stmt.setInt(4, deliverySpeed);
+            stmt.setInt(5, overall);
+            stmt.setString(6, comment.isEmpty() ? null : comment);
+            stmt.executeUpdate();
+            System.out.println("[Feedback] Saved for order #" + orderId
+                    + " — overall: " + overall + "/5");
+        } catch (SQLException e) {
+            System.err.println("[Feedback] Save failed: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // ── Staff Billing: Back button ────────────────────────────

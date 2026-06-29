@@ -64,12 +64,12 @@ public class CustomerTrackingController {
                     : "Tracking your order...");
         }
 
-        // FIX: Remove the simulation — it was overriding real DB status
+
         // Load real status from DB instead
         loadOrderDetails();
-        loadCulinarySummary();
+        //culinary summary disabled
+        //loadCulinarySummary();
 
-        // FIX: Wait for layout to complete before starting tracker
         // so progressTrackContainer.getWidth() returns a real value
         Platform.runLater(() -> {
             updateProgressDisplay(); // initial render with correct step
@@ -129,73 +129,74 @@ public class CustomerTrackingController {
     }
 
     // ── LOAD ORDER ITEMS FROM DB ──────────────────────────────
+// Culinary summary is disabled — uncomment to re-enable
     private void loadCulinarySummary() {
-        if (trackedOrderId == -1) return;
-        if (orderItemsList != null) {
-            Platform.runLater(() -> orderItemsList.getChildren().clear());
-        }
-
-        Connection conn = DBConnection.getConnection();
-        if (conn == null) return;
-
-        double[] total = {0.0}; // array to allow lambda mutation
-
-        try {
-            String sql = "SELECT f.name, oi.quantity, f.price " +
-                    "FROM order_items oi " +
-                    "JOIN food_items f ON oi.item_id = f.item_id " +
-                    "WHERE oi.order_id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, trackedOrderId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        String name     = rs.getString("name");
-                        int    qty      = rs.getInt("quantity");
-                        double subtotal = rs.getDouble("price") * qty;
-                        total[0] += subtotal;
-
-                        // Build row — must capture final values for lambda
-                        final String n = name;
-                        final int    q = qty;
-                        final double s = subtotal;
-
-                        Platform.runLater(() -> {
-                            if (orderItemsList == null) return;
-                            HBox row = new HBox(12);
-                            row.setAlignment(Pos.CENTER_LEFT);
-
-                            Label qtyBadge = new Label(q + "x");
-                            qtyBadge.getStyleClass().add("qty-badge");
-
-                            Label nameLabel = new Label(n);
-                            nameLabel.getStyleClass().add("order-item-name");
-
-                            Region spacer = new Region();
-                            HBox.setHgrow(spacer, Priority.ALWAYS);
-
-                            Label priceLabel = new Label(String.format("GH₵ %.2f", s));
-                            priceLabel.getStyleClass().add("order-item-price");
-
-                            row.getChildren().addAll(qtyBadge, nameLabel, spacer, priceLabel);
-                            orderItemsList.getChildren().add(row);
-                        });
-                    }
-                }
-            }
-
-            final double finalTotal = total[0];
-            Platform.runLater(() -> {
-                if (itemsTotalLabel != null)
-                    itemsTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
-                if (grandTotalLabel != null)
-                    grandTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
-            });
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    /*
+    if (trackedOrderId == -1) return;
+    if (orderItemsList != null) {
+        Platform.runLater(() -> orderItemsList.getChildren().clear());
     }
 
+    Connection conn = DBConnection.getConnection();
+    if (conn == null) return;
+
+    double[] total = {0.0};
+
+    try {
+        String sql = "SELECT f.name, oi.quantity, f.price " +
+                "FROM order_items oi " +
+                "JOIN food_items f ON oi.item_id = f.item_id " +
+                "WHERE oi.order_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, trackedOrderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String name     = rs.getString("name");
+                    int    qty      = rs.getInt("quantity");
+                    double subtotal = rs.getDouble("price") * qty;
+                    total[0] += subtotal;
+
+                    final String n = name;
+                    final int    q = qty;
+                    final double s = subtotal;
+
+                    Platform.runLater(() -> {
+                        if (orderItemsList == null) return;
+                        HBox row = new HBox(12);
+                        row.setAlignment(Pos.CENTER_LEFT);
+
+                        Label qtyBadge = new Label(q + "x");
+                        qtyBadge.getStyleClass().add("qty-badge");
+
+                        Label nameLabel = new Label(n);
+                        nameLabel.getStyleClass().add("order-item-name");
+
+                        Region spacer = new Region();
+                        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                        Label priceLabel = new Label(String.format("GH₵ %.2f", s));
+                        priceLabel.getStyleClass().add("order-item-price");
+
+                        row.getChildren().addAll(qtyBadge, nameLabel, spacer, priceLabel);
+                        orderItemsList.getChildren().add(row);
+                    });
+                }
+            }
+        }
+
+        final double finalTotal = total[0];
+        Platform.runLater(() -> {
+            if (itemsTotalLabel != null)
+                itemsTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
+            if (grandTotalLabel != null)
+                grandTotalLabel.setText(String.format("GH₵ %.2f", finalTotal));
+        });
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    */
+    }
     // ── MARK DELIVERED IN DB ──────────────────────────────────
     private void markOrderDelivered() {
         if (trackedOrderId == -1) return;
