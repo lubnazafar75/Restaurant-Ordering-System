@@ -1,8 +1,12 @@
-/* ═══════════════════════════════════════════════════════════════
-   SAVORIA RESTAURANT SYSTEM — GLOBAL STYLESHEET (LIGHT THEME)
-   Brand: Emerald Green (#10B981) · Dark Charcoal (#1F2937)
-          Warm Orange (#F59E0B) · Background (#F8FAFC) · Cards (#FFFFFF)
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   SAVORIA RESTAURANT SYSTEM — GLOBAL STYLESHEET
+   Primary: Emerald Green (#10B981)
+   Secondary: Deep Forest Green (#163B2C)
+   Neutral: Charcoal (#1F2937)
+   Accent: Warm Orange (#F59E0B)
+   Background: Soft White (#F8FAFC)
+   Surface: White (#FFFFFF)
+   ═══════════════════════════════════════════════════════ */
 
 .root {
     /* Brand Colors */

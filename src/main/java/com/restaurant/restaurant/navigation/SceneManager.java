@@ -29,15 +29,15 @@ public class SceneManager {
 
     private static void registerAllScreens() {
 
-        // ✅ Main Entry
+        // Main Entry
         register(NavigationUtil.MAIN_ENTRY, App.buildMainPortalView());
 
-        // ✅ Customer Home
+        //Customer Home
         register(NavigationUtil.CUSTOMER_HOME,
                 NavigationUtil.buildPlaceholderRoot(
                         "Customer Workspace Root", NavigationUtil.CUSTOMER_HOME));
 
-        // ✅ Customer Menu — order.fxml
+        //Customer Menu — order.fxml
         try {
             FXMLLoader orderLoader = new FXMLLoader(
                     SceneManager.class.getResource("/fxml/order.fxml"));
@@ -51,7 +51,7 @@ public class SceneManager {
                             "Customer Ordering Menu", NavigationUtil.CUSTOMER_MENU));
         }
 
-        // ✅ Admin Menu — menu.fxml
+        //Admin Menu — menu.fxml
         try {
             Parent menuRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/menu.fxml")));
@@ -63,7 +63,7 @@ public class SceneManager {
                             "Admin Menu", NavigationUtil.ADMIN_MENU));
         }
 
-        // ✅ Staff Order Tracking — tracking.fxml
+        //Staff Order Tracking — tracking.fxml
         try {
             Parent trackingRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/tracking.fxml")));
@@ -75,7 +75,7 @@ public class SceneManager {
                             "Real-Time Order Tracking", NavigationUtil.ORDER_TRACKING));
         }
 
-        // ✅ Customer Tracking — customer_tracking.fxml
+        // Customer Tracking — customer_tracking.fxml
         try {
             Parent customerTrackingRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/customer_tracking.fxml")));
@@ -88,7 +88,7 @@ public class SceneManager {
                             "Customer Order Tracking", NavigationUtil.CUSTOMER_TRACKING));
         }
 
-        // ✅ Customer Receipt — customer_billing.fxml (simple thank you + request screen)
+        //Customer Receipt — customer_billing.fxml (simple thank you + request screen)
         try {
             Parent customerReceiptRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/customer_billing.fxml")));
@@ -101,7 +101,7 @@ public class SceneManager {
                             "Your Digital Bill Receipt", NavigationUtil.customer_billing));
         }
 
-        // ✅ Staff Billing — billing.fxml (uses customer_billing_STAFF key)
+        //Staff Billing — billing.fxml (uses customer_billing_STAFF key)
         try {
             Parent billingRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource(
@@ -114,7 +114,7 @@ public class SceneManager {
                             "Billing Management", NavigationUtil.customer_billing_STAFF));
         }
 
-        // ✅ Staff Login
+        //Staff Login
         try {
             Parent loginRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/login.fxml")));
@@ -126,7 +126,7 @@ public class SceneManager {
                             "Staff Login", NavigationUtil.STAFF_LOGIN));
         }
 
-        // ✅ Staff Dashboard
+        //Staff Dashboard
         try {
             Parent staffDashRoot = FXMLLoader.load(Objects.requireNonNull(
                     SceneManager.class.getResource("/fxml/staff_dashboard.fxml")));
@@ -137,24 +137,24 @@ public class SceneManager {
             register(NavigationUtil.STAFF_DASHBOARD, StaffDashboard.getRoot());
         }
 
-        // ✅ Order Checking
+        //Order Checking
         register(NavigationUtil.ORDER_CHECKING,
                 NavigationUtil.buildPlaceholderRoot(
                         "Hostess Order Intake Checking Panel",
                         NavigationUtil.ORDER_CHECKING));
 
-        // ✅ Kitchen
+        //Kitchen
         register(NavigationUtil.KITCHEN,
                 NavigationUtil.buildPlaceholderRoot(
                         "Kitchen Monitor Pipeline", NavigationUtil.KITCHEN));
 
-        // ✅ Admin Staff
+        //Admin Staff
         register(NavigationUtil.ADMIN_STAFF,
                 NavigationUtil.buildPlaceholderRoot(
                         "Managerial System: Employee Accounts Management",
                         NavigationUtil.ADMIN_STAFF));
 
-        // ✅ Admin Sales
+        //Admin Sales
         register(NavigationUtil.ADMIN_SALES,
                 NavigationUtil.buildPlaceholderRoot(
                         "Managerial System: Revenue Analytics",

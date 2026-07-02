@@ -64,7 +64,7 @@ public class TrackingController {
         String selectedStatusFilter = statusFilterComboBox.getValue();
 
         filteredOrderList.setPredicate(order -> {
-            // FIX: This now checks ONLY the table number field
+
             boolean matchesSearch = String.valueOf(order.getTableNo()).toLowerCase().contains(searchText);
 
             // Check Status match

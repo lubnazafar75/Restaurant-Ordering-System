@@ -16,19 +16,19 @@ import java.util.List;
 
 public class BillingController {
 
-    // ── Customer Billing Panels ──────────────────────────────
+    // Customer Billing Panels
     @FXML private VBox enjoyMealPanel;
     @FXML private VBox receiptPanel;
     @FXML private VBox paymentConfirmedPanel;
 
-    // ── Customer Receipt Labels ──────────────────────────────
+    // Customer Receipt Labels
     @FXML private Label tableNumberLabel;
     @FXML private VBox  itemsVBox;
     @FXML private Label subtotalLabel;
     @FXML private Label vatLabel;
     @FXML private Label totalLabel;
 
-    // ── Star Rating HBoxes ───────────────────────────────────
+    // Star Rating HBoxes
     @FXML private HBox foodQualityStars;
     @FXML private HBox serviceHospitalityStars;
     @FXML private HBox deliverySpeedStars;
@@ -95,11 +95,11 @@ public class BillingController {
         currentItems   = items != null ? items : new ArrayList<>();
     }
 
-    // ── JavaFX Lifecycle ─────────────────────────────────────
+    //JavaFX Lifecycle
 
     @FXML
     public void initialize() {
-        // ── Detect which FXML loaded this controller ──────────
+        // Detect which FXML loaded this controller
         // customer_billing.fxml → enjoyMealPanel exists
         // billing.fxml (staff)  → orderListView exists
 
@@ -284,10 +284,6 @@ public class BillingController {
 
     // ── Star Ratings ─────────────────────────────────────────
 
-    /**
-     * Builds 5 clickable star labels in each HBox.
-     * THIS must be called in initialize() — it was missing before.
-     */
     private void buildStarRows() {
         if (foodQualityStars       != null)
             buildStarRow(foodQualityStars,
